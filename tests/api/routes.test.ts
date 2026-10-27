@@ -81,7 +81,8 @@ describe("shift check-in / check-out", () => {
   });
 
   it("tells a worker when a QR belongs to another employer's site", async () => {
-    await login({ role: "worker", sub: "w-k02", orgId: "org-col" });
+    // The college demo worker starts each day checked out, so the site check is what answers.
+    await login({ role: "worker", sub: "w-k01", orgId: "org-col" });
     const { POST } = await import("@/app/api/shifts/check-in/route");
     const res = await POST(json({ method: "qr", siteId: "site-con-1", qrToken: todaysSiteToken("site-con-1") }));
     expect(await res.json()).toMatchObject({ error: "wrong_site" });
