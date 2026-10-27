@@ -23,8 +23,10 @@ built for UN Sustainable Development Goal 8: Decent Work and Economic Growth.
 
 ## Contents
 
+- [Chosen vertical](#chosen-vertical)
 - [Why PAYSA](#why-paysa)
 - [How it works](#how-it-works)
+- [Approach and decision logic](#approach-and-decision-logic)
 - [Features](#features)
 - [Tracking codes](#tracking-codes)
 - [Two sectors, one engine](#two-sectors-one-engine)
@@ -37,8 +39,17 @@ built for UN Sustainable Development Goal 8: Decent Work and Economic Growth.
 - [Accessibility and design](#accessibility-and-design)
 - [Testing and quality](#testing-and-quality)
 - [Project structure](#project-structure)
+- [Assumptions](#assumptions)
 
 ---
+
+## Chosen vertical
+
+**UN SDG 8: Decent Work and Economic Growth.** The persona is a daily-wage or shift worker in a labour-intensive workplace, such as a construction labourer or a campus housekeeper, security guard or maintenance worker. These workers often have low literacy, a basic Android phone, and a first language other than English. The second persona is the supervisor or HR person responsible for them.
+
+PAYSA is designed around one question for each persona:
+- **Worker:** "Was I paid fairly, am I safe, and can I speak up without risk?"
+- **Supervisor/HR:** "Who needs help *before* they get hurt or quit?"
 
 ## Why PAYSA
 
@@ -69,6 +80,21 @@ PAYSA turns a single shift check-in into fair pay, early fatigue warnings and a 
 ```
 
 One check-in feeds everything. Business rules are deterministic, unit-tested and explain themselves: every alert and score shows the reason, with numbers.
+
+## Approach and decision logic
+
+PAYSA behaves like an assistant that adapts to **who** the user is and **what is happening to them**. All decisions live in pure, unit-tested functions in `src/lib/rules/`, separate from the UI, so every outcome can be traced and explained.
+
+| Context | Decision | Rule (source) |
+|---|---|---|
+| Hours worked | Overtime and pay | Hours beyond 8 a day are overtime (configurable, capped at 9). Regular hours beyond 48 in a Mon–Sun week also count, without double-counting. Shifts crossing midnight are split across days. Overtime is paid at 2×. (`overtime.ts`, `payslip.ts`) |
+| Shift pattern | Fatigue level | **Warning:** shift over 10h, rest under 11h, more than 6 days in a row, or over 54h/week. **Critical:** shift over 12h, rest under 8h, or over 60h/week. Each reason is stated with numbers. (`fatigue.ts`) |
+| Last 14 days vs the worker's own baseline | Quit-risk score 0–100 | Adds points for rising absences (+20), fatigue days (+5 each, max 20), weeks over 54h (+15), late pay (+20), low team mood (+10, only with 5+ responses), tenure under 90 days (+10) and a silent team (+5). Bands: under 30 low, 30–59 medium, 60+ high. Always returns the top reasons and a suggested action. (`attrition.ts`) |
+| Report text in any language | Category and severity | A Tamil/Hindi/English keyword classifier, optionally refined by Gemini. AI may raise but never lower a severity the safety rules flagged. (`classify.ts`, `ai/gemini.ts`) |
+| Anonymous or named | What is stored | Anonymous reports store no worker ID and only hour-level time; a random tracking code is the only link back. (`anonymity.ts`) |
+| Group size | What HR may see | Team aggregates are hidden below 5 responses (k-anonymity). (`anonymity.ts`) |
+| GPS location / QR token | Whether check-in is allowed | Must be inside the site's radius, or present today's HMAC-signed site code. Double check-ins are rejected. (`geo.ts`, `qr.ts`) |
+| Language, sector, role | What the user sees | UI language, voice and spoken time formats follow the worker's choice. Hazard categories and skills follow the sector. Workers see only their own data, HR only their organisations. |
 
 ## Features
 
@@ -290,3 +316,15 @@ src/
 └─ data/seed.ts     Demo data for both sectors
 tests/              Vitest suites mirroring src/
 ```
+
+## Assumptions
+
+- **Region and time:** India, with all day boundaries in IST (UTC+05:30, no daylight saving).
+- **Work week:** Mon–Sun weeks with six scheduled working days; Sunday is the usual day off. Pay periods are weekly.
+- **Labour rules:** overtime starts after 8 hours a day or 48 a week (in line with common Indian practice) and is paid at 2×. ESI is deducted at 0.75% of gross. These are configuration values, not legal advice.
+- **Devices:** workers use a basic Android phone with Chrome. Read-aloud and browser speech recognition depend on the phone having Tamil/Hindi voices installed.
+- **Sign-in:** phone number + 4-digit PIN for workers, and email + password for supervisors. This is demo-grade; production would add OTP verification.
+- **Data:** the demo runs on generated data relative to today. Without Firestore configured, data is kept in memory and resets when the server restarts.
+- **AI is optional:** without a Gemini key, every feature still works using deterministic fallbacks.
+- **Admin language:** the supervisor/HR dashboard is English-only; the worker app is fully English, Tamil and Hindi.
+- **Sites:** each site is a circle (centre + radius) for GPS check-in. One QR code per site, rotating daily.
