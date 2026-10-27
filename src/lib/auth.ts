@@ -1,4 +1,5 @@
 import "server-only";
+import bcrypt from "bcryptjs";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -10,6 +11,14 @@ const SESSION_HOURS = 12;
 export type Session =
   | { role: "worker"; sub: string; orgId: string }
   | { role: "admin"; sub: string; orgIds: string[] };
+
+// Checked when the account is unknown, so response time doesn't reveal which phones/emails exist.
+const DUMMY_HASH = "$2b$10$CwTycUXWue0Thq9StjUM0uJ8.wyKFm1Gx4x5i1V3bRzZbqNj3Gm6W";
+
+export async function verifySecret(plain: string, hash: string | undefined): Promise<boolean> {
+  const ok = await bcrypt.compare(plain, hash ?? DUMMY_HASH);
+  return ok && hash !== undefined;
+}
 
 const key = (): Uint8Array => new TextEncoder().encode(sessionSecret());
 

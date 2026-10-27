@@ -1,22 +1,14 @@
 import en from "../locales/en.json";
 import hi from "../locales/hi.json";
 import ta from "../locales/ta.json";
+import { DEFAULT_LANG, LANG_COOKIE, LANG_LABELS, LANG_TAGS, isLang } from "./lang";
 import type { Lang } from "./types";
+
+export { DEFAULT_LANG, LANG_COOKIE, LANG_LABELS, LANG_TAGS, isLang };
 
 type Dict = { [key: string]: string | Dict };
 
 const DICTS: Record<Lang, Dict> = { en, ta, hi };
-
-export const LANG_COOKIE = "fs_lang";
-export const DEFAULT_LANG: Lang = "en";
-
-export const LANG_LABELS: Record<Lang, string> = { en: "English", ta: "தமிழ்", hi: "हिंदी" };
-/** BCP-47 tags for <html lang>, Intl and speechSynthesis. */
-export const LANG_TAGS: Record<Lang, string> = { en: "en-IN", ta: "ta-IN", hi: "hi-IN" };
-
-export function isLang(v: unknown): v is Lang {
-  return v === "en" || v === "ta" || v === "hi";
-}
 
 function lookup(dict: Dict, key: string): string | undefined {
   let node: string | Dict | undefined = dict;
