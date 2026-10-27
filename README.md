@@ -170,7 +170,7 @@ The demo data is generated relative to today, so the dashboards always show rece
 
 ## Getting started
 
-**Requirements:** Node.js 20 or later.
+**Requirements:** Node.js 22 or later (required by `firebase-admin`).
 
 ```bash
 git clone https://github.com/shreyascode11/PAYSA.git
