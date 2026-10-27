@@ -38,3 +38,9 @@ export const FEEDBACK_CATEGORIES = ["manager", "conditions", "other"] as const;
 export function sectorConfig(sector: Sector): SectorConfig {
   return SECTORS[sector];
 }
+
+export function categoriesFor(type: "hazard" | "grievance" | "manager_feedback", sector: Sector): readonly string[] {
+  if (type === "hazard") return SECTORS[sector].hazardCategories;
+  if (type === "grievance") return GRIEVANCE_CATEGORIES;
+  return FEEDBACK_CATEGORIES;
+}

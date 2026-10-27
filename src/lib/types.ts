@@ -2,10 +2,16 @@ export type Sector = "construction" | "college";
 export type Lang = "en" | "ta" | "hi";
 export const LANGS: readonly Lang[] = ["en", "ta", "hi"] as const;
 
+export interface Team {
+  id: string;
+  name: string;
+}
+
 export interface Org {
   id: string;
   name: string;
   sector: Sector;
+  teams: Team[];
 }
 
 export interface Site {
@@ -153,5 +159,7 @@ export interface Announcement {
   id: string;
   orgId: string;
   text: string;
+  /** Language the notice was written in, so it is read aloud with the right voice. */
+  lang: Lang;
   createdAt: string;
 }
