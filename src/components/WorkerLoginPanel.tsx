@@ -24,8 +24,8 @@ export function WorkerLoginPanel({ lang, t, next }: { lang: Lang; t: Translator;
       >
         <div className="mb-5 flex items-end justify-between gap-3">
           <div>
-            <h1 className="text-4xl font-black leading-none tracking-tight sm:text-5xl">{t("login.big")}</h1>
-            <p className="mt-2 text-base text-cream-50/75">{t("common.tagline")}</p>
+            <h1 className="text-3xl font-black leading-none tracking-tight">{t("login.big")}</h1>
+            <p className="mt-2 text-sm text-ivory-50/75">{t("common.tagline")}</p>
           </div>
           <SpeakButton text={t("login.speak")} lang={lang} listenLabel={t("common.listen")} stopLabel={t("common.stop")} compact />
         </div>
@@ -40,8 +40,8 @@ export function WorkerLoginPanel({ lang, t, next }: { lang: Lang; t: Translator;
           ]}
         />
       </IdBadge>
-      <aside aria-labelledby="demo-h" className="glass-dark rounded-3xl p-5 text-base">
-        <h2 id="demo-h" className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-cream-50/75">
+      <aside aria-labelledby="demo-h" className="glass-dark rounded-3xl p-5 text-sm">
+        <h2 id="demo-h" className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-ivory-50/75">
           <KeyRound aria-hidden="true" className="size-4" />
           {t("login.demoTitle")}
         </h2>

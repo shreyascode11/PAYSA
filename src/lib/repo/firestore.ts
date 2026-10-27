@@ -52,9 +52,12 @@ export class FirestoreRepository implements Repository {
   }
 
   private async init(): Promise<Firestore> {
-    const { initializeApp, getApps, applicationDefault } = await import("firebase-admin/app");
+    const { initializeApp, getApps, applicationDefault, cert } = await import("firebase-admin/app");
     const { getFirestore } = await import("firebase-admin/firestore");
-    const app = getApps()[0] ?? initializeApp({ credential: applicationDefault(), projectId: this.projectId });
+    // Cloud Run has ambient Google credentials; elsewhere (e.g. Vercel) pass a service-account JSON via env.
+    const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT;
+    const credential = serviceAccount ? cert(JSON.parse(serviceAccount) as object) : applicationDefault();
+    const app = getApps()[0] ?? initializeApp({ credential, projectId: this.projectId });
     const db = getFirestore(app);
     db.settings({ ignoreUndefinedProperties: true });
     await this.seedIfEmpty(db);

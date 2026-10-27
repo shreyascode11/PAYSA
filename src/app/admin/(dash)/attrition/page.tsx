@@ -12,11 +12,11 @@ import { attritionTable, loadOrgData } from "@/lib/services/admin";
 export const metadata: Metadata = { title: "Quit risk" };
 
 const TILE: Record<RiskBand, { cls: string; Icon: typeof CircleCheck; word: string; tone: "ok" | "warn" | "critical" }> = {
-  low: { cls: "bg-ok text-ink-900", Icon: CircleCheck, word: "Low", tone: "ok" },
-  medium: { cls: "bg-warn text-ink-900", Icon: TriangleAlert, word: "Medium", tone: "warn" },
-  high: { cls: "bg-critical text-cream-50", Icon: OctagonAlert, word: "High", tone: "critical" },
+  low: { cls: "bg-ok text-navy-950", Icon: CircleCheck, word: "Low", tone: "ok" },
+  medium: { cls: "bg-warn text-navy-950", Icon: TriangleAlert, word: "Medium", tone: "warn" },
+  high: { cls: "bg-critical text-ivory-50", Icon: OctagonAlert, word: "High", tone: "critical" },
 };
-const card = "rounded-3xl border border-ink-900/10 bg-cream-50 p-5 shadow-sm shadow-ink-900/5";
+const card = "rounded-3xl border border-navy-950/10 bg-ivory-50 p-5 shadow-sm shadow-navy-950/5";
 
 export default async function Attrition() {
   const { org } = await adminPageContext();
@@ -39,14 +39,14 @@ export default async function Attrition() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-3xl font-extrabold text-ink-900">Quit risk</h1>
-        <p className="max-w-3xl text-ink-900/70">
+        <h1 className="text-2xl font-extrabold text-navy-950">Quit risk</h1>
+        <p className="max-w-3xl text-navy-950/70">
           An explainable 0–100 score per worker from the last 14 days against their own baseline. Anonymous reports are never used, and every score shows why.
         </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <section aria-labelledby="g-h" className={`${card} flex flex-col items-center justify-center text-ink-900`}>
+        <section aria-labelledby="g-h" className={`${card} flex flex-col items-center justify-center text-navy-950`}>
           <h2 id="g-h" className="sr-only">
             Average quit risk
           </h2>
@@ -57,13 +57,13 @@ export default async function Attrition() {
           <StatCard tone="light" label="Medium" value={n("medium")} hint="score 30–59" />
           <StatCard tone="light" label="Low" value={n("low")} hint="score under 30" />
           <div className={`${card} col-span-3`}>
-            <h2 className="mb-3 text-sm font-bold uppercase tracking-wider text-ink-900/70">Most common reasons</h2>
+            <h2 className="mb-3 text-sm font-bold uppercase tracking-wider text-navy-950/70">Most common reasons</h2>
             <ul className="grid gap-2 sm:grid-cols-2">
               {topDrivers.map((d) => (
-                <li key={d.label} className="flex items-center justify-between gap-3 rounded-2xl bg-mint-100/60 px-4 py-2.5 text-ink-900">
+                <li key={d.label} className="flex items-center justify-between gap-3 rounded-2xl bg-sand-300/40 px-4 py-2.5 text-navy-950">
                   <span className="font-semibold">{d.label}</span>
                   <span className="tabular font-extrabold">
-                    {d.count} <span className="text-sm font-semibold text-ink-900/70">workers</span>
+                    {d.count} <span className="text-sm font-semibold text-navy-950/70">workers</span>
                   </span>
                 </li>
               ))}
@@ -73,10 +73,10 @@ export default async function Attrition() {
       </div>
 
       <section aria-labelledby="tiles-h" className={card}>
-        <h2 id="tiles-h" className="mb-1 text-lg font-extrabold text-ink-900">
+        <h2 id="tiles-h" className="mb-1 text-lg font-extrabold text-navy-950">
           Risk map
         </h2>
-        <p className="mb-4 text-sm text-ink-900/70">One tile per worker, highest risk first. Each tile shows the score, an icon and the band.</p>
+        <p className="mb-4 text-sm text-navy-950/70">One tile per worker, highest risk first. Each tile shows the score, an icon and the band.</p>
         <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
           {rows.map(({ worker, result }) => {
             const tile = TILE[result.band];
@@ -101,13 +101,13 @@ export default async function Attrition() {
       </section>
 
       <section aria-labelledby="tbl-h" className={card}>
-        <h2 id="tbl-h" className="mb-3 text-lg font-extrabold text-ink-900">
+        <h2 id="tbl-h" className="mb-3 text-lg font-extrabold text-navy-950">
           Why, and what to do
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <caption className="sr-only">Workers sorted by quit-risk score, with the top two reasons and a suggested action</caption>
-            <thead className="text-ink-900/70">
+            <thead className="text-navy-950/70">
               <tr>
                 <th scope="col" className="py-2 pr-3">Worker</th>
                 <th scope="col" className="py-2 pr-3">Score</th>
@@ -119,32 +119,32 @@ export default async function Attrition() {
               {rows.map(({ worker, result }) => {
                 const top = result.drivers.slice(0, 2);
                 return (
-                  <tr key={worker.id} className="border-t border-ink-900/10 align-top">
+                  <tr key={worker.id} className="border-t border-navy-950/10 align-top">
                     <th scope="row" className="py-3 pr-3 text-left">
-                      <Link href={`/admin/workers/${worker.id}`} className="font-bold text-ink-900 hover:underline">
+                      <Link href={`/admin/workers/${worker.id}`} className="font-bold text-navy-950 hover:underline">
                         {worker.name}
                       </Link>
-                      <span className="block font-normal text-ink-900/70">
+                      <span className="block font-normal text-navy-950/70">
                         {worker.role} · {teamName.get(worker.teamId)}
                       </span>
                     </th>
                     <td className="py-3 pr-3">
                       <RiskBadge band={result.band} score={result.score} />
                     </td>
-                    <td className="py-3 pr-3 text-ink-900">
+                    <td className="py-3 pr-3 text-navy-950">
                       {top.length === 0 ? (
-                        <span className="text-ink-900/70">No risk signals</span>
+                        <span className="text-navy-950/70">No risk signals</span>
                       ) : (
                         <ul className="flex flex-col gap-0.5">
                           {top.map((d) => (
                             <li key={d.code}>
-                              {d.detail} <span className="text-ink-900/70">(+{d.points})</span>
+                              {d.detail} <span className="text-navy-950/70">(+{d.points})</span>
                             </li>
                           ))}
                         </ul>
                       )}
                     </td>
-                    <td className="py-3 font-semibold text-ink-900">{top[0] ? ACTION_LABELS[top[0].action] : "—"}</td>
+                    <td className="py-3 font-semibold text-navy-950">{top[0] ? ACTION_LABELS[top[0].action] : "—"}</td>
                   </tr>
                 );
               })}

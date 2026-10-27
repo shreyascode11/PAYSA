@@ -161,5 +161,7 @@ export interface Announcement {
   text: string;
   /** Language the notice was written in, so it is read aloud with the right voice. */
   lang: Lang;
+  /** Versions in other languages, so each worker reads the notice in their own. */
+  translations?: Partial<Record<Lang, string>>;
   createdAt: string;
 }

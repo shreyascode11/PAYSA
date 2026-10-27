@@ -52,7 +52,7 @@ export default async function ReportDetail({ params }: { params: Promise<{ id: s
       </p>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <section aria-labelledby="content" className="rounded-3xl border border-ink-900/10 bg-cream-50 p-5 shadow-sm shadow-ink-900/5">
+        <section aria-labelledby="content" className="rounded-3xl border border-navy-950/10 bg-ivory-50 p-5 shadow-sm shadow-navy-950/5">
           <h2 id="content" className="mb-2 text-lg font-bold">
             What the worker said
           </h2>
@@ -81,7 +81,7 @@ export default async function ReportDetail({ params }: { params: Promise<{ id: s
         </section>
 
         <div className="flex flex-col gap-6">
-          <section aria-labelledby="update" className="rounded-3xl border border-ink-900/10 bg-cream-50 p-5 shadow-sm shadow-ink-900/5">
+          <section aria-labelledby="update" className="rounded-3xl border border-navy-950/10 bg-ivory-50 p-5 shadow-sm shadow-navy-950/5">
             <h2 id="update" className="mb-3 text-lg font-bold">
               Update status
             </h2>
@@ -94,7 +94,7 @@ export default async function ReportDetail({ params }: { params: Promise<{ id: s
             />
           </section>
 
-          <section aria-labelledby="chat" className="rounded-3xl border border-ink-900/10 bg-cream-50 p-5 shadow-sm shadow-ink-900/5">
+          <section aria-labelledby="chat" className="rounded-3xl border border-navy-950/10 bg-ivory-50 p-5 shadow-sm shadow-navy-950/5">
             <h2 id="chat" className="text-lg font-bold">
               {report.anonymous ? "Anonymous follow-up chat" : "Messages"}
             </h2>

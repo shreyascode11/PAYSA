@@ -11,7 +11,7 @@ export default async function WorkerAppLayout({ children }: { children: React.Re
       <main id="main" className="flex-1 px-4 pb-32 pt-4">
         {children}
         <form action="/api/auth/logout" method="post" className="no-print mt-10">
-          <button type="submit" className="flex min-h-12 items-center gap-2 rounded-full px-3 font-semibold text-cream-50/75 underline">
+          <button type="submit" className="flex min-h-12 items-center gap-2 rounded-full px-3 font-semibold text-ivory-50/75 underline">
             <LogOut aria-hidden="true" className="size-5" />
             {t("common.logout")}
           </button>

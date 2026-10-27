@@ -33,17 +33,17 @@ function dotClass(state: DotState, tone: "dark" | "light"): string {
   const dark = tone === "dark";
   switch (state) {
     case "worked":
-      return "bg-safety-500";
+      return "bg-sand-300";
     case "off":
-      return `scale-50 ${dark ? "bg-cream-50/40" : "bg-ink-900/40"}`;
+      return `scale-50 ${dark ? "bg-ivory-50/40" : "bg-navy-950/40"}`;
     case "future":
-      return `border-2 ${dark ? "border-cream-50/45" : "border-ink-900/45"}`;
+      return `border-2 ${dark ? "border-ivory-50/45" : "border-navy-950/45"}`;
     case "ok":
       return "bg-ok";
     case "warn":
-      return "bg-warn text-ink-900";
+      return "bg-warn text-navy-950";
     case "critical":
-      return "bg-critical text-cream-50";
+      return "bg-critical text-ivory-50";
   }
 }
 
@@ -59,7 +59,7 @@ function DotMark({ state, tone }: { state: DotState; tone: "dark" | "light" }) {
 /** Dot grid (worker attendance streak, admin fatigue). Rendered as a table so it reads row by row. */
 export function DotCalendar({ rows, caption, columns, tone = "dark", size = "md", onSelect, selected }: Props) {
   const cell = size === "md" ? "size-7" : "size-5";
-  const sub = tone === "dark" ? "text-cream-50/75" : "text-ink-900/70";
+  const sub = tone === "dark" ? "text-ivory-50/75" : "text-navy-950/70";
   return (
     <table className="border-separate border-spacing-1">
       <caption className="sr-only">{caption}</caption>

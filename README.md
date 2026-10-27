@@ -1,52 +1,124 @@
-# PAYSA: Decent Work Platform
+<div align="center">
 
-> Prompt Wars 2026 × SRM ACM · UN SDG 8 (Decent Work & Economic Growth)
+<img src="public/icon.svg" alt="PAYSA logo" width="96" />
 
-## The problem
+# PAYSA
 
-Construction crews and campus support staff are run on paper registers, spreadsheets and WhatsApp.
-Unpaid overtime goes unnoticed, exhaustion is invisible until someone gets hurt, and workers stay silent about danger or abuse because speaking up is risky.
-PAYSA turns one shift check-in into fair pay, safety alerts and an anonymous voice, in the worker's own language.
+**Fair pay. Safe work. A voice for every worker.**
 
-## SDG 8 targets addressed
+A worker-first workforce platform for construction sites and campus support staff,<br />
+built for UN Sustainable Development Goal 8: Decent Work and Economic Growth.
 
-| Target | How PAYSA helps |
+![Next.js 15](https://img.shields.io/badge/Next.js-15-0D1B2A?logo=nextdotjs)
+![TypeScript strict](https://img.shields.io/badge/TypeScript-strict-415A77?logo=typescript&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-Vitest-778D7A)
+![WCAG AA](https://img.shields.io/badge/a11y-WCAG%20AA-D4C4A8)
+![Languages](https://img.shields.io/badge/languages-English%20·%20தமிழ்%20·%20हिंदी-F4F1DE)
+
+<sub>Prompt Wars 2026 × SRM ACM</sub>
+
+</div>
+
+---
+
+## Contents
+
+- [Why PAYSA](#why-paysa)
+- [How it works](#how-it-works)
+- [Features](#features)
+- [Tracking codes](#tracking-codes)
+- [Two sectors, one engine](#two-sectors-one-engine)
+- [Try the demo](#try-the-demo)
+- [Getting started](#getting-started)
+- [Deployment](#deployment)
+- [Architecture](#architecture)
+- [Privacy and anonymity](#privacy-and-anonymity)
+- [Security](#security)
+- [Accessibility and design](#accessibility-and-design)
+- [Testing and quality](#testing-and-quality)
+- [Project structure](#project-structure)
+
+---
+
+## Why PAYSA
+
+Labour-intensive workplaces still run on paper registers, spreadsheets and WhatsApp. The result is predictable:
+
+- **Overtime goes unpaid** because nobody counts it.
+- **Exhaustion is invisible** until someone is hurt.
+- **Workers stay silent** about danger or abuse, because speaking up is risky.
+
+PAYSA turns a single shift check-in into fair pay, early fatigue warnings and a safe, anonymous voice. Everything works in the worker's own language and on a low-cost Android phone.
+
+| SDG 8 target | What PAYSA does |
 |---|---|
-| **8.5** Decent work and equal pay | Automatic overtime from real check-ins; plain-language payslip in Tamil, Hindi or English that is read aloud; one-tap "Something wrong?" pay grievance |
-| **8.7** Forced-labour signals | Fatigue rules (12h+ shifts, < 8h rest, 60h+ weeks), late or missed pay, and anonymous "forced overtime / threats" feedback are all surfaced to HR with reasons |
-| **8.8** Safe and secure working environments | Voice-first anonymous hazard reports with AI triage, a red banner for critical reports, a status timeline and two-way anonymous chat |
+| **8.5** Decent work and equal pay | Automatic overtime from real check-ins; a plain-language payslip that is read aloud; a one-tap pay grievance |
+| **8.7** Signals of forced labour | Flags 12-hour shifts, short rest, 60-hour weeks, late pay and anonymous reports of forced overtime or threats |
+| **8.8** Safe working environments | Voice-first anonymous hazard reports with triage, critical alerts for HR, a public status timeline and two-way anonymous chat |
+
+## How it works
+
+```
+ Check in (QR or GPS)  ──►  hours & overtime  ──►  payslip in the worker's language
+          │                        │
+          │                        └──►  fatigue rules  ──►  rest alerts for worker & HR
+          │
+          └──►  attendance patterns  ──►  explainable quit-risk for HR
+
+ Report a hazard (voice, any language, anonymous)  ──►  tracking code  ──►  status + private chat
+```
+
+One check-in feeds everything. Business rules are deterministic, unit-tested and explain themselves: every alert and score shows the reason, with numbers.
 
 ## Features
 
-The deck asked for at least 3 working features. PAYSA ships 8.
+### For workers (mobile, Tamil / Hindi / English)
 
-| # | Feature | Where |
+| Feature | Highlights |
+|---|---|
+| **Shift check-in** | Scan the site's daily QR code or use GPS inside the site boundary. Rejects expired codes, out-of-range locations and double check-ins. |
+| **Payslip I can understand** | Normal pay, overtime (counted at 2×) and deductions as clear cards, with a plain-language explanation and a **Listen** button. "Something wrong?" opens a pre-filled pay complaint. |
+| **Voice-first reporting** | Pick an icon, hold the button and speak in any of the three languages, optionally add a photo. Reports are **anonymous by default**. |
+| **Report tracking** | A step-by-step timeline (Received → Being checked → Action taken → Solved) and a private chat with HR, reached with a tracking code. |
+| **Rest alerts** | A gentle warning with the exact reason, e.g. *"You worked 63 hours this week (limit 60)"*. |
+| **My voice** | A one-tap weekly mood check and anonymous feedback about managers or conditions. |
+| **Skill Passport** | Verified days worked, skills and employer endorsements as a shareable ID badge and QR code. Phone number and wage are never shown. |
+| **Notices** | Daily announcements in the worker's language, readable aloud. |
+
+### For supervisors and HR (desktop)
+
+| Feature | Highlights |
+|---|---|
+| **Overview** | Live headcount, open reports by severity, average resolution time, critical alerts, attendance trend and weekly regular-vs-overtime hours. |
+| **Reports inbox** | Filter by type, severity, status and site. Update status and severity, and reply anonymously. Every update appears on the worker's tracking page. |
+| **Fatigue grid** | Workers × last 14 days, with reasons for each flagged day and a log of actions taken (rest given, shift swapped…). |
+| **Quit risk** | An explainable 0–100 score per worker, a risk gauge, a risk map and a suggested action for each worker. |
+| **Sites & QR** | Printable daily QR posters for every site. |
+| **Sector switch** | Move between the construction and campus organisations in one click. |
+
+## Tracking codes
+
+A **tracking code** (for example `PS-7K2Q9M`) is the receipt a worker gets after sending a report.
+
+- **It is the only link between the worker and the report.** For anonymous reports PAYSA stores no name, phone number or exact time, so the code is the worker's way to come back.
+- **Anyone holding the code can check progress**, at `/w/report/PS-XXXXXX` or via "Enter your tracking code" on the home page. No login is needed, so a worker can check from any phone. They see the status timeline and HR's messages, and can reply without revealing who they are.
+- **It is easy to read out and write down.** The 6 characters avoid look-alikes (no `0/O`, `1/I/L`) and are generated with a cryptographically secure random source.
+- **It is shown once**, with Copy and Listen buttons. Workers are told to keep it safe.
+
+Try `PS-7K2Q9M` (a critical fall hazard reported in Tamil) or `PS-H3KMT4` (a safety-gear report with an ongoing chat).
+
+## Two sectors, one engine
+
+Every rule, screen and data structure is shared; each sector is a small configuration in `src/lib/sectors.ts` plus its translated labels.
+
+| | Construction site | College campus staff |
 |---|---|---|
-| 1 | **Shift check-in (QR or GPS) with automatic overtime.** The QR code rotates daily, GPS check-in is geofenced, and double check-ins are rejected. | `/w/home`, `/w/checkin`, `/admin/sites` |
-| 2 | **Clear payslip in the worker's language.** Shows line items, OT hours stated explicitly, a 🔊 Listen button and a prefilled pay grievance. | `/w/pay` |
-| 3 | **Voice-first safety and grievance reporting.** Pick an icon, hold to speak, add an optional photo (EXIF stripped). Reports are anonymous by default and come back with a tracking ID. | `/w/report`, `/w/report/[trackingId]` |
-| 4 | **Honest anonymous feedback.** A weekly 5-face pulse, anonymous manager/conditions feedback and two-way anonymous chat. Aggregates are shown only when k ≥ 5. | `/w/voice`, `/admin` |
-| 5 | **Fatigue alerts.** Workers get a gentle banner with the reason and the numbers. Admins get a 14-day heatmap and can log an action. | `/w/home`, `/admin/fatigue` |
-| 6 | **Admin dashboard.** KPIs, attendance trend (chart + table), reports inbox with filters, status updates and a sector switcher. | `/admin/*` |
-| 7 | **Skill Passport.** Skills plus verified days worked, employer endorsements, and a shareable QR or link that never shows phone number or wage. | `/w/passport`, `/p/[passportId]` |
-| 8 | **Daily notices.** Short notices that workers can listen to. | `/admin/notices`, `/w/home` |
+| Demo organisation | Sri Vinayaka Builders: 2 sites, 13 workers | Greenfield College of Engineering: 2 sites, 12 workers |
+| Hazard categories | Fall from height, missing safety gear, electrical, machinery, heat, collapse | Wet floor, cleaning chemicals, electrical, heavy lifting, harassment |
+| Shift pattern | Day shifts | Rotating morning / evening / night, including 12-hour security shifts |
+| Skills | Masonry, bar bending, scaffolding, welding… | Housekeeping, gardening, lab assistance, security… |
 
-**Explainable quit-risk** (`/admin/attrition`) scores each worker from 0 to 100 against their own baseline. It always shows the top 2 reasons and a suggested action. Anonymous reports are never an input.
-
-## Cross-sector: one engine, sector templates
-
-Both sectors run on the same rules, screens and data model. Only `src/lib/sectors.ts` and the locale labels differ:
-
-| | Construction Site | College Campus Staff |
-|---|---|---|
-| Demo org | Sri Vinayaka Builders (2 sites, 13 workers) | Greenfield College of Engineering (2 sites, 12 workers) |
-| Hazard icons | fall from height, no safety gear, electrical, machinery, heat, collapse | wet floor, cleaning chemicals, electrical, heavy lifting, harassment |
-| Shift pattern | day shifts | rotating morning / evening / night, including 12h night guards |
-| Skills | masonry, bar bending, scaffolding, welding… | housekeeping, gardening, lab assistance, security… |
-
-Use the **sector switcher** in the admin sidebar to see both.
-
-**Adding hospitals or factories** needs one new config object and its labels:
+Adding a new sector, such as a hospital or a factory, takes one configuration object:
 
 ```ts
 hospital: {
@@ -57,83 +129,62 @@ hospital: {
 },
 ```
 
-Check-in, overtime, payslips, fatigue, quit-risk, anonymity and the passport work unchanged.
+## Try the demo
 
-## Demo logins
+All worker accounts use PIN **1234**.
 
-All workers use PIN **1234**.
-
-| Who | Login | What to look at |
+| Role | Sign in with | Worth a look |
 |---|---|---|
-| Construction worker (Tamil) | phone `9000000001` | Overworked: fatigue banner, heavy OT on last week's payslip, endorsed skills |
-| Construction worker (Hindi) | phone `9000000002` | Hindi UI and payslip |
-| College housekeeping (Tamil) | phone `9000000101` | Rotating shifts, short rest between shifts |
-| Admin / HR (both orgs) | `admin@paysa.demo` / `demo1234` | Critical banner, heatmap, quit-risk, reports |
+| Construction worker (Tamil) | `9000000001` | Rest alert, heavy overtime on last week's payslip, endorsed skills |
+| Construction worker (Hindi) | `9000000002` | The whole app in Hindi |
+| Campus housekeeping (Tamil) | `9000000101` | Rotating shifts and short rest between shifts |
+| Supervisor / HR, both organisations | `admin@paysa.demo` / `demo1234` | Critical alert, charts, fatigue grid, quit risk |
 
-Demo tracking codes (no login needed): `PS-7K2Q9M` (critical fall hazard, Tamil) and `PS-H3KMT4` (PPE hazard with chat).
+The demo data is generated relative to today, so the dashboards always show recent activity: six weeks of shifts, overworked and at-risk workers in both sectors, and a four-person team whose mood stays hidden to protect anonymity.
 
-Seed data is generated relative to "now", so the dashboard always shows recent activity: 6 weeks of shifts, critical-fatigue and high-risk workers in both sectors, and a 4-person team whose mood is hidden by k-anonymity.
+## Getting started
 
-## Architecture
-
-```mermaid
-flowchart LR
-  subgraph Phone["Worker phone (Android Chrome)"]
-    W["/w/* server-rendered pages<br/>+ small client islands<br/>(voice recorder, QR scanner: lazy)"]
-    TTS["speechSynthesis<br/>(read aloud)"]
-  end
-  subgraph Desk["HR desktop"]
-    A["/admin/* dashboard<br/>(recharts lazy)"]
-  end
-  subgraph Run["Google Cloud Run · Next.js 15 standalone"]
-    API["API routes<br/>zod · sessions (jose) · rate limits"]
-    S["services/*"]
-    R["lib/rules/*<br/>pure, unit-tested"]
-    AI["lib/ai/gemini.ts<br/>+ deterministic fallbacks"]
-    REPO["Repository interface"]
-  end
-  W --> API
-  A --> API
-  API --> S --> R
-  S --> AI --> G[(Gemini API)]
-  S --> REPO
-  REPO --> M[(In-memory + seed)]
-  REPO --> F[(Firestore)]
-  SM[Secret Manager] -. env .-> Run
-```
-
-* **Business logic** (`src/lib/rules/`) is pure TypeScript with no I/O and is fully unit tested: overtime, payslip, fatigue, attrition, anonymity, geo and classify.
-* **Worker pages** are server components. Client JS covers only interactive pieces, so `/w/home` ships about 109 KB First Load JS (budget 150 KB). The QR scanner, voice recorder and charts load lazily.
-* **AI is optional.** Without `GEMINI_API_KEY` the app uses a Tamil/Hindi/English keyword classifier and template payslip text, and voice notes fall back to typing. Gemini output is schema-validated. It can never lower a severity that the keyword rules flagged, and an explanation that changes the net pay amount is discarded.
-
-## How anonymity is guaranteed
-
-1. **Nothing identifying is stored.** For an anonymous report `workerId` is never written, and `createdAt`, the first timeline entry and the worker's chat replies are rounded to the hour, so they can't be matched against check-in logs. See `reportIdentity()` in `src/lib/rules/anonymity.ts`, which is the only place identity is decided.
-2. **The tracking code is the only way back.** `PS-XXXXXX` is drawn from a crypto-random, unambiguous alphabet. The public track endpoint returns status, timeline and messages only, and is tested to contain no identity fields.
-3. **Photos are cleaned twice.** The phone re-encodes the photo through a canvas, and the server strips every JPEG APP1–APP15 and comment segment (EXIF, GPS, XMP).
-4. **Small groups stay hidden (k-anonymity).** Team mood is shown, and used in quit-risk, only when 5 or more people responded. Otherwise the dashboard says "Not enough responses".
-5. **Anonymous reports never feed an individual's quit-risk score.** This is enforced in `deriveAttritionSignals` and covered by a test.
-6. **Manager feedback is always anonymous**, and IPs used for rate limiting are hashed in memory and never stored. Report text is never logged.
-
-## Run locally
+**Requirements:** Node.js 20 or later.
 
 ```bash
+git clone https://github.com/shreyascode11/PAYSA.git
+cd PAYSA
 npm install
-npm run dev          # http://localhost:3000, no cloud config needed
+npm run dev          # http://localhost:3000
 ```
 
-Optional `.env.local` (see `.env.example`):
+No accounts or keys are needed to run locally. PAYSA falls back to an in-memory store with demo data and to deterministic (non-AI) features.
 
-| Var | Purpose |
+### Configuration
+
+Copy `.env.example` to `.env.local` and set what you need. Secrets are read only on the server and never sent to the browser.
+
+| Variable | Purpose |
 |---|---|
-| `GEMINI_API_KEY`, `GEMINI_MODEL` | Turns on voice transcription/translation, AI triage and AI payslip wording (server only) |
-| `SESSION_SECRET` | 32+ chars; signs sessions and daily QR tokens. Without it a per-process random secret is used. |
-| `FIRESTORE_PROJECT_ID` | Uses Firestore instead of memory and seeds it on first boot |
+| `SESSION_SECRET` | 32+ random characters (`openssl rand -hex 32`). Signs sessions and daily QR codes. **Required in production.** |
+| `FIRESTORE_PROJECT_ID` | Store data in Firestore instead of memory; seeded automatically on first start. |
+| `FIREBASE_SERVICE_ACCOUNT` | Service-account JSON (one line) for Firestore on hosts without Google credentials, such as Vercel. |
+| `GEMINI_API_KEY`, `GEMINI_MODEL` | Optional AI: voice transcription and translation, report triage, payslip wording, notice translation. |
 
-## Deploy to Cloud Run
+Without Gemini, PAYSA still works fully:
+
+- **Voice input** uses the browser's built-in speech recognition in the worker's language.
+- **Reports** are triaged by a Tamil / Hindi / English keyword classifier.
+- **Payslips** are explained with translated templates.
+
+## Deployment
+
+### Vercel (recommended)
+
+1. Import the repository at [vercel.com/new](https://vercel.com/new). Next.js is detected automatically, and `vercel.json` places the app in the Mumbai region (`bom1`).
+2. Under **Settings → Environment Variables**, add `SESSION_SECRET`, and preferably `FIRESTORE_PROJECT_ID` with `FIREBASE_SERVICE_ACCOUNT`. Without Firestore, each serverless instance keeps its own demo data, so changes may not persist.
+3. Deploy. Every push to `main` redeploys automatically.
+
+Using the CLI instead: `npx vercel login`, then `npx vercel --prod`.
+
+### Google Cloud Run (alternative)
 
 ```bash
-# one-time secrets
 printf '%s' "<gemini key>" | gcloud secrets create gemini-key --data-file=-
 openssl rand -hex 32 | tr -d '\n' | gcloud secrets create session-secret --data-file=-
 
@@ -144,18 +195,98 @@ gcloud run deploy paysa \
   --memory 512Mi --min-instances 1 --max-instances 3
 ```
 
-The multi-stage `Dockerfile` (node:20-alpine) builds Next.js `output: "standalone"` and runs as a non-root user on port 8080.
+The multi-stage `Dockerfile` builds a standalone Next.js server that runs as a non-root user on port 8080. For durable data, add `FIRESTORE_PROJECT_ID` and grant the service account `roles/datastore.user`.
 
-Without Firestore, the in-memory store resets on cold start. Keep `--min-instances 1` for the demo, or add `--set-env-vars FIRESTORE_PROJECT_ID=<project>`. That requires giving the service account the `roles/datastore.user` role.
+## Architecture
 
-## Tests and quality
-
-```bash
-npm test          # Vitest: rules, AI fallbacks, anonymity API, passport privacy, seed scenarios, components
-npm run lint
-npm run typecheck
+```mermaid
+flowchart LR
+  subgraph Clients
+    W["Worker app /w/*<br/>server-rendered, small client islands"]
+    A["HR dashboard /admin/*<br/>server-rendered charts"]
+  end
+  subgraph Server["Next.js 15 (Vercel or Cloud Run)"]
+    API["API routes<br/>zod validation · sessions · rate limits"]
+    S["Services"]
+    R["Business rules<br/>pure functions, unit-tested"]
+    AI["AI adapter<br/>with deterministic fallbacks"]
+    REPO["Repository interface"]
+  end
+  W --> API
+  A --> API
+  API --> S --> R
+  S --> AI --> G[(Gemini API)]
+  S --> REPO
+  REPO --> M[(In-memory demo store)]
+  REPO --> F[(Firestore)]
 ```
 
-Accessibility: semantic landmarks, a skip link, visible `focus-visible` rings, `aria-live` results, and status always shown as icon + text. Every text/background colour pair is WCAG AA (≥ 4.5:1) in light and dark themes, `<html lang>` follows the chosen language, and `prefers-reduced-motion` is respected. The chart also has a table view.
+- **Business rules** (`src/lib/rules/`) are pure TypeScript with no I/O: overtime, payslip, fatigue, attrition, anonymity, geofencing and report classification.
+- **Lightweight pages.** Worker pages are server components; only interactive pieces ship JavaScript. The home screen loads about 109 KB of JavaScript, and the QR scanner and voice recorder load on demand.
+- **Guarded AI.** Gemini output is schema-validated. It can never lower a severity flagged by the safety rules, and an explanation that changes the net pay is discarded.
 
-Security: bcrypt-hashed PINs and passwords, HttpOnly + Secure + SameSite=Lax JWT session cookie, a zod-validated input on every route, per-org authorization checks, a same-origin check on mutating API calls, token-bucket rate limits, and CSP / nosniff / Referrer-Policy / Permissions-Policy headers.
+## Privacy and anonymity
+
+1. **No identity on anonymous reports.** The worker's ID is never written, and times are rounded to the hour so they can't be matched to shift logs. One function, `reportIdentity()`, decides this.
+2. **Tracking code only.** The public tracking endpoint returns status, timeline and messages, and is tested to contain no identifying fields.
+3. **Photos are cleaned twice.** The phone re-encodes images, and the server strips all EXIF, GPS and XMP metadata.
+4. **Small groups stay hidden.** Team mood is shown, and used in quit-risk, only when at least 5 people respond.
+5. **Anonymous reports never affect an individual's quit-risk score**, enforced in code and covered by tests.
+6. **Feedback about managers is always anonymous.** IP addresses used for rate limiting are hashed in memory and never stored, and report text is never logged.
+
+## Security
+
+- **Credentials:** PINs and passwords are hashed with bcrypt, with timing-safe checks for unknown accounts.
+- **Sessions:** signed JWTs in an `HttpOnly`, `Secure`, `SameSite=Lax` cookie.
+- **Inputs and access:** every API input is validated with zod, and authorization is checked per organisation on every route.
+- **Requests:** mutating API calls must be same-origin, and logins, reports and voice uploads are rate-limited.
+- **QR codes:** check-in codes are HMAC-signed and rotate daily.
+- **Headers:** CSP, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` and `X-Frame-Options`.
+- **Secrets:** no secrets in the repository; `.env.example` lists names only.
+
+## Accessibility and design
+
+- WCAG AA contrast for every text pair, computed and documented in [`CLAUDE.md` §18](CLAUDE.md).
+- Full keyboard support, visible focus rings, a skip link, semantic landmarks and ARIA labels.
+- Status is never shown by colour alone: every status carries an icon and a label.
+- Every screen in the worker app has a **Listen** button. `<html lang>` follows the chosen language, and times use spoken forms such as காலை 7:09 or सुबह 7:09.
+- Charts are server-rendered, keyboard-focusable and come with a table view.
+- Motion respects `prefers-reduced-motion`.
+- Visual language: the Holst palette (navy, slate, sage, sand, ivory), lanyard ID-badge sign-in and subtle glass surfaces.
+
+## Testing and quality
+
+```bash
+npm test             # unit and component tests (Vitest + Testing Library)
+npm run lint         # ESLint (Next.js rules)
+npm run typecheck    # TypeScript strict mode
+```
+
+Tests cover every business rule, plus:
+
+- AI fallbacks and guardrails
+- anonymity at the API level
+- Skill Passport privacy
+- realistic demo scenarios in both sectors
+- translation completeness across all three languages
+- accessibility behaviour of the shared UI components
+
+## Project structure
+
+```
+src/
+├─ app/
+│  ├─ w/            Worker app (home, check-in, pay, report, tracking, voice, passport)
+│  ├─ admin/        HR dashboard (overview, reports, fatigue, quit risk, workers, sites, notices)
+│  ├─ p/            Public Skill Passport
+│  └─ api/          API routes
+├─ components/      UI, including the design-system components in components/ui
+├─ lib/
+│  ├─ rules/        Pure business logic (unit-tested)
+│  ├─ services/     Use cases combining rules and storage
+│  ├─ repo/         Repository interface, in-memory and Firestore implementations
+│  └─ ai/           Gemini adapter with fallbacks
+├─ locales/         English, Tamil and Hindi strings
+└─ data/seed.ts     Demo data for both sectors
+tests/              Vitest suites mirroring src/
+```

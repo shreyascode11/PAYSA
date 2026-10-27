@@ -4,10 +4,10 @@ export type StatusTone = "ok" | "warn" | "critical" | "info" | "neutral";
 
 // Fills paired with the only text colour that passes AA on them (CLAUDE.md §18.2).
 const TONES: Record<StatusTone, { cls: string; Icon: LucideIcon }> = {
-  ok: { cls: "bg-ok text-ink-900", Icon: CircleCheck },
-  warn: { cls: "bg-warn text-ink-900", Icon: TriangleAlert },
-  critical: { cls: "bg-critical text-cream-50", Icon: OctagonAlert },
-  info: { cls: "bg-mint-100 text-ink-900", Icon: Info },
+  ok: { cls: "bg-ok text-navy-950", Icon: CircleCheck },
+  warn: { cls: "bg-warn text-navy-950", Icon: TriangleAlert },
+  critical: { cls: "bg-critical text-ivory-50", Icon: OctagonAlert },
+  info: { cls: "bg-sand-300 text-navy-950", Icon: Info },
   neutral: { cls: "ring-1 ring-inset ring-current/40", Icon: Circle },
 };
 

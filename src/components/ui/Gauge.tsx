@@ -15,7 +15,7 @@ const FILL: Record<Props["band"], string> = { ok: "var(--color-ok)", warn: "var(
 export function Gauge({ value, label, bandLabel, band, tone = "light", segments = 24 }: Props) {
   const v = Math.max(0, Math.min(100, value));
   const lit = Math.round((v / 100) * segments);
-  const empty = tone === "light" ? "color-mix(in srgb, var(--color-ink-900) 12%, transparent)" : "color-mix(in srgb, var(--color-cream-50) 15%, transparent)";
+  const empty = tone === "light" ? "color-mix(in srgb, var(--color-navy-950) 12%, transparent)" : "color-mix(in srgb, var(--color-ivory-50) 15%, transparent)";
   const cx = 100;
   const cy = 100;
   return (

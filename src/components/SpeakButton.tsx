@@ -13,8 +13,19 @@ interface Props {
   compact?: boolean;
 }
 
-function pickVoice(tag: string): SpeechSynthesisVoice | undefined {
-  const voices = window.speechSynthesis.getVoices();
+/** Chrome fills the voice list asynchronously; wait briefly so the first tap gets the right language. */
+function loadVoices(): Promise<SpeechSynthesisVoice[]> {
+  const synth = window.speechSynthesis;
+  const now = synth.getVoices();
+  if (now.length > 0) return Promise.resolve(now);
+  return new Promise((resolve) => {
+    const done = () => resolve(synth.getVoices());
+    synth.addEventListener("voiceschanged", done, { once: true });
+    setTimeout(done, 800);
+  });
+}
+
+function pickVoice(voices: SpeechSynthesisVoice[], tag: string): SpeechSynthesisVoice | undefined {
   const norm = (s: string) => s.replace("_", "-").toLowerCase();
   return voices.find((v) => norm(v.lang) === tag.toLowerCase()) ?? voices.find((v) => norm(v.lang).startsWith(tag.slice(0, 2)));
 }
@@ -31,7 +42,7 @@ export function SpeakButton({ text, lang, listenLabel, stopLabel, compact = fals
     };
   }, []);
 
-  function toggle() {
+  async function toggle() {
     const synth = window.speechSynthesis;
     if (speaking) {
       synth.cancel();
@@ -39,14 +50,14 @@ export function SpeakButton({ text, lang, listenLabel, stopLabel, compact = fals
       return;
     }
     synth.cancel();
+    setSpeaking(true);
     const u = new SpeechSynthesisUtterance(text);
     u.lang = LANG_TAGS[lang];
-    const voice = pickVoice(u.lang);
+    const voice = pickVoice(await loadVoices(), u.lang);
     if (voice) u.voice = voice;
     u.rate = 0.9;
     u.onend = () => setSpeaking(false);
     u.onerror = () => setSpeaking(false);
-    setSpeaking(true);
     synth.speak(u);
   }
 
@@ -56,10 +67,10 @@ export function SpeakButton({ text, lang, listenLabel, stopLabel, compact = fals
   return (
     <button
       type="button"
-      onClick={toggle}
+      onClick={() => void toggle()}
       aria-label={label}
       aria-pressed={speaking}
-      className={`inline-flex min-h-12 items-center gap-2 rounded-full bg-mint-100 font-bold text-ink-900 ${
+      className={`inline-flex min-h-12 items-center gap-2 rounded-full bg-ivory-50 font-bold text-navy-950 ${
         compact ? "min-w-12 justify-center px-2" : "px-4 text-lg"
       }`}
     >

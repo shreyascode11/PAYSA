@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ReportFlow } from "@/components/ReportFlow";
+import { aiEnabled } from "@/lib/ai/gemini";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { TrackForm } from "@/components/TrackForm";
 import { requireWorkerPage } from "@/lib/auth";
@@ -34,7 +35,7 @@ export default async function Report({ searchParams }: { searchParams: Promise<{
   return (
     <>
       <ScreenHeader title={t("report.title")} speak={t("report.speak")} lang={lang} listenLabel={t("common.listen")} stopLabel={t("common.stop")} />
-      <ReportFlow lang={lang} types={types} initialType={initialType} initialCategory={initialCategory} prefillText={prefill} labels={reportLabels(t)} />
+      <ReportFlow aiVoice={aiEnabled()} lang={lang} types={types} initialType={initialType} initialCategory={initialCategory} prefillText={prefill} labels={reportLabels(t)} />
       <section className="mt-10 rounded-2xl bg-surface p-4">
         <TrackForm label={t("track.enter")} button={t("track.check")} />
       </section>

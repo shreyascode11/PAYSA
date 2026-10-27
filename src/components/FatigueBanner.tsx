@@ -5,19 +5,19 @@ import type { FatigueResult } from "@/lib/rules/fatigue";
 const reasonText = (f: FatigueResult["factors"][number], t: Translator): string =>
   t(`fatigue.${f.code}`, { value: formatHours(f.value), limit: f.limit });
 
-/** Rest reminder on the worker home. Critical = red fill + cream text; warning = yellow fill + ink text. */
+/** Rest reminder on the worker home. Critical = red fill + ivory text; warning = amber fill + navy text. */
 export function FatigueBanner({ fatigue, t }: { fatigue: FatigueResult; t: Translator }) {
   if (fatigue.level === "ok") return null;
   const critical = fatigue.level === "critical";
   const Icon = critical ? OctagonAlert : BedDouble;
   return (
-    <section aria-labelledby="fatigue-title" className={`flex gap-3 rounded-4xl p-5 ${critical ? "bg-critical text-cream-50" : "bg-warn text-ink-900"}`}>
-      <Icon aria-hidden="true" className="size-9 shrink-0" />
+    <section aria-labelledby="fatigue-title" className={`flex gap-3 rounded-3xl p-4 ${critical ? "bg-critical text-ivory-50" : "bg-warn text-navy-950"}`}>
+      <Icon aria-hidden="true" className="size-7 shrink-0" />
       <div>
-        <h2 id="fatigue-title" className="text-xl font-extrabold">
+        <h2 id="fatigue-title" className="text-base font-extrabold">
           {t(critical ? "fatigue.criticalTitle" : "fatigue.warnTitle")}
         </h2>
-        <ul className="mt-1 font-semibold">
+        <ul className="mt-1 text-sm font-medium">
           {fatigue.factors.map((f) => (
             <li key={f.code}>{reasonText(f, t)}</li>
           ))}

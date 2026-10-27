@@ -36,9 +36,9 @@ export function PulseForm({ question, faceLabels, thanks, already, errorText, an
 
   return (
     <fieldset>
-      <legend className="mb-3 text-xl font-extrabold">{question}</legend>
+      <legend className="mb-3 text-lg font-extrabold">{question}</legend>
       {state === "done" || state === "already" ? (
-        <p role="status" className="rounded-3xl bg-mint-100 p-5 text-lg font-bold text-ink-900">
+        <p role="status" className="rounded-3xl bg-ivory-50 p-4 text-base font-bold text-navy-950">
           {state === "done" ? thanks : already}
         </p>
       ) : (
@@ -49,16 +49,16 @@ export function PulseForm({ question, faceLabels, thanks, already, errorText, an
               type="button"
               disabled={state === "busy"}
               onClick={() => void send(score)}
-              className="glass-dark flex min-h-28 flex-col items-center justify-center gap-2 rounded-3xl p-1 text-center text-sm font-bold text-cream-50 transition hover:bg-safety-500 hover:text-ink-900 focus-visible:bg-safety-500 focus-visible:text-ink-900"
+              className="glass-dark flex min-h-24 flex-col items-center justify-center gap-2 rounded-3xl p-1 text-center text-xs font-bold text-ivory-50 transition hover:bg-sand-300 hover:text-navy-950 focus-visible:bg-sand-300 focus-visible:text-navy-950"
             >
-              <Icon aria-hidden="true" className="size-10" strokeWidth={1.75} />
+              <Icon aria-hidden="true" className="size-8" strokeWidth={1.75} />
               <span className="leading-tight">{faceLabels[score]}</span>
             </button>
           ))}
         </div>
       )}
       {state === "error" && (
-        <p role="alert" className="mt-2 rounded-3xl bg-critical p-3 font-bold text-cream-50">
+        <p role="alert" className="mt-2 rounded-3xl bg-critical p-3 font-bold text-ivory-50">
           {errorText}
         </p>
       )}

@@ -66,7 +66,7 @@ export function FatigueHeatmap({ rows, dates }: { rows: HeatRow[]; dates: { key:
 
   return (
     <div className="flex flex-col gap-4 xl:flex-row xl:items-start">
-      <div className="min-w-0 flex-1 overflow-x-auto rounded-3xl border border-ink-900/10 bg-cream-50 p-4 shadow-sm shadow-ink-900/5">
+      <div className="min-w-0 flex-1 overflow-x-auto rounded-3xl border border-navy-950/10 bg-ivory-50 p-4 shadow-sm shadow-navy-950/5">
         <DotCalendar
           tone="light"
           caption="Fatigue level per worker per day. Select a dot for reasons and to log an action."
@@ -91,51 +91,51 @@ export function FatigueHeatmap({ rows, dates }: { rows: HeatRow[]; dates: { key:
 
       <aside aria-live="polite" className="glass-light rounded-3xl p-5 xl:sticky xl:top-24 xl:w-80 xl:shrink-0">
         {!selected ? (
-          <p className="text-ink-900/70">Select a dot to see why the day was flagged and to log what you did about it.</p>
+          <p className="text-navy-950/70">Select a dot to see why the day was flagged and to log what you did about it.</p>
         ) : (
           <div className="flex flex-col gap-3">
             <div className="flex items-start justify-between gap-2">
               <div>
-                <h2 className="text-lg font-extrabold text-ink-900">{selected.row.name}</h2>
-                <p className="text-sm text-ink-900/70">{selected.cell.date}</p>
+                <h2 className="text-lg font-extrabold text-navy-950">{selected.row.name}</h2>
+                <p className="text-sm text-navy-950/70">{selected.cell.date}</p>
               </div>
-              <button type="button" aria-label="Close details" onClick={() => setSel(null)} className="flex size-10 items-center justify-center rounded-full hover:bg-ink-900/5">
+              <button type="button" aria-label="Close details" onClick={() => setSel(null)} className="flex size-10 items-center justify-center rounded-full hover:bg-navy-950/5">
                 <X aria-hidden="true" className="size-5" />
               </button>
             </div>
             {selected.cell.hours === 0 ? (
               <StatusPill tone="neutral" label="Day off" />
             ) : (
-              <p className="flex items-center gap-2 font-semibold text-ink-900">
+              <p className="flex items-center gap-2 font-semibold text-navy-950">
                 <StatusPill tone={selected.cell.level} label={LEVEL_LABEL[selected.cell.level]} />
                 {selected.cell.hours}h worked
               </p>
             )}
             {selected.cell.reasons.length > 0 ? (
-              <ul className="list-disc pl-5 text-ink-900">
+              <ul className="list-disc pl-5 text-navy-950">
                 {selected.cell.reasons.map((r) => (
                   <li key={r}>{r}</li>
                 ))}
               </ul>
             ) : (
-              <p className="flex items-center gap-1.5 text-forest-700">
+              <p className="flex items-center gap-1.5 text-slate-600">
                 <CircleCheck aria-hidden="true" className="size-4" /> No fatigue rule broken.
               </p>
             )}
             {actionsFor(selected.row, selected.cell).length > 0 && (
-              <p className="text-sm text-ink-900">Logged: {actionsFor(selected.row, selected.cell).map((a) => ACTION_LABEL[a] ?? a).join(", ")}</p>
+              <p className="text-sm text-navy-950">Logged: {actionsFor(selected.row, selected.cell).map((a) => ACTION_LABEL[a] ?? a).join(", ")}</p>
             )}
             {selected.cell.level !== "ok" && (
               <fieldset className="flex flex-col gap-2">
-                <legend className="mb-1 text-sm font-bold uppercase tracking-wider text-ink-900/70">Log action</legend>
+                <legend className="mb-1 text-sm font-bold uppercase tracking-wider text-navy-950/70">Log action</legend>
                 {ACTIONS.map(([v, l]) => (
-                  <button key={v} type="button" onClick={() => void logAction(v)} className="min-h-11 rounded-full border border-ink-900/20 bg-cream-50 px-4 text-left font-semibold text-ink-900 hover:border-forest-700">
+                  <button key={v} type="button" onClick={() => void logAction(v)} className="min-h-11 rounded-full border border-navy-950/20 bg-ivory-50 px-4 text-left font-semibold text-navy-950 hover:border-slate-600">
                     {l}
                   </button>
                 ))}
               </fieldset>
             )}
-            <p className="text-sm font-semibold text-ink-900">{status}</p>
+            <p className="text-sm font-semibold text-navy-950">{status}</p>
           </div>
         )}
       </aside>

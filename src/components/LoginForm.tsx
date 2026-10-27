@@ -57,7 +57,7 @@ export function LoginForm({ endpoint, fields, submitLabel, messages, next }: Pro
     <form onSubmit={onSubmit} className="flex flex-col gap-4">
       {fields.map((f) => (
         <label key={f.name} className="flex flex-col gap-1.5">
-          <span className="text-xs font-bold uppercase tracking-[0.14em] text-cream-50/75">{f.label}</span>
+          <span className="text-xs font-bold uppercase tracking-[0.14em] text-ivory-50/75">{f.label}</span>
           <input
             name={f.name}
             type={f.type}
@@ -68,13 +68,13 @@ export function LoginForm({ endpoint, fields, submitLabel, messages, next }: Pro
             required
             aria-invalid={error ? true : undefined}
             aria-describedby={error ? "login-error" : undefined}
-            className="min-h-14 rounded-2xl bg-cream-50/8 px-4 text-2xl font-bold tracking-[0.12em] text-cream-50 ring-1 ring-cream-50/20 transition focus:bg-cream-50/12 focus:outline-none focus:ring-2 focus:ring-safety-500"
+            className="min-h-13 rounded-2xl bg-ivory-50/8 px-4 text-lg font-semibold tracking-[0.08em] text-ivory-50 ring-1 ring-ivory-50/20 transition focus:bg-ivory-50/12 focus:outline-none focus:ring-2 focus:ring-sand-300"
           />
         </label>
       ))}
       <div id="login-error" role="alert" aria-live="polite" className="min-h-0">
         {error && (
-          <p className="flex items-center gap-2 rounded-2xl bg-critical px-4 py-2.5 font-bold text-cream-50">
+          <p className="flex items-center gap-2 rounded-2xl bg-critical px-4 py-2.5 font-bold text-ivory-50">
             <OctagonAlert aria-hidden="true" className="size-5 shrink-0" />
             {error}
           </p>
@@ -83,11 +83,11 @@ export function LoginForm({ endpoint, fields, submitLabel, messages, next }: Pro
       <button
         type="submit"
         disabled={busy}
-        className="group mt-1 flex min-h-16 items-center justify-between gap-3 rounded-full bg-safety-500 pl-6 pr-2 text-xl font-extrabold text-ink-900 transition disabled:opacity-60"
+        className="group mt-1 flex min-h-14 items-center justify-between gap-3 rounded-full bg-sand-300 pl-6 pr-1.5 text-lg font-bold text-navy-950 transition disabled:opacity-60"
       >
         {submitLabel}
-        <span aria-hidden="true" className="flex size-12 items-center justify-center rounded-full bg-ink-900 text-cream-50 transition group-hover:translate-x-0.5">
-          <ArrowRight className="size-6" />
+        <span aria-hidden="true" className="flex size-11 items-center justify-center rounded-full bg-navy-900 text-ivory-50 transition group-hover:translate-x-0.5">
+          <ArrowRight className="size-5" />
         </span>
       </button>
     </form>

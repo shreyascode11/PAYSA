@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { NoticeForm } from "@/components/admin/NoticeForm";
+import { aiEnabled } from "@/lib/ai/gemini";
 import { adminPageContext } from "@/lib/admin-context";
 import { getRepo } from "@/lib/repo";
 
@@ -12,20 +13,20 @@ export default async function Notices() {
   const notices = await getRepo().listAnnouncements(org.id);
   return (
     <>
-      <h1 className="mb-1 text-3xl font-extrabold">Daily notices</h1>
+      <h1 className="mb-1 text-2xl font-extrabold">Daily notices</h1>
       <p className="mb-4 text-muted">Short notices appear on every worker&apos;s home screen with a Listen button.</p>
       <div className="grid gap-6 lg:grid-cols-2">
-        <NoticeForm orgId={org.id} />
+        <NoticeForm orgId={org.id} autoTranslate={aiEnabled()} />
         <section aria-labelledby="posted">
           <h2 id="posted" className="mb-3 text-lg font-bold">
             Posted
           </h2>
           <ul className="flex flex-col gap-3">
             {notices.map((n) => (
-              <li key={n.id} className="rounded-3xl border-l-4 border-forest-700 bg-cream-50 p-5">
+              <li key={n.id} className="rounded-3xl border-l-4 border-slate-600 bg-ivory-50 p-5">
                 <p lang={n.lang}>{n.text}</p>
                 <p className="mt-1 text-sm text-muted">
-                  {LANG_NAMES[n.lang]} · {new Date(n.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" })}
+                  {LANG_NAMES[n.lang]} · also in {Object.keys(n.translations ?? {}).filter((l) => l !== n.lang).map((l) => LANG_NAMES[l as keyof typeof LANG_NAMES]).join(", ") || "no other language"} · {new Date(n.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" })}
                 </p>
               </li>
             ))}

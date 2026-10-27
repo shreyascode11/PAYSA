@@ -42,8 +42,8 @@ export default async function Fatigue() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-3xl font-extrabold text-ink-900">Fatigue, last 14 days</h1>
-        <p className="max-w-3xl text-ink-900/70">
+        <h1 className="text-2xl font-extrabold text-navy-950">Fatigue, last 14 days</h1>
+        <p className="max-w-3xl text-navy-950/70">
           Warning: shift over 10h, rest under 11h, more than 6 days in a row, or over 54h a week. Critical: shift over 12h, rest under 8h, or over 60h a week.
         </p>
       </div>
@@ -53,11 +53,11 @@ export default async function Fatigue() {
         <StatCard tone="light" label="Critical days" value={cells.filter((c) => c.result.level === "critical").length} hint={`of ${cells.filter((c) => c.hours > 0).length} worked days`} />
         <StatCard tone="light" label="Actions logged" value={cells.reduce((a, c) => a + c.actions.length, 0)} hint="rest, swaps, talks" />
       </section>
-      <ul aria-label="Legend" className="flex flex-wrap gap-5 text-sm text-ink-900">
+      <ul aria-label="Legend" className="flex flex-wrap gap-5 text-sm text-navy-950">
         <LegendDot cls="bg-ok" label="OK" />
-        <LegendDot cls="bg-warn text-ink-900" icon="!" label="Warning" />
-        <LegendDot cls="bg-critical text-cream-50" icon="×" label="Critical" />
-        <LegendDot cls="scale-50 bg-ink-900/40" label="Day off" />
+        <LegendDot cls="bg-warn text-navy-950" icon="!" label="Warning" />
+        <LegendDot cls="bg-critical text-ivory-50" icon="×" label="Critical" />
+        <LegendDot cls="scale-50 bg-navy-950/40" label="Day off" />
       </ul>
       <FatigueHeatmap rows={rows} dates={dates} />
     </div>

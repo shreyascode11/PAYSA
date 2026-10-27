@@ -4,10 +4,10 @@ import type { ReactNode } from "react";
 export type StatTone = "card" | "hero" | "light" | "dark";
 
 const TONES: Record<StatTone, { box: string; label: string }> = {
-  card: { box: "bg-mint-100/8 text-cream-50 rounded-4xl", label: "text-cream-50/75" },
-  hero: { box: "bg-forest-700 text-cream-50 rounded-4xl", label: "text-cream-50/80" },
-  light: { box: "bg-cream-50 text-ink-900 rounded-2xl border border-ink-900/10", label: "text-ink-900/70" },
-  dark: { box: "bg-forest-900 text-cream-50 rounded-2xl", label: "text-cream-50/75" },
+  card: { box: "bg-navy-900 text-ivory-50 rounded-4xl", label: "text-ivory-50/75" },
+  hero: { box: "bg-slate-600 text-ivory-50 rounded-4xl", label: "text-ivory-50/85" },
+  light: { box: "bg-ivory-50 text-navy-950 rounded-2xl border border-navy-950/10", label: "text-navy-950/70" },
+  dark: { box: "bg-navy-950 text-ivory-50 rounded-2xl", label: "text-ivory-50/75" },
 };
 
 interface Props {
@@ -27,15 +27,15 @@ export function StatCard({ label, value, unit, hint, icon, tone = "card", href, 
   const t = TONES[tone];
   const body = (
     <>
-      <span className={`flex items-center gap-2 text-sm font-bold uppercase tracking-wide ${t.label} [&>svg]:size-5`}>
+      <span className={`flex items-center gap-2 text-xs font-bold uppercase tracking-wider ${t.label} [&>svg]:size-5`}>
         {icon}
         {label}
       </span>
       <span className="mt-1 flex items-baseline gap-1.5">
-        <span className={`tabular font-extrabold leading-none ${size === "lg" ? "text-6xl" : "text-4xl"}`}>{value}</span>
+        <span className={`tabular font-extrabold leading-none ${size === "lg" ? "text-5xl" : "text-3xl"}`}>{value}</span>
         {unit && <span className={`font-bold ${t.label}`}>{unit}</span>}
       </span>
-      {hint && <span className={`mt-2 block text-base ${t.label}`}>{hint}</span>}
+      {hint && <span className={`mt-1.5 block text-sm ${t.label}`}>{hint}</span>}
       {children}
     </>
   );

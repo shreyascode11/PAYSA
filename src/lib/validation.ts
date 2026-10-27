@@ -58,7 +58,13 @@ export const fatigueActionSchema = z.object({
   action: z.enum(["rest_given", "shift_swapped", "hours_reduced", "talked"]),
 });
 
-export const announcementSchema = z.object({ orgId: id, text: z.string().trim().min(1).max(280), lang });
+const noticeText = z.string().trim().max(280);
+export const announcementSchema = z.object({
+  orgId: id,
+  text: z.string().trim().min(1).max(280),
+  lang,
+  translations: z.object({ en: noticeText, ta: noticeText, hi: noticeText }).partial().optional(),
+});
 
 export const MAX_AUDIO_BYTES = 2 * 1024 * 1024;
 export const AUDIO_TYPES = ["audio/webm", "audio/ogg", "audio/mp4", "audio/mpeg", "audio/wav"] as const;

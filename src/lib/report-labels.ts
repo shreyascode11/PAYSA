@@ -34,6 +34,7 @@ export function reportLabels(t: Translator): ReportLabels {
       micDenied: t("report.micDenied"),
       aiUnavailable: t("report.aiUnavailable"),
       tooLong: t("report.tooLong"),
+      noSpeech: t("report.noSpeech"),
       generic: t("common.error"),
       tooMany: t("common.tooMany"),
       offline: t("common.offline"),

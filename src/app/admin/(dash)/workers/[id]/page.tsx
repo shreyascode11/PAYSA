@@ -34,12 +34,12 @@ export default async function WorkerDetail({ params }: { params: Promise<{ id: s
       <Link href="/admin/workers" className="mb-4 inline-flex min-h-11 items-center gap-1 font-semibold text-brand">
         <ArrowLeft aria-hidden="true" className="size-5" /> All workers
       </Link>
-      <h1 className="text-3xl font-extrabold">{worker.name}</h1>
+      <h1 className="text-2xl font-extrabold">{worker.name}</h1>
       <p className="mb-6 text-muted">
         {worker.role} · {org.teams.find((t) => t.id === worker.teamId)?.name} · {formatINR(worker.dailyWage)}/day · {days} verified days
       </p>
       <div className="grid gap-6 lg:grid-cols-2">
-        <section aria-labelledby="week" className="rounded-3xl border border-ink-900/10 bg-cream-50 p-5 shadow-sm shadow-ink-900/5">
+        <section aria-labelledby="week" className="rounded-3xl border border-navy-950/10 bg-ivory-50 p-5 shadow-sm shadow-navy-950/5">
           <h2 id="week" className="mb-3 text-lg font-bold">
             This week
           </h2>
@@ -69,7 +69,7 @@ export default async function WorkerDetail({ params }: { params: Promise<{ id: s
           )}
         </section>
 
-        <section aria-labelledby="risk" className="rounded-3xl border border-ink-900/10 bg-cream-50 p-5 shadow-sm shadow-ink-900/5">
+        <section aria-labelledby="risk" className="rounded-3xl border border-navy-950/10 bg-ivory-50 p-5 shadow-sm shadow-navy-950/5">
           <h2 id="risk" className="mb-3 flex items-center gap-2 text-lg font-bold">
             Quit risk {risk && <RiskBadge band={risk.band} score={risk.score} />}
           </h2>
@@ -86,7 +86,7 @@ export default async function WorkerDetail({ params }: { params: Promise<{ id: s
           )}
         </section>
 
-        <section aria-labelledby="skills" className="rounded-3xl border border-ink-900/10 bg-cream-50 p-5 shadow-sm shadow-ink-900/5 lg:col-span-2">
+        <section aria-labelledby="skills" className="rounded-3xl border border-navy-950/10 bg-ivory-50 p-5 shadow-sm shadow-navy-950/5 lg:col-span-2">
           <h2 id="skills" className="mb-1 text-lg font-bold">
             Skill Passport
           </h2>
@@ -95,7 +95,7 @@ export default async function WorkerDetail({ params }: { params: Promise<{ id: s
             {sectorConfig(org.sector).skills.map((skill) => {
               const entry = has.get(skill);
               return (
-                <li key={skill} className="flex min-h-12 items-center justify-between gap-2 rounded-2xl bg-mint-100/60 px-4 py-2.5">
+                <li key={skill} className="flex min-h-12 items-center justify-between gap-2 rounded-2xl bg-sand-300/40 px-4 py-2.5">
                   <span>
                     {humanize(skill)}
                     {entry && <span className="ml-2 text-sm text-muted">level {entry.level} · {entry.source}</span>}

@@ -54,6 +54,8 @@ interface Props {
   prefillText?: string;
   /** Feedback about managers is always anonymous; the toggle is hidden. */
   forceAnonymous?: boolean;
+  /** Server has Gemini for voice notes; otherwise the browser recogniser is used. */
+  aiVoice: boolean;
   labels: ReportLabels;
 }
 
@@ -75,7 +77,7 @@ async function toCleanJpeg(file: File): Promise<Blob | null> {
   }
 }
 
-export function ReportFlow({ lang, types, initialType, initialCategory, prefillText = "", forceAnonymous = false, labels }: Props) {
+export function ReportFlow({ lang, types, initialType, initialCategory, prefillText = "", forceAnonymous = false, aiVoice, labels }: Props) {
   const [type, setType] = useState<ReportType>(initialType);
   const [category, setCategory] = useState(initialCategory ?? "");
   const [text, setText] = useState(prefillText);
@@ -137,26 +139,26 @@ export function ReportFlow({ lang, types, initialType, initialCategory, prefillT
     const spoken = `${labels.doneIntro} ${trackingId.split("").join(" ")}`;
     return (
       <section aria-labelledby="done-title" className="flex flex-col gap-4" aria-live="polite">
-        <h2 id="done-title" className="flex items-center gap-2 text-2xl font-extrabold">
-          <span className="flex size-10 items-center justify-center rounded-full bg-ok text-ink-900"><CircleCheck aria-hidden="true" className="size-6" /></span>
+        <h2 id="done-title" className="flex items-center gap-2 text-xl font-extrabold">
+          <span className="flex size-10 items-center justify-center rounded-full bg-ok text-navy-950"><CircleCheck aria-hidden="true" className="size-6" /></span>
           {labels.doneTitle}
         </h2>
         <p>{labels.doneIntro}</p>
-        <p className="bg-ember rounded-4xl p-6 text-center font-mono text-4xl font-black tracking-[0.2em] ring-1 ring-cream-50/15">
+        <p className="bg-dusk rounded-4xl p-6 text-center font-mono text-3xl font-black tracking-[0.2em] ring-1 ring-ivory-50/15">
           {trackingId}
         </p>
         <div className="flex flex-wrap gap-3">
           <button
             type="button"
             onClick={() => void navigator.clipboard?.writeText(trackingId).then(() => setCopied(true))}
-            className="flex min-h-12 items-center gap-2 rounded-full border-2 border-cream-50/45 px-4 font-bold"
+            className="flex min-h-12 items-center gap-2 rounded-full border-2 border-ivory-50/45 px-4 font-bold"
           >
             <Copy aria-hidden="true" className="size-5" />
             {copied ? labels.copied : labels.copy}
           </button>
           <SpeakButton text={spoken} lang={lang} listenLabel={labels.listen} stopLabel={labels.stop} />
         </div>
-        <Link href={`/w/report/${trackingId}`} className="flex min-h-16 items-center justify-center rounded-full bg-safety-500 text-xl font-extrabold text-ink-900">
+        <Link href={`/w/report/${trackingId}`} className="flex min-h-14 items-center justify-center rounded-full bg-sand-300 text-lg font-bold text-navy-950">
           {labels.track}
         </Link>
         <button
@@ -171,7 +173,7 @@ export function ReportFlow({ lang, types, initialType, initialCategory, prefillT
             setCategory("");
             setCopied(false);
           }}
-          className="min-h-12 font-semibold text-mint-100 underline"
+          className="min-h-12 font-semibold text-sand-300 underline"
         >
           {labels.newReport}
         </button>
@@ -192,7 +194,7 @@ export function ReportFlow({ lang, types, initialType, initialCategory, prefillT
                 setType(t.type);
                 setCategory("");
               }}
-              className={`min-h-12 rounded-full px-3 font-bold ${type === t.type ? "bg-safety-500 text-ink-900" : "text-cream-50"}`}
+              className={`min-h-12 rounded-full px-3 font-bold ${type === t.type ? "bg-sand-300 text-navy-950" : "text-ivory-50"}`}
             >
               {t.label}
             </button>
@@ -201,7 +203,7 @@ export function ReportFlow({ lang, types, initialType, initialCategory, prefillT
       )}
 
       <fieldset>
-        <legend className="mb-3 flex items-center gap-2 text-xl font-extrabold"><span aria-hidden="true" className="flex size-8 items-center justify-center rounded-full bg-cream-50 text-base text-ink-900">1</span>{labels.step1}</legend>
+        <legend className="mb-3 flex items-center gap-2 text-lg font-extrabold"><span aria-hidden="true" className="flex size-8 items-center justify-center rounded-full bg-ivory-50 text-base text-navy-950">1</span>{labels.step1}</legend>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {current?.categories.map((c) => {
             const Icon = categoryIcon(c.id);
@@ -212,11 +214,11 @@ export function ReportFlow({ lang, types, initialType, initialCategory, prefillT
                 type="button"
                 aria-pressed={selected}
                 onClick={() => setCategory(c.id)}
-                className={`flex min-h-28 flex-col items-center justify-center gap-2 rounded-3xl p-3 text-center font-bold transition ${
-                  selected ? "bg-safety-500 text-ink-900 shadow-lg shadow-safety-500/20" : "glass-dark text-cream-50"
+                className={`flex min-h-24 flex-col items-center justify-center gap-1.5 rounded-3xl p-3 text-center text-sm font-bold transition ${
+                  selected ? "bg-sand-300 text-navy-950 shadow-lg shadow-sand-300/20" : "glass-dark text-ivory-50"
                 }`}
               >
-                <span aria-hidden="true" className={`flex size-12 items-center justify-center rounded-full ${selected ? "bg-ink-900/10" : "bg-cream-50/10"}`}><Icon className="size-7" /></span>
+                <span aria-hidden="true" className={`flex size-10 items-center justify-center rounded-full ${selected ? "bg-navy-950/10" : "bg-ivory-50/10"}`}><Icon className="size-6" /></span>
                 <span className="leading-tight">{c.label}</span>
               </button>
             );
@@ -225,26 +227,27 @@ export function ReportFlow({ lang, types, initialType, initialCategory, prefillT
       </fieldset>
 
       <fieldset className="flex flex-col gap-4">
-        <legend className="mb-3 flex items-center gap-2 text-xl font-extrabold"><span aria-hidden="true" className="flex size-8 items-center justify-center rounded-full bg-cream-50 text-base text-ink-900">2</span>{labels.step2}</legend>
+        <legend className="mb-3 flex items-center gap-2 text-lg font-extrabold"><span aria-hidden="true" className="flex size-8 items-center justify-center rounded-full bg-ivory-50 text-base text-navy-950">2</span>{labels.step2}</legend>
         <VoiceRecorder
           lang={lang}
+          aiVoice={aiVoice}
           labels={{ hold: labels.hold, recording: labels.recording, transcribing: labels.transcribing }}
           onTranscript={onTranscript}
           onError={(e) => setError(labels.errors[e])}
         />
         {heard && (
-          <p className="rounded-3xl bg-mint-100 p-4 text-ink-900">
+          <p className="rounded-3xl bg-ivory-50 p-4 text-navy-950">
             <span className="font-bold">{labels.heard}</span> {heard}
           </p>
         )}
-        <label className="flex flex-col gap-2 text-sm font-bold uppercase tracking-wider text-cream-50/75">
+        <label className="flex flex-col gap-2 text-sm font-bold uppercase tracking-wider text-ivory-50/75">
           {labels.typeLabel}
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={3}
             maxLength={2000}
-            className="rounded-3xl bg-cream-50/8 p-4 text-lg text-cream-50 ring-1 ring-cream-50/20 focus:outline-none focus:ring-2 focus:ring-safety-500"
+            className="rounded-3xl bg-ivory-50/8 p-4 text-base text-ivory-50 ring-1 ring-ivory-50/20 focus:outline-none focus:ring-2 focus:ring-sand-300"
           />
         </label>
         {preview ? (
@@ -257,15 +260,15 @@ export function ReportFlow({ lang, types, initialType, initialCategory, prefillT
                 setPhoto(null);
                 setPreview("");
               }}
-              className="flex min-h-12 items-center gap-2 rounded-full border-2 border-cream-50/45 px-4 font-semibold"
+              className="flex min-h-12 items-center gap-2 rounded-full border-2 border-ivory-50/45 px-4 font-semibold"
             >
               <X aria-hidden="true" className="size-5" />
               {labels.photoRemove}
             </button>
           </div>
         ) : (
-          <label className="flex min-h-14 cursor-pointer items-center gap-3 rounded-3xl border-2 border-dashed border-cream-50/45 px-4 font-semibold focus-within:outline focus-within:outline-3 focus-within:outline-[var(--focus)]">
-            <Camera aria-hidden="true" className="size-7 text-mint-100" />
+          <label className="flex min-h-14 cursor-pointer items-center gap-3 rounded-3xl border-2 border-dashed border-ivory-50/45 px-4 font-semibold focus-within:outline focus-within:outline-3 focus-within:outline-[var(--focus)]">
+            <Camera aria-hidden="true" className="size-7 text-sand-300" />
             {labels.photo}
             <input type="file" accept="image/*" capture="environment" className="sr-only" onChange={(e) => void onPhoto(e.target.files?.[0])} />
           </label>
@@ -273,31 +276,31 @@ export function ReportFlow({ lang, types, initialType, initialCategory, prefillT
       </fieldset>
 
       <fieldset className="flex flex-col gap-4">
-        <legend className="mb-3 flex items-center gap-2 text-xl font-extrabold"><span aria-hidden="true" className="flex size-8 items-center justify-center rounded-full bg-cream-50 text-base text-ink-900">3</span>{labels.step3}</legend>
+        <legend className="mb-3 flex items-center gap-2 text-lg font-extrabold"><span aria-hidden="true" className="flex size-8 items-center justify-center rounded-full bg-ivory-50 text-base text-navy-950">3</span>{labels.step3}</legend>
         {!forceAnonymous && (
           <button
             type="button"
             role="switch"
             aria-checked={anonymous}
             onClick={() => setAnonymous((a) => !a)}
-            className={`flex min-h-16 items-center gap-4 rounded-3xl p-4 text-left ${anonymous ? "bg-mint-100 text-ink-900" : "bg-warn text-ink-900"}`}
+            className={`flex min-h-16 items-center gap-4 rounded-3xl p-4 text-left ${anonymous ? "bg-ivory-50 text-navy-950" : "bg-warn text-navy-950"}`}
           >
             {anonymous ? <EyeOff aria-hidden="true" className="size-8 shrink-0" /> : <Eye aria-hidden="true" className="size-8 shrink-0" />}
             <span className="flex flex-col">
-              <span className="text-xl font-bold">{labels.anonymous}</span>
+              <span className="text-base font-bold">{labels.anonymous}</span>
               <span className="font-semibold">{anonymous ? labels.anonymousOn : labels.anonymousOff}</span>
             </span>
           </button>
         )}
         {forceAnonymous && (
-          <p className="flex items-center gap-3 rounded-3xl bg-mint-100 p-4 font-bold text-ink-900">
+          <p className="flex items-center gap-3 rounded-3xl bg-ivory-50 p-4 font-bold text-navy-950">
             <EyeOff aria-hidden="true" className="size-7 shrink-0" />
             {labels.anonymousOn}
           </p>
         )}
         <p role="alert" className="min-h-0 font-bold">
           {error && (
-            <span className="flex items-start gap-2 rounded-3xl bg-critical p-4 text-cream-50">
+            <span className="flex items-start gap-2 rounded-3xl bg-critical p-4 text-ivory-50">
               <TriangleAlert aria-hidden="true" className="size-6 shrink-0" />
               {error}
             </span>
@@ -306,7 +309,7 @@ export function ReportFlow({ lang, types, initialType, initialCategory, prefillT
         <button
           type="submit"
           disabled={busy}
-          className="flex min-h-16 items-center justify-center gap-3 rounded-full bg-safety-500 text-xl font-extrabold text-ink-900 disabled:opacity-60"
+          className="flex min-h-14 items-center justify-center gap-2 rounded-full bg-sand-300 text-lg font-bold text-navy-950 disabled:opacity-60"
         >
           <Send aria-hidden="true" className="size-7" />
           {busy ? labels.sending : labels.submit}

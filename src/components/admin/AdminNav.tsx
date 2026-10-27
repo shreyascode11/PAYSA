@@ -14,12 +14,12 @@ const ITEMS = [
   { href: "/admin/notices", label: "Notices", Icon: Megaphone },
 ] as const;
 
-/** Sidebar navigation on the forest panel: active item is a mint chip with forest text. */
+/** Sidebar navigation on the navy panel: active item is a sand chip with navy text. */
 export function AdminNav() {
   const path = usePathname();
   return (
     <nav aria-label="Admin">
-      <p className="mb-2 hidden px-3 text-xs font-bold uppercase tracking-wider text-cream-50/75 lg:block">Menu</p>
+      <p className="mb-2 hidden px-3 text-xs font-bold uppercase tracking-wider text-ivory-50/75 lg:block">Menu</p>
       <ul className="flex gap-1 overflow-x-auto lg:flex-col">
         {ITEMS.map(({ href, label, Icon }) => {
           const active = href === "/admin" ? path === href : path.startsWith(href);
@@ -29,7 +29,7 @@ export function AdminNav() {
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={`flex min-h-11 items-center gap-3 whitespace-nowrap rounded-xl px-3 font-semibold ${
-                  active ? "bg-mint-100 text-forest-900" : "text-cream-50/80 hover:bg-cream-50/10 hover:text-cream-50"
+                  active ? "bg-sand-300 text-navy-950" : "text-ivory-50/80 hover:bg-ivory-50/10 hover:text-ivory-50"
                 }`}
               >
                 <Icon aria-hidden="true" className="size-5" />

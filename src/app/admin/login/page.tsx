@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: "Admin login" };
 export default async function AdminLogin() {
   if (await getAdminSession()) redirect("/admin");
   return (
-    <div lang="en" className="bg-aurora min-h-dvh text-cream-50">
+    <div lang="en" className="bg-aurora min-h-dvh text-ivory-50">
       <main id="main" className="mx-auto flex min-h-dvh w-full max-w-sm flex-col justify-center gap-6 px-4 pb-10">
         <IdBadge
           kind="Staff pass"
@@ -26,8 +26,8 @@ export default async function AdminLogin() {
             </>
           }
         >
-          <h1 className="text-4xl font-black leading-none tracking-tight sm:text-5xl">SUPERVISOR</h1>
-          <p className="mb-5 mt-2 text-base text-cream-50/75">Sites, safety and people, in one place.</p>
+          <h1 className="text-3xl font-black leading-none tracking-tight">SUPERVISOR</h1>
+          <p className="mb-5 mt-2 text-sm text-ivory-50/75">Sites, safety and people, in one place.</p>
           <LoginForm
             endpoint="/api/auth/admin-login"
             submitLabel="Log in"
@@ -44,7 +44,7 @@ export default async function AdminLogin() {
           />
         </IdBadge>
         <aside className="glass-dark rounded-3xl p-5">
-          <h2 className="mb-1 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-cream-50/75">
+          <h2 className="mb-1 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-ivory-50/75">
             <KeyRound aria-hidden="true" className="size-4" /> Demo login
           </h2>
           <p className="tabular">

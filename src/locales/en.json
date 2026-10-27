@@ -176,7 +176,7 @@
     "needText": "Please record or type what happened.",
     "needCategory": "Please choose what happened.",
     "micDenied": "Microphone is turned off. Allow it, or type your report.",
-    "aiUnavailable": "Voice to text is not available now. Please type instead.",
+    "aiUnavailable": "Voice typing is not available in this browser. Please type instead.",
     "tooLong": "Voice note is too long. Keep it under 60 seconds.",
     "periodNote": "Pay for {start} – {end}",
     "doneTitle": "Report sent",
@@ -202,7 +202,8 @@
       "manager": "My manager",
       "conditions": "Work conditions",
       "other": "Other"
-    }
+    },
+    "noSpeech": "We could not hear you. Hold the button, speak close to the phone, or type."
   },
   "track": {
     "title": "Report status",

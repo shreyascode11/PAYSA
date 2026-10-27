@@ -20,10 +20,10 @@ export default async function PublicPassport({ params }: { params: Promise<{ pas
   const { lang, t } = await getT();
 
   return (
-    <div className="bg-aurora min-h-dvh text-lg text-cream-50">
+    <div className="bg-aurora min-h-dvh text-base text-ivory-50">
     <div className="mx-auto max-w-md px-4 py-6">
       <header className="mb-6 flex items-center justify-between gap-2">
-        <p className="flex items-center gap-2 text-xl font-extrabold tracking-[0.18em]">
+        <p className="flex items-center gap-2 text-lg font-extrabold tracking-[0.18em]">
           <Logo className="size-9" />
           {t("common.appName")}
         </p>
@@ -32,8 +32,8 @@ export default async function PublicPassport({ params }: { params: Promise<{ pas
       <main id="main">
         <h1 className="sr-only">{t("passport.publicTitle")}</h1>
         <PassportCard passport={passport} t={t} />
-        <p className="mt-6 flex items-center gap-2 text-base text-cream-50/75">
-          <ShieldCheck aria-hidden="true" className="size-5 text-mint-100" />
+        <p className="mt-6 flex items-center gap-2 text-base text-ivory-50/75">
+          <ShieldCheck aria-hidden="true" className="size-5 text-sand-300" />
           {t("passport.publicPrivacy")}
         </p>
       </main>

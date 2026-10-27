@@ -28,8 +28,8 @@ describe("BigButton", () => {
     render(<BigButton href="/w/pay" icon={<HardHat />} label="My pay" />);
     const link = screen.getByRole("link", { name: "My pay" });
     expect(link).toHaveAttribute("href", "/w/pay");
-    expect(link.className).toContain("bg-safety-500");
-    expect(link.className).toContain("text-ink-900");
+    expect(link.className).toContain("bg-sand-300");
+    expect(link.className).toContain("text-navy-950");
   });
 });
 
@@ -56,8 +56,8 @@ describe("StatusPill / StatusBadge", () => {
   it("never puts ink text on critical (fails contrast) or orange anywhere", () => {
     render(<StatusPill tone="critical" label="Critical" />);
     const cls = screen.getByText("Critical").className;
-    expect(cls).toContain("text-cream-50");
-    expect(cls).not.toContain("safety-500");
+    expect(cls).toContain("text-ivory-50");
+    expect(cls).not.toContain("sand-300");
   });
 
   it("report status badge keeps its label", () => {
@@ -164,7 +164,7 @@ describe("ColumnChart", () => {
         format={(v) => `${v}h`}
         series={[
           { key: "r", label: "Regular", fill: "bg-forest-700" },
-          { key: "o", label: "Overtime", fill: "bg-safety-500" },
+          { key: "o", label: "Overtime", fill: "bg-sand-300" },
         ]}
         columns={[
           { key: "w1", label: "6 Oct", values: { r: 40, o: 5 } },

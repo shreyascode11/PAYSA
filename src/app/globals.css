@@ -1,20 +1,22 @@
 @import "tailwindcss";
 
 /*
- * PAYSA design system (CLAUDE.md §18). The palette below is the only source of colour.
- * Contrast for every text pair is computed and listed in §18.2.
+ * PAYSA design system (CLAUDE.md §18), Holst palette. The palette below is the only source of
+ * colour. Contrast for every text pair is computed and listed in §18.2.
  */
 @theme {
   --color-*: initial;
-  --color-forest-900: #0f2a1d;
-  --color-forest-700: #1f5a3f;
-  --color-mint-100: #d9f2e3;
-  --color-cream-50: #f7f3ea;
-  --color-ink-900: #11201a;
-  --color-safety-500: #ff6b1a;
-  --color-ok: #1e9e5a;
-  --color-warn: #f5b800;
-  --color-critical: #c62828;
+  /* Holst palette */
+  --color-navy-950: #0d1b2a;
+  --color-navy-900: #1b263b;
+  --color-slate-600: #415a77;
+  --color-sage-500: #778d7a;
+  --color-sand-300: #d4c4a8;
+  --color-ivory-50: #f4f1de;
+  /* Status tones (fills only; always with icon + label), tuned to sit with the palette */
+  --color-ok: #778d7a;
+  --color-warn: #e3b04b;
+  --color-critical: #a8432f;
   --color-transparent: transparent;
   --color-current: currentColor;
 
@@ -23,57 +25,53 @@
 }
 
 /*
- * Semantic aliases used by screens not yet redesigned. Each area maps them onto palette
- * tokens only, chosen so every pair the code uses still passes AA (see §18.2).
+ * Semantic aliases used by older markup. Each area maps them onto palette tokens only,
+ * chosen so every pair the code uses passes AA (see CLAUDE.md §18.2).
  */
 .theme-worker,
 :root {
-  --bg: var(--color-forest-900);
-  --surface: color-mix(in srgb, var(--color-mint-100) 8%, var(--color-forest-900));
-  --surface-2: color-mix(in srgb, var(--color-mint-100) 14%, var(--color-forest-900));
-  --ink: var(--color-cream-50);
-  --muted: color-mix(in srgb, var(--color-cream-50) 78%, var(--color-forest-900));
-  --line: color-mix(in srgb, var(--color-cream-50) 22%, var(--color-forest-900));
-  --brand: var(--color-mint-100);
-  --brand-ink: var(--color-forest-900);
-  --brand-soft: var(--color-forest-700);
-  --ok: var(--color-mint-100);
-  --ok-soft: var(--color-forest-700);
+  --bg: var(--color-navy-950);
+  --surface: var(--color-navy-900);
+  --surface-2: color-mix(in srgb, var(--color-ivory-50) 10%, var(--color-navy-900));
+  --ink: var(--color-ivory-50);
+  --muted: color-mix(in srgb, var(--color-ivory-50) 75%, var(--color-navy-900));
+  --line: color-mix(in srgb, var(--color-ivory-50) 20%, var(--color-navy-950));
+  --brand: var(--color-sand-300);
+  --brand-ink: var(--color-navy-950);
+  --brand-soft: var(--color-navy-900);
+  --ok: var(--color-sand-300);
+  --ok-soft: var(--color-navy-900);
   --warn: var(--color-warn);
-  --warn-soft: var(--color-forest-700);
-  --danger: var(--color-cream-50);
+  --warn-soft: var(--color-navy-900);
+  --danger: var(--color-ivory-50);
   --danger-ink: var(--color-critical);
   --danger-soft: var(--color-critical);
-  --info: var(--color-mint-100);
-  --info-soft: var(--color-forest-700);
-  --focus: var(--color-safety-500);
-  --chart: var(--color-mint-100);
-  --grid: color-mix(in srgb, var(--color-cream-50) 15%, var(--color-forest-900));
+  --info: var(--color-sand-300);
+  --info-soft: var(--color-navy-900);
+  --focus: var(--color-sand-300);
   color-scheme: dark;
 }
 
 .theme-admin {
-  --bg: color-mix(in srgb, var(--color-mint-100) 35%, var(--color-cream-50));
-  --surface: var(--color-cream-50);
-  --surface-2: var(--color-mint-100);
-  --ink: var(--color-ink-900);
-  --muted: color-mix(in srgb, var(--color-ink-900) 72%, var(--color-cream-50));
-  --line: color-mix(in srgb, var(--color-ink-900) 14%, var(--color-cream-50));
-  --brand: var(--color-forest-700);
-  --brand-ink: var(--color-cream-50);
-  --brand-soft: var(--color-mint-100);
-  --ok: var(--color-forest-700);
-  --ok-soft: var(--color-mint-100);
-  --warn: var(--color-ink-900);
+  --bg: color-mix(in srgb, var(--color-sand-300) 25%, var(--color-ivory-50));
+  --surface: var(--color-ivory-50);
+  --surface-2: color-mix(in srgb, var(--color-sand-300) 45%, var(--color-ivory-50));
+  --ink: var(--color-navy-950);
+  --muted: color-mix(in srgb, var(--color-navy-950) 72%, var(--color-ivory-50));
+  --line: color-mix(in srgb, var(--color-navy-950) 14%, var(--color-ivory-50));
+  --brand: var(--color-slate-600);
+  --brand-ink: var(--color-ivory-50);
+  --brand-soft: color-mix(in srgb, var(--color-sand-300) 45%, var(--color-ivory-50));
+  --ok: var(--color-slate-600);
+  --ok-soft: color-mix(in srgb, var(--color-sand-300) 45%, var(--color-ivory-50));
+  --warn: var(--color-navy-950);
   --warn-soft: var(--color-warn);
   --danger: var(--color-critical);
-  --danger-ink: var(--color-cream-50);
-  --danger-soft: var(--color-cream-50);
-  --info: var(--color-forest-900);
-  --info-soft: var(--color-mint-100);
-  --focus: var(--color-forest-700);
-  --chart: var(--color-forest-700);
-  --grid: color-mix(in srgb, var(--color-ink-900) 10%, var(--color-cream-50));
+  --danger-ink: var(--color-ivory-50);
+  --danger-soft: var(--color-ivory-50);
+  --info: var(--color-navy-950);
+  --info-soft: color-mix(in srgb, var(--color-sand-300) 45%, var(--color-ivory-50));
+  --focus: var(--color-slate-600);
   color-scheme: light;
   background: var(--bg);
   color: var(--ink);
@@ -101,8 +99,8 @@
 }
 
 html {
-  background: var(--color-forest-900);
-  color: var(--color-cream-50);
+  background: var(--color-navy-950);
+  color: var(--color-ivory-50);
   -webkit-text-size-adjust: 100%;
 }
 
@@ -125,8 +123,8 @@ body {
   top: -100px;
   z-index: 50;
   padding: 12px 16px;
-  background: var(--color-safety-500);
-  color: var(--color-ink-900);
+  background: var(--color-sand-300);
+  color: var(--color-navy-950);
   font-weight: 700;
   border-radius: 12px;
 }
@@ -151,35 +149,35 @@ body {
 }
 
 /*
- * Glass and glow (CLAUDE.md §18.6). Glow peaks are capped at 35% orange / 30% yellow so cream
- * text, even at /75, stays above 4.6:1 wherever it lands on them.
+ * Glass and glow (CLAUDE.md §18.6). Glow peaks are capped at 25% sand / 60% slate so ivory
+ * text, even at /70, stays above 5:1 wherever it lands on them.
  */
 @utility glass-dark {
-  background: color-mix(in srgb, var(--color-ink-900) 60%, transparent);
+  background: color-mix(in srgb, var(--color-navy-900) 60%, transparent);
   backdrop-filter: blur(18px) saturate(1.2);
   -webkit-backdrop-filter: blur(18px) saturate(1.2);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-cream-50) 12%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-ivory-50) 12%, transparent);
 }
 
 @utility glass-light {
-  background: color-mix(in srgb, var(--color-cream-50) 72%, transparent);
+  background: color-mix(in srgb, var(--color-ivory-50) 72%, transparent);
   backdrop-filter: blur(16px) saturate(1.2);
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-ink-900) 10%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-navy-950) 10%, transparent);
 }
 
-@utility bg-ember {
-  background-color: var(--color-ink-900);
+@utility bg-dusk {
+  background-color: var(--color-navy-950);
   background-image:
-    radial-gradient(60% 45% at 0% 0%, color-mix(in srgb, var(--color-safety-500) 35%, transparent), transparent 70%),
-    radial-gradient(55% 45% at 100% 100%, color-mix(in srgb, var(--color-warn) 30%, transparent), transparent 70%);
+    radial-gradient(70% 50% at 0% 0%, color-mix(in srgb, var(--color-slate-600) 60%, transparent), transparent 70%),
+    radial-gradient(60% 45% at 100% 100%, color-mix(in srgb, var(--color-sand-300) 25%, transparent), transparent 70%);
 }
 
 @utility bg-aurora {
-  background-color: var(--color-forest-900);
+  background-color: var(--color-navy-950);
   background-image:
-    radial-gradient(70% 40% at 100% 0%, color-mix(in srgb, var(--color-forest-700) 70%, transparent), transparent 70%),
-    radial-gradient(50% 30% at 0% 18%, color-mix(in srgb, var(--color-safety-500) 12%, transparent), transparent 70%);
+    radial-gradient(80% 45% at 50% -5%, color-mix(in srgb, var(--color-sand-300) 18%, transparent), transparent 70%),
+    radial-gradient(60% 40% at 100% 30%, color-mix(in srgb, var(--color-slate-600) 45%, transparent), transparent 70%);
   background-attachment: fixed;
 }
 
@@ -233,6 +231,6 @@ body {
     display: none !important;
   }
   .theme-admin {
-    background: var(--color-cream-50);
+    background: var(--color-ivory-50);
   }
 }

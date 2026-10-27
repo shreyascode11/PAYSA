@@ -10,7 +10,7 @@ import { DotCalendar } from "@/components/ui/DotCalendar";
 import { Ring } from "@/components/ui/Ring";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { requireWorkerPage } from "@/lib/auth";
-import { LANG_TAGS, formatDay, formatHours, formatTime } from "@/lib/i18n";
+import { LANG_TAGS, formatDay, formatHours, formatTime, localizedNotice } from "@/lib/i18n";
 import { getT } from "@/lib/locale";
 import { getRepo } from "@/lib/repo";
 import { sectorConfig } from "@/lib/sectors";
@@ -27,7 +27,7 @@ const weekdays = (lang: Lang): string[] =>
 
 function Legend({ items }: { items: { cls: string; label: string }[] }) {
   return (
-    <ul className="mt-3 flex flex-wrap gap-4 text-sm font-semibold text-cream-50/75">
+    <ul className="mt-3 flex flex-wrap gap-4 text-sm font-semibold text-ivory-50/75">
       {items.map((i) => (
         <li key={i.label} className="flex items-center gap-1.5">
           <span aria-hidden="true" className={`inline-block size-3 rounded-full ${i.cls}`} />
@@ -76,24 +76,24 @@ export default async function WorkerHome() {
 
       <section aria-labelledby="week-h" className="flex items-end justify-between gap-4 pt-2">
         <div>
-          <h2 id="week-h" className="text-sm font-bold uppercase tracking-wider text-cream-50/75">
+          <h2 id="week-h" className="text-xs font-bold uppercase tracking-wider text-ivory-50/75">
             {t("home.weekHours")}
           </h2>
           <p className="tabular mt-1 flex items-baseline gap-2">
-            <span className="text-7xl font-extrabold leading-none">{formatHours(summary.weekHours)}</span>
-            <span className="text-2xl font-bold text-cream-50/75">h</span>
+            <span className="text-5xl font-extrabold leading-none">{formatHours(summary.weekHours)}</span>
+            <span className="text-xl font-bold text-ivory-50/75">h</span>
           </p>
-          <p className="mt-2 font-bold text-mint-100">{t("home.otLine", { hours: formatHours(summary.weekOtHours) })}</p>
+          <p className="mt-2 font-bold text-sand-300">{t("home.otLine", { hours: formatHours(summary.weekOtHours) })}</p>
         </div>
         <Ring
           value={summary.todayHours}
           max={goal}
-          size={96}
-          stroke={9}
+          size={80}
+          stroke={8}
           label={t("home.todayGoal", { hours: formatHours(summary.todayHours), goal })}
         >
-          <span className="tabular text-2xl font-extrabold">{formatHours(summary.todayHours)}</span>
-          <span className="mt-1 text-xs font-bold text-cream-50/75">{t("home.today")}</span>
+          <span className="tabular text-xl font-extrabold">{formatHours(summary.todayHours)}</span>
+          <span className="mt-1 text-xs font-bold text-ivory-50/75">{t("home.today")}</span>
         </Ring>
       </section>
 
@@ -105,13 +105,13 @@ export default async function WorkerHome() {
         <BigButton href="/w/checkin" icon={<CirclePlay />} label={t("home.startWork")} />
       )}
 
-      <section aria-labelledby="streak-h" className="rounded-4xl bg-mint-100/8 p-5">
-        <h2 id="streak-h" className="text-sm font-bold uppercase tracking-wider text-cream-50/75">
+      <section aria-labelledby="streak-h" className="rounded-4xl bg-navy-900 p-5">
+        <h2 id="streak-h" className="text-xs font-bold uppercase tracking-wider text-ivory-50/75">
           {t("home.streakTitle")}
         </h2>
         <p className="mb-4 mt-1 flex items-baseline gap-2">
-          <span className="tabular text-5xl font-extrabold leading-none">{streak.worked}</span>
-          <span className="font-bold text-cream-50/75">{t("home.streakUnit")}</span>
+          <span className="tabular text-4xl font-extrabold leading-none">{streak.worked}</span>
+          <span className="font-bold text-ivory-50/75">{t("home.streakUnit")}</span>
         </p>
         <div className="overflow-x-auto">
           <DotCalendar
@@ -132,34 +132,37 @@ export default async function WorkerHome() {
         </div>
         <Legend
           items={[
-            { cls: "bg-safety-500", label: t("home.legendWorked") },
-            { cls: "scale-50 bg-cream-50/40", label: t("home.legendOff") },
-            { cls: "border-2 border-cream-50/45", label: t("home.legendFuture") },
+            { cls: "bg-sand-300", label: t("home.legendWorked") },
+            { cls: "scale-50 bg-ivory-50/40", label: t("home.legendOff") },
+            { cls: "border-2 border-ivory-50/45", label: t("home.legendFuture") },
           ]}
         />
       </section>
 
-      <Link href="/w/voice" className="flex min-h-16 items-center gap-4 rounded-4xl bg-mint-100 p-5 font-bold text-ink-900">
+      <Link href="/w/voice" className="flex min-h-16 items-center gap-4 rounded-4xl bg-ivory-50 p-5 font-bold text-navy-950">
         <MessageCircle aria-hidden="true" className="size-8 shrink-0" />
         <span className="flex-1">{t("home.voiceCard")}</span>
         <ChevronRight aria-hidden="true" className="size-6" />
       </Link>
 
       <section aria-labelledby="notices">
-        <h2 id="notices" className="mb-3 flex items-center gap-2 text-lg font-extrabold">
-          <Megaphone aria-hidden="true" className="size-6 text-mint-100" />
+        <h2 id="notices" className="mb-3 flex items-center gap-2 text-base font-extrabold">
+          <Megaphone aria-hidden="true" className="size-6 text-sand-300" />
           {t("home.notices")}
         </h2>
         {notices.length === 0 ? (
-          <p className="text-cream-50/75">{t("home.noNotices")}</p>
+          <p className="text-ivory-50/75">{t("home.noNotices")}</p>
         ) : (
           <ul className="flex flex-col gap-3">
-            {notices.slice(0, 3).map((n) => (
-              <li key={n.id} className="flex items-start justify-between gap-3 rounded-4xl bg-mint-100/8 p-5">
+            {notices.slice(0, 3).map((raw) => {
+              const n = { id: raw.id, ...localizedNotice(raw, lang) };
+              return (
+              <li key={n.id} className="flex items-start justify-between gap-3 rounded-4xl bg-navy-900 p-5">
                 <p lang={n.lang}>{n.text}</p>
                 <SpeakButton text={n.text} lang={n.lang} listenLabel={t("common.listen")} stopLabel={t("common.stop")} compact />
               </li>
-            ))}
+              );
+            })}
           </ul>
         )}
       </section>

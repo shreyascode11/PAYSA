@@ -27,42 +27,42 @@ export function PassportCard({ passport, t }: { passport: PublicPassport; t: Tra
       }
     >
       <div className="flex items-center gap-4">
-        <span aria-hidden="true" className="flex size-20 shrink-0 items-center justify-center rounded-3xl bg-cream-50/90 text-3xl font-black text-ink-900">
+        <span aria-hidden="true" className="flex size-16 shrink-0 items-center justify-center rounded-3xl bg-ivory-50/90 text-2xl font-black text-navy-950">
           {initials(passport.name)}
         </span>
         <div className="min-w-0">
-          <p className="text-2xl font-black leading-tight">{passport.name}</p>
-          <p className="text-cream-50/75">{passport.role}</p>
+          <p className="text-xl font-black leading-tight">{passport.name}</p>
+          <p className="text-ivory-50/75">{passport.role}</p>
         </div>
       </div>
 
-      <p className="mt-5 flex items-center gap-3 rounded-3xl bg-cream-50/8 p-4">
-        <CalendarCheck aria-hidden="true" className="size-8 shrink-0 text-mint-100" />
+      <p className="mt-5 flex items-center gap-3 rounded-3xl bg-ivory-50/8 p-4">
+        <CalendarCheck aria-hidden="true" className="size-8 shrink-0 text-sand-300" />
         <span>
-          <span className="tabular block text-4xl font-black leading-none">{passport.verifiedDays}</span>
-          <span className="text-sm text-cream-50/75">{t("passport.daysLabel")}</span>
+          <span className="tabular block text-3xl font-black leading-none">{passport.verifiedDays}</span>
+          <span className="text-sm text-ivory-50/75">{t("passport.daysLabel")}</span>
         </span>
       </p>
 
-      <h2 className="mb-3 mt-6 text-sm font-bold uppercase tracking-[0.14em] text-cream-50/75">{t("passport.skills")}</h2>
+      <h2 className="mb-3 mt-6 text-sm font-bold uppercase tracking-[0.14em] text-ivory-50/75">{t("passport.skills")}</h2>
       {passport.skills.length === 0 ? (
-        <p className="text-cream-50/75">{t("passport.noSkills")}</p>
+        <p className="text-ivory-50/75">{t("passport.noSkills")}</p>
       ) : (
         <ul className="flex flex-col gap-2.5">
           {passport.skills.map((s) => (
-            <li key={s.skill} className="rounded-3xl bg-cream-50/8 p-4">
+            <li key={s.skill} className="rounded-3xl bg-ivory-50/8 p-4">
               <div className="flex items-center justify-between gap-3">
                 <span className="flex items-center gap-2 font-bold">
-                  <Award aria-hidden="true" className="size-5 text-mint-100" />
+                  <Award aria-hidden="true" className="size-5 text-sand-300" />
                   {t(`passport.skill.${s.skill}`)}
                 </span>
                 <span role="img" aria-label={t("passport.level", { level: s.level })} className="flex gap-1">
                   {[1, 2, 3].map((n) => (
-                    <span key={n} aria-hidden="true" className={`size-3 rounded-full ${n <= s.level ? "bg-safety-500" : "border-2 border-cream-50/45"}`} />
+                    <span key={n} aria-hidden="true" className={`size-3 rounded-full ${n <= s.level ? "bg-sand-300" : "border-2 border-ivory-50/45"}`} />
                   ))}
                 </span>
               </div>
-              <p className="mt-1 text-sm text-cream-50/75">
+              <p className="mt-1 text-sm text-ivory-50/75">
                 {t("passport.level", { level: s.level })} · {t(`passport.source.${s.source}`)}
               </p>
               {s.endorsedByName && (

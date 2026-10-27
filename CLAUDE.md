@@ -24,7 +24,7 @@ On top of that sit **anonymous, voice-first safety and grievance reporting**, pl
 
 | Rule | What it means for the code |
 |---|---|
-| Hosted on **Google Cloud Run** | Ship a `Dockerfile`. Use Next.js `output: "standalone"`. Never mention Vercel or Netlify anywhere. |
+| Hosted on **Vercel** (primary) or **Google Cloud Run** | `vercel.json` (region `bom1`) for Vercel; `Dockerfile` with Next.js `output: "standalone"` for Cloud Run. On serverless hosts `SESSION_SECRET` is required and Firestore is the data store (in-memory data is per instance). |
 | Repo **< 10 MB**, **1 branch** (`main`) | Add no binaries, videos or datasets. Seed data lives in a small TS/JSON file. Use SVG icons only. Keep `node_modules`, `.next` and `.env*` gitignored. |
 | Public repo URL ends in `.git` | n/a for code |
 | **No exposed secrets** (AI evaluator checks this) | Keys are read only from `process.env` on the server. Commit `.env.example` with empty values. Gemini is never called from the client. |
@@ -263,7 +263,7 @@ Rate-limit `/api/reports`, `/api/voice/transcribe` and the login routes with a s
 ## 10. Worker UI rules (inclusivity, judged directly)
 
 - Make **icon + colour + short word** the primary path. Text is secondary. Every action is reachable without reading.
-- Tap targets ≥ 48 px, base font ≥ 18 px, and a maximum of 3 primary actions per screen.
+- Tap targets ≥ 44–48 px, base font 16 px (see §18.3), and a maximum of 3 primary actions per screen.
 - Every screen has a 🔊 button that reads its main content aloud in the selected language.
 - The language switch (EN / தமிழ் / हिंदी) is always visible in the header and persisted in a cookie.
 - All strings come from `src/locales/*.json`. **No hard-coded UI text.** Translate properly; don't leave English in the ta/hi files.
@@ -346,78 +346,84 @@ The problem in 3 lines → SDG 8 targets addressed (8.5 decent work, 8.7 forced 
 
 Design references live in `./ui-design/` (gitignored, never committed). Use them for **layout and feel only**. Never copy their branding, logos or text.
 
-### 18.1 Palette (the only colours allowed)
+### 18.1 Palette — Holst (the only colours allowed)
 
-These are Tailwind theme tokens (`bg-forest-900`, `text-cream-50`…). Tints are allowed only as reduced opacity of these tokens (`text-cream-50/75`). Nothing else.
+These are Tailwind theme tokens (`bg-navy-950`, `text-ivory-50`…). Tints are allowed only as reduced opacity of these tokens (`text-ivory-50/70`).
 
 | Token | Hex | Use |
 |---|---|---|
-| `forest-900` | `#0F2A1D` | Worker background; admin sidebar; dark hero cards |
-| `forest-700` | `#1F5A3F` | Raised cards on dark; admin links, headings, bars |
-| `mint-100` | `#D9F2E3` | Accent text and icons on dark; light chips on cream |
-| `cream-50` | `#F7F3EA` | Text on dark; admin background and cards |
-| `ink-900` | `#11201A` | Text on light, **and the only text colour on orange / ok / warn fills**; nav pill |
-| `safety-500` | `#FF6B1A` | **Fill only**, always with `ink-900` content. Primary action, active nav, progress |
-| `ok` | `#1E9E5A` | Status fill (+ ink text) |
-| `warn` | `#F5B800` | Status fill (+ ink text) |
-| `critical` | `#C62828` | Status fill (+ cream text); text on cream only |
+| `navy-950` | `#0D1B2A` | Worker background; admin sidebar; **text on every light fill** |
+| `navy-900` | `#1B263B` | Raised cards and surfaces on dark |
+| `slate-600` | `#415A77` | Emphasis cards on dark; links, headings and primary chart series on light; completed timeline steps |
+| `sage-500` | `#778D7A` | `ok` status fill; secondary chart series |
+| `sand-300` | `#D4C4A8` | **Primary action fill** (navy text), active nav, worked days, rings, progress; accent text on dark |
+| `ivory-50` | `#F4F1DE` | Text on dark; admin cards; light chips (navy text) |
+
+**Status tones** are the only colours outside the palette. They're tuned to sit with it and are used **only as fills, with an icon and a label**: `ok` = sage `#778D7A` (navy text), `warn` = `#E3B04B` (navy text), `critical` = `#A8432F` (ivory text).
 
 ### 18.2 Contrast rules (computed, WCAG AA ≥ 4.5:1 for text)
 
 | Text on background | Ratio | Allowed |
 |---|---|---|
-| cream-50 on forest-900 / forest-700 | 13.85 / 7.31 | ✓ body text |
-| cream-50/75 on forest-900 · on card (mint-100/8) · on forest-700 | 8.38 · 7.04 · 4.92 | ✓ muted text (never below /75 on forest-700) |
-| mint-100 on forest-900 / forest-700 | 12.97 / 6.85 | ✓ accent text |
-| ink-900 on safety-500 · ok · warn | 5.92 · 4.89 · 9.43 | ✓ the only text on these fills |
-| cream-50 on critical | 5.08 | ✓ |
-| ink-900 on cream-50 / mint-100 | 15.23 / 14.26 | ✓ |
-| ink-900/70 on cream-50 | 5.98 | ✓ muted text on light |
-| forest-700 on cream-50 | 7.31 | ✓ links on light |
-| critical on cream-50 | 5.08 | ✓ error text on light |
-| safety-500 as text anywhere | ≤ 2.6 | ✗ never |
-| ok on cream (3.11) or forest (4.45); warn as text on light; critical on dark (2.73) | — | ✗ never |
+| ivory-50 on navy-950 / navy-900 / slate-600 | 15.31 / 13.33 / 6.26 | ✓ |
+| ivory-50/70 on navy-950 · navy-900 | 8.02 · 7.24 | ✓ muted text on dark |
+| ivory-50/85 on slate-600 | 5.04 | ✓ muted text on slate (never below /85) |
+| sand-300 on navy-950 / navy-900 | 10.16 / 8.84 | ✓ accent text on dark |
+| navy-950 on sand-300 · ivory-50 · warn · sage (ok) | 10.16 · 15.31 · 8.76 · 4.87 | ✓ the only text on these fills |
+| ivory-50 on critical | 5.27 | ✓ |
+| navy-950/70 on ivory-50 · admin bg | 6.11 · 5.81 | ✓ muted text on light |
+| slate-600 on admin bg | 5.69 | ✓ links on light |
+| critical on ivory-50 · admin bg | 5.27 · 4.79 | ✓ error text on light |
+| sage-500 as text on light (3.15) or dark (4.87 on navy is fill-only) | — | ✗ never as text |
+| critical as text on dark (≤ 3.5) | — | ✗ never |
 
-Non-text marks need ≥ 3:1: hollow "future" dots use cream-50/45 (3.9:1), "off" dots use cream-50/40.
+Non-text marks need ≥ 3:1: "off" dots use ivory-50/40 (3.48:1) and hollow "future" dots use ivory-50/45 (4.04:1). Chart series: slate (6.26:1) and sage (3.15:1) against the ivory card.
 
 ### 18.3 Rules
 
 - **Status = icon + label, always** (`StatusPill`). Colour is never the only signal. Dots and heatmaps carry a shape difference plus an accessible name or table.
-- **Worker UI is dark** (`forest-900` background) and mobile-first: ≥ 48px tap targets, 18px base font, **one primary action per screen** (the orange button).
-- **Admin UI is light** (`cream-50` background, `forest-900` sidebar) and desktop-first.
-- Cards: `rounded-3xl` on worker, `rounded-2xl` on admin. Worker cards are `bg-mint-100/8` (or `bg-forest-700` for emphasis). Admin cards are cream with a hairline `ink-900/10` border.
-- Numbers lead: one huge figure per hero (`text-6xl`, tabular nums), with its label above in small caps.
-- Focus ring: 3px `safety-500` on dark, 3px `forest-700` on light.
-- Motion: only the nav highlight slide and ring/progress fills, at ≤ 250ms. All motion is disabled under `prefers-reduced-motion`.
-- Worker pages stay server components; only `PillNav` and existing interactive leaves are client JS.
+- **Worker UI is dark** (`navy-950` + `bg-aurora`) and mobile-first: **16px base text**, ≥ 44–48px tap targets, **one primary action per screen** (the sand button).
+- **Type scale** (keep it calm):
+  - worker screen titles `text-xl`; hero figures `text-5xl`; card figures `text-3xl`
+  - buttons `text-lg`; labels in small caps `text-xs`
+  - admin page titles `text-2xl`; KPI figures `text-3xl`
+- **Admin UI is light** (ivory/sand background, `navy-950` sidebar) and desktop-first.
+- **Cards:** `rounded-3xl`/`rounded-4xl` on worker and `rounded-3xl` on admin. Worker cards are `bg-navy-900`, with `bg-slate-600` for emphasis. Admin cards are ivory with a hairline `navy-950/10` border.
+- **Focus ring:** 3px `sand-300` on dark, 3px `slate-600` on light.
+- **Motion:** only the nav highlight slide, the badge sway and ring/progress fills, at ≤ 250ms (sway 1.6s once). All motion is disabled under `prefers-reduced-motion`.
+- **Language:**
+  - every UI string comes from the locale files;
+  - times use spoken day periods in Tamil/Hindi (காலை 7:09, सुबह 7:09);
+  - notices carry per-language translations;
+  - voice input uses Gemini when configured, otherwise the browser's own speech recogniser in the worker's language.
 
 ### 18.4 Shared components (`src/components/ui/`)
 
 | Component | Purpose | Notes |
 |---|---|---|
-| `BigButton` | One primary action | `primary` = orange fill + ink; `secondary` = forest-700 + cream; `light` = forest-900 + cream (admin) |
-| `StatCard` | Label + big number + unit + hint | `tone`: `card`, `hero` (forest-700), `light` (admin cream), `dark` (admin forest hero) |
+| `BigButton` | One primary action | `primary` = sand fill + navy; `secondary` = slate + ivory; `light` = navy + ivory (admin); `outline` |
+| `StatCard` | Label + big number + unit + hint | `tone`: `card`, `hero` (slate), `light` (admin ivory), `dark` (admin navy hero) |
 | `StatusPill` | Status chip | `ok`, `warn`, `critical`, `info`, `neutral`; icon + label always |
-| `PillNav` | Worker bottom nav | Dark `ink-900` pill, 4 tabs (Home, Pay, Report, Passport), orange highlight circle slides to the active tab, label under each icon |
-| `Timeline` | Horizontal step tracker | done (mint fill, check), current (orange fill, ink icon, "Now" label), todo (hollow ring); progress bar beneath |
-| `DotCalendar` | Dot grid by row | `worked` (orange), `off` (small grey), `future` (hollow), and `ok`/`warn`/`critical` (status fill + icon) for fatigue; optional select handler; always paired with an sr-only summary |
+| `PillNav` | Worker bottom nav | Glass navy pill, 4 tabs (Home, Pay, Report, Passport), sand highlight circle slides to the active tab, label under each icon |
+| `Timeline` | Horizontal step tracker | done (slate fill, check), current (sand fill, navy icon, "Now" label), todo (hollow ring); progress bar beneath |
+| `DotCalendar` | Dot grid by row | `worked` (sand), `off` (small grey), `future` (hollow), and `ok`/`warn`/`critical` (status fill + icon) for fatigue; optional select handler; always paired with an sr-only summary |
 | `Gauge` | Semicircular segmented gauge (0–100) | Segments filled to the value in band colour; centre shows value + band label + icon |
-| `Ring` | Timer-style progress ring | For pay and hours; value text sits inside. `arc="ink"` on orange cards |
-| `IdBadge` | Lanyard ID badge (strap, clip, punched slot, ember glow) | Auth (worker + supervisor login, role picker) and the Skill Passport |
+| `Ring` | Timer-style progress ring | For pay and hours; value text sits inside. `arc="ink"` on sand cards |
+| `IdBadge` | Lanyard ID badge (strap, clip, punched slot, dusk glow) | Auth (worker + supervisor login, role picker) and the Skill Passport |
 | `ColumnChart` | Server-rendered column chart | y-axis ticks, hairline grid, optional average line, stacked series with 2px gaps, focusable tooltips, legend for 2+ series, table view |
 
 ### 18.5 Screen patterns
 
 - **Worker home:** big "hours this week" number at top, then rounded cards (today, overtime, streak dot calendar, notices), then the primary action.
-- **Worker check-in:** 3 steps (permission → scan inside orange corner brackets → result).
-- **Worker pay:** cream / ink / orange cards with rings, plus a Listen button.
+- **Worker check-in:** 3 steps (permission → scan inside sand corner brackets → result).
+- **Worker pay:** ivory / navy / sand cards with rings, plus a Listen button.
 - **Report tracking:** horizontal `Timeline`.
-- **Auth:** dark `bg-aurora` page; the form lives inside an `IdBadge` (big role word like "WORKER" / "SUPERVISOR", orange role chip, orange pill submit).
-- **Admin:** forest sidebar, top bar with the sector switcher, KPI `StatCard`s, bar chart, team table with `StatusPill`s. The quit-risk page uses `Gauge` plus heatmap tiles. The fatigue page uses a `DotCalendar` grid (workers × days).
+- **Auth:** dark `bg-aurora` page; the form lives inside an `IdBadge` (big role word like "WORKER" / "SUPERVISOR", sand role chip, sand pill submit).
+- **Admin:** navy sidebar, top bar with the sector switcher, KPI `StatCard`s, bar chart, team table with `StatusPill`s. The quit-risk page uses `Gauge` plus heatmap tiles. The fatigue page uses a `DotCalendar` grid (workers × days).
 
 ### 18.6 Brand, glass and glow
 
-- **Logo:** the PAYSA mascot (a site worker in a hard hat and shades), drawn as an original SVG in palette colours (`Logo` = cream tile, `Mascot` = bare). Always next to the "PAYSA" wordmark, which carries the name.
+- **Logo:** the PAYSA mascot (a site worker in a hard hat and shades), drawn as an original SVG (`Logo` = ivory tile, `Mascot` = bare). Always next to the "PAYSA" wordmark, which carries the name.
 - **Glass** (`glass-dark`, `glass-light`): blurred, translucent surfaces only where content scrolls beneath or sits over a glow. That means sticky headers, the bottom nav, panels beside grids, and secondary cards on auth pages. Never put glass behind long body text.
-- **Glow** (`bg-ember`, `bg-aurora`): radial gradients of the palette. Peaks are capped at 35% orange / 30% yellow, which keeps cream text ≥ 7:1 and cream/75 ≥ 4.6:1 over them.
-- **Charts:** one axis only, hairline solid gridlines, ≤ 28px bars with 4px rounded tops, 2px gaps between stacked segments, a legend for 2+ series, and always a table view. Regular hours are `forest-700`, overtime `safety-500`, today `safety-500` and rest days hatched.
+- **Glow** (`bg-dusk`, `bg-aurora`): radial gradients of the palette. Peaks are capped at 25% sand / 60% slate, which keeps ivory/70 text ≥ 5:1 over them.
+- **Charts:** one axis only, hairline solid gridlines, ≤ 28px bars with 4px rounded tops, 2px gaps between stacked segments, a legend for 2+ series, and always a table view. Regular hours are `slate-600`, overtime `sage-500`, today `navy-950` and rest days hatched.

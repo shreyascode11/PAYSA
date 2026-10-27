@@ -14,7 +14,7 @@ import type { Severity } from "@/lib/types";
 export const metadata: Metadata = { title: "Overview" };
 
 const FATIGUE_RANK = { ok: 0, warn: 1, critical: 2 } as const;
-const card = "rounded-3xl border border-ink-900/10 bg-cream-50 p-5 shadow-sm shadow-ink-900/5";
+const card = "rounded-3xl border border-navy-950/10 bg-ivory-50 p-5 shadow-sm shadow-navy-950/5";
 
 export default async function Overview() {
   const { org } = await adminPageContext();
@@ -46,12 +46,12 @@ export default async function Overview() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-3xl font-extrabold text-ink-900">Dashboard</h1>
-        <p className="text-ink-900/70">Attendance, safety and wellbeing across {data.sites.length} sites.</p>
+        <h1 className="text-2xl font-extrabold text-navy-950">Dashboard</h1>
+        <p className="text-navy-950/70">Attendance, safety and wellbeing across {data.sites.length} sites.</p>
       </div>
 
       {ov.criticalReports.length > 0 && (
-        <section aria-labelledby="crit" role="alert" className="rounded-2xl bg-critical p-5 text-cream-50">
+        <section aria-labelledby="crit" role="alert" className="rounded-2xl bg-critical p-5 text-ivory-50">
           <h2 id="crit" className="flex items-center gap-2 text-lg font-extrabold">
             <OctagonAlert aria-hidden="true" className="size-6" />
             {ov.criticalReports.length} critical report{ov.criticalReports.length > 1 ? "s need" : " needs"} action now
@@ -89,26 +89,26 @@ export default async function Overview() {
           <section aria-labelledby="att" className={card}>
             <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
               <div>
-                <h2 id="att" className="text-lg font-extrabold text-ink-900">
+                <h2 id="att" className="text-lg font-extrabold text-navy-950">
                   Attendance, last 14 days
                 </h2>
-                <p className="text-sm text-ink-900/70">Share of workers who checked in each day</p>
+                <p className="text-sm text-navy-950/70">Share of workers who checked in each day</p>
               </div>
-              <ul className="flex gap-4 text-sm text-ink-900/70" aria-label="Legend">
+              <ul className="flex gap-4 text-sm text-navy-950/70" aria-label="Legend">
                 <li className="flex items-center gap-1.5">
-                  <span aria-hidden="true" className="inline-block size-3 rounded-sm bg-forest-700" /> Attendance
+                  <span aria-hidden="true" className="inline-block size-3 rounded-sm bg-slate-600" /> Attendance
                 </li>
                 <li className="flex items-center gap-1.5">
-                  <span aria-hidden="true" className="inline-block size-3 rounded-sm bg-safety-500" /> Today so far
+                  <span aria-hidden="true" className="inline-block size-3 rounded-sm bg-navy-950" /> Today so far
                 </li>
                 <li className="flex items-center gap-1.5">
-                  <span aria-hidden="true" className="inline-block size-3 rounded-sm bg-[repeating-linear-gradient(135deg,var(--color-ink-900)_0_1.5px,transparent_1.5px_5px)] opacity-60" /> Rest day
+                  <span aria-hidden="true" className="inline-block size-3 rounded-sm bg-[repeating-linear-gradient(135deg,var(--color-navy-950)_0_1.5px,transparent_1.5px_5px)] opacity-60" /> Rest day
                 </li>
               </ul>
             </div>
             <ColumnChart
               title="Daily attendance, last 14 days"
-              series={[{ key: "rate", label: "Attendance", fill: "bg-forest-700" }]}
+              series={[{ key: "rate", label: "Attendance", fill: "bg-slate-600" }]}
               columns={attendanceCols}
               max={100}
               format={(v) => `${Math.round(v)}%`}
@@ -119,18 +119,18 @@ export default async function Overview() {
           <section aria-labelledby="hrs" className={card}>
             <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
               <div>
-                <h2 id="hrs" className="text-lg font-extrabold text-ink-900">
+                <h2 id="hrs" className="text-lg font-extrabold text-navy-950">
                   Hours worked per week
                 </h2>
-                <p className="text-sm text-ink-900/70">Regular vs overtime, all workers · overtime is paid at 2×</p>
+                <p className="text-sm text-navy-950/70">Regular vs overtime, all workers · overtime is paid at 2×</p>
               </div>
               <StatusPill tone={otShare >= 20 ? "critical" : otShare >= 10 ? "warn" : "ok"} label={`Last week: ${otShare}% overtime`} />
             </div>
             <ColumnChart
               title="Regular and overtime hours per week, last 6 weeks"
               series={[
-                { key: "regular", label: "Regular hours", fill: "bg-forest-700" },
-                { key: "overtime", label: "Overtime hours", fill: "bg-safety-500" },
+                { key: "regular", label: "Regular hours", fill: "bg-slate-600" },
+                { key: "overtime", label: "Overtime hours", fill: "bg-sage-500" },
               ]}
               columns={hoursCols}
               format={(v) => `${Math.round(v)}h`}
@@ -142,15 +142,15 @@ export default async function Overview() {
 
         <div className="flex flex-col gap-6">
           <section aria-labelledby="sev" className={card}>
-            <h2 id="sev" className="mb-3 text-lg font-extrabold text-ink-900">
+            <h2 id="sev" className="mb-3 text-lg font-extrabold text-navy-950">
               Open reports by severity
             </h2>
             <ul className="flex flex-col gap-2.5">
               {([4, 3, 2, 1] as Severity[]).map((s) => (
                 <li key={s}>
-                  <Link href={`/admin/reports?severity=${s}&status=open`} className="flex items-center justify-between rounded-lg hover:bg-mint-100/60">
+                  <Link href={`/admin/reports?severity=${s}&status=open`} className="flex items-center justify-between rounded-lg hover:bg-sand-300/40">
                     <StatusPill tone={SEVERITY[s].tone} label={SEVERITY[s].label} />
-                    <span className="tabular text-xl font-extrabold text-ink-900">{ov.openBySeverity[s]}</span>
+                    <span className="tabular text-xl font-extrabold text-navy-950">{ov.openBySeverity[s]}</span>
                   </Link>
                 </li>
               ))}
@@ -158,14 +158,14 @@ export default async function Overview() {
           </section>
 
           <section aria-labelledby="pulse" className={card}>
-            <h2 id="pulse" className="text-lg font-extrabold text-ink-900">
+            <h2 id="pulse" className="text-lg font-extrabold text-navy-950">
               Team mood
             </h2>
-            <p className="mb-3 text-sm text-ink-900/70">Anonymous weekly pulse · shown only with 5+ responses</p>
+            <p className="mb-3 text-sm text-navy-950/70">Anonymous weekly pulse · shown only with 5+ responses</p>
             <ul className="flex flex-col gap-2.5">
               {ov.teamPulse.map((tp) => (
                 <li key={tp.teamId} className="flex items-center justify-between gap-2">
-                  <span className="text-ink-900">{tp.name}</span>
+                  <span className="text-navy-950">{tp.name}</span>
                   {tp.average === null ? (
                     <StatusPill tone="neutral" label="Not enough responses" />
                   ) : (
@@ -180,17 +180,17 @@ export default async function Overview() {
 
       <section aria-labelledby="team" className={card}>
         <div className="mb-3 flex items-center justify-between gap-2">
-          <h2 id="team" className="text-lg font-extrabold text-ink-900">
+          <h2 id="team" className="text-lg font-extrabold text-navy-950">
             Team: needs attention first
           </h2>
-          <Link href="/admin/workers" className="flex min-h-10 items-center gap-1 rounded-full border border-ink-900/20 px-4 text-sm font-bold text-forest-700">
+          <Link href="/admin/workers" className="flex min-h-10 items-center gap-1 rounded-full border border-navy-950/20 px-4 text-sm font-bold text-slate-600">
             All workers <ArrowUpRight aria-hidden="true" className="size-4" />
           </Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <caption className="sr-only">Workers sorted by quit risk, with today&apos;s status and fatigue</caption>
-            <thead className="text-ink-900/70">
+            <thead className="text-navy-950/70">
               <tr>
                 <th scope="col" className="py-2 pr-3">Worker</th>
                 <th scope="col" className="py-2 pr-3">Today</th>
@@ -201,17 +201,17 @@ export default async function Overview() {
             </thead>
             <tbody>
               {people.map(({ worker, onSite, fatigue, risk }) => (
-                <tr key={worker.id} className="border-t border-ink-900/10">
+                <tr key={worker.id} className="border-t border-navy-950/10">
                   <th scope="row" className="py-3 pr-3 text-left">
                     <span className="flex items-center gap-3">
-                      <span aria-hidden="true" className="flex size-9 shrink-0 items-center justify-center rounded-full bg-mint-100 text-sm font-extrabold text-forest-900">
+                      <span aria-hidden="true" className="flex size-9 shrink-0 items-center justify-center rounded-full bg-sand-300 text-sm font-extrabold text-navy-950">
                         {worker.name.split(" ").map((p) => p[0]).join("").slice(0, 2)}
                       </span>
                       <span>
-                        <Link href={`/admin/workers/${worker.id}`} className="font-bold text-ink-900 hover:underline">
+                        <Link href={`/admin/workers/${worker.id}`} className="font-bold text-navy-950 hover:underline">
                           {worker.name}
                         </Link>
-                        <span className="block font-normal text-ink-900/70">
+                        <span className="block font-normal text-navy-950/70">
                           {worker.role} · {teamName.get(worker.teamId)}
                         </span>
                       </span>
@@ -224,7 +224,7 @@ export default async function Overview() {
                   <td className="py-3 pr-3">
                     <RiskBadge band={risk.band} score={risk.score} />
                   </td>
-                  <td className="py-3 text-ink-900">{risk.drivers[0]?.detail ?? "—"}</td>
+                  <td className="py-3 text-navy-950">{risk.drivers[0]?.detail ?? "—"}</td>
                 </tr>
               ))}
             </tbody>

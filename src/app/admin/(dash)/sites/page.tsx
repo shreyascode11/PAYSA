@@ -33,20 +33,20 @@ export default async function Sites() {
     <>
       <div className="no-print mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-extrabold">Sites & check-in QR</h1>
+          <h1 className="text-2xl font-extrabold">Sites & check-in QR</h1>
           <p className="text-muted">Codes rotate daily. Print today&apos;s poster each morning. Workers can also check in by GPS inside the radius.</p>
         </div>
         <PrintButton />
       </div>
       <ul className="grid gap-6 md:grid-cols-2">
         {posters.map(({ site, url, src }) => (
-          <li key={site.id} className="break-inside-avoid rounded-3xl border border-ink-900/10 bg-cream-50 p-6 shadow-sm shadow-ink-900/5 text-center">
+          <li key={site.id} className="break-inside-avoid rounded-3xl border border-navy-950/10 bg-ivory-50 p-6 shadow-sm shadow-navy-950/5 text-center">
             <h2 className="text-2xl font-extrabold">{site.name}</h2>
             <p className="mb-3 text-muted">
               {org.name} · valid {today}
             </p>
             {/* eslint-disable-next-line @next/next/no-img-element -- inline generated SVG data URL */}
-            <img src={src} alt={`Check-in QR code for ${site.name}, valid today`} className="mx-auto size-64 rounded-3xl bg-cream-50 p-3 ring-1 ring-ink-900/10" />
+            <img src={src} alt={`Check-in QR code for ${site.name}, valid today`} className="mx-auto size-64 rounded-3xl bg-ivory-50 p-3 ring-1 ring-navy-950/10" />
             <p className="mt-3 text-lg font-bold">Scan to start / end work · काम शुरू करें · வேலை தொடங்கு</p>
             <p className="no-print mt-2 text-xs text-muted">
               GPS radius {site.radiusM} m ·{" "}

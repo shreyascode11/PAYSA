@@ -13,7 +13,9 @@ export function sessionSecret(): string {
   if (fromEnv && fromEnv.length >= 32) return fromEnv;
   if (!g.__paysaSecret) {
     g.__paysaSecret = randomBytes(32).toString("hex");
-    console.warn("[paysa] SESSION_SECRET missing or < 32 chars; using an ephemeral secret.");
+    // On serverless hosts each function instance would mint its own secret and sessions would break.
+    const log = process.env.VERCEL ? console.error : console.warn;
+    log("[paysa] SESSION_SECRET missing or < 32 chars; using an ephemeral secret. Set it in your host's env settings.");
   }
   return g.__paysaSecret;
 }

@@ -242,10 +242,37 @@ const REPORTS: ReportSeed[] = [
   { orgId: "org-col", siteId: "site-col-2", type: "manager_feedback", category: "conditions", severity: 1, lang: "en", text: "No drinking water near the hostel block during the day.", textEn: "No drinking water near the hostel block during the day.", status: "action_taken", hoursAgo: 300, trackingId: "PS-WTR4HB", updates: [[250, "action_taken", "Water cooler installed."]] },
 ];
 
-const ANNOUNCEMENTS: [Announcement["orgId"], Lang, string, number][] = [
-  ["org-con", "ta", "வெப்ப எச்சரிக்கை: இன்று மதியம் 12 முதல் 3 மணி வரை வேலை நிறுத்தம். ஒவ்வொரு மணி நேரமும் தண்ணீர் குடியுங்கள்.", 4],
-  ["org-con", "hi", "शनिवार को सुबह 9 बजे सुरक्षा प्रशिक्षण है। हेलमेट साथ लाएँ।", 30],
-  ["org-col", "en", "Gloves and masks are now available at the housekeeping store. Ask your supervisor.", 6],
+const ANNOUNCEMENTS: { orgId: string; hoursAgo: number; text: Record<Lang, string>; written: Lang }[] = [
+  {
+    orgId: "org-con",
+    hoursAgo: 4,
+    written: "ta",
+    text: {
+      ta: "வெப்ப எச்சரிக்கை: இன்று மதியம் 12 முதல் 3 மணி வரை வேலை நிறுத்தம். ஒவ்வொரு மணி நேரமும் தண்ணீர் குடியுங்கள்.",
+      hi: "गर्मी की चेतावनी: आज दोपहर 12 से 3 बजे तक काम बंद रहेगा। हर घंटे पानी पिएँ।",
+      en: "Heat alert: work pauses from 12 to 3 pm today. Drink water every hour.",
+    },
+  },
+  {
+    orgId: "org-con",
+    hoursAgo: 30,
+    written: "hi",
+    text: {
+      hi: "शनिवार को सुबह 9 बजे सुरक्षा प्रशिक्षण है। हेलमेट साथ लाएँ।",
+      ta: "சனிக்கிழமை காலை 9 மணிக்கு பாதுகாப்புப் பயிற்சி. ஹெல்மெட் கொண்டு வாருங்கள்.",
+      en: "Safety training on Saturday at 9 am. Bring your helmet.",
+    },
+  },
+  {
+    orgId: "org-col",
+    hoursAgo: 6,
+    written: "en",
+    text: {
+      en: "Gloves and masks are now available at the housekeeping store. Ask your supervisor.",
+      ta: "கையுறைகளும் முகக்கவசங்களும் இப்போது தூய்மைப் பணி கிடங்கில் கிடைக்கும். மேற்பார்வையாளரிடம் கேளுங்கள்.",
+      hi: "दस्ताने और मास्क अब हाउसकीपिंग स्टोर में मिल रहे हैं। अपने सुपरवाइज़र से माँगें।",
+    },
+  },
 ];
 
 const PULSE_PLAN: Record<string, { weeksAgo: number[]; perWeek: number; scores: number[] }> = {
@@ -343,12 +370,13 @@ export function buildSeed(now: Date, pinHash: string, adminPasswordHash: string)
     })),
   );
 
-  const announcements: Announcement[] = ANNOUNCEMENTS.map(([orgId, lang, text, h], i) => ({
+  const announcements: Announcement[] = ANNOUNCEMENTS.map((a, i) => ({
     id: `an-${i + 1}`,
-    orgId,
-    lang,
-    text,
-    createdAt: hoursAgo(h),
+    orgId: a.orgId,
+    lang: a.written,
+    text: a.text[a.written],
+    translations: a.text,
+    createdAt: hoursAgo(a.hoursAgo),
   }));
 
   return {

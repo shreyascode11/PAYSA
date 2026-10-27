@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { PulseForm } from "@/components/PulseForm";
 import { ReportFlow } from "@/components/ReportFlow";
+import { aiEnabled } from "@/lib/ai/gemini";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { requireWorkerPage } from "@/lib/auth";
 import { PULSE_COOKIE } from "@/lib/constants";
@@ -37,6 +38,7 @@ export default async function Voice() {
           {t("voice.commentTitle")}
         </h2>
         <ReportFlow
+          aiVoice={aiEnabled()}
           lang={lang}
           types={[reportTypeOption("manager_feedback", t("voice.commentAbout"), org.sector, t)]}
           initialType="manager_feedback"

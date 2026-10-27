@@ -37,9 +37,9 @@ export default async function Passport() {
         <h2 id="share" className="mb-2 text-xl font-bold">
           {t("passport.share")}
         </h2>
-        <p className="mb-4 text-cream-50/75">{t("passport.shareHint")}</p>
+        <p className="mb-4 text-ivory-50/75">{t("passport.shareHint")}</p>
         {/* eslint-disable-next-line @next/next/no-img-element -- generated SVG data URL */}
-        <img src={`data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`} alt={t("passport.share")} className="mx-auto mb-4 size-52 rounded-3xl bg-cream-50 p-3" />
+        <img src={`data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`} alt={t("passport.share")} className="mx-auto mb-4 size-52 rounded-3xl bg-ivory-50 p-3" />
         <CopyLink url={url} copyLabel={t("common.copy")} copiedLabel={t("common.copied")} shareLabel={t("passport.share")} />
       </section>
     </>
