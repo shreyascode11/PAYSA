@@ -127,7 +127,7 @@ Open **[paysa-eight.vercel.app](https://paysa-eight.vercel.app)** and pick a bad
 | Campus housekeeping (Tamil) | `9000000101` | Rotating shifts and short rest between shifts |
 | Supervisor / HR (both workplaces) | `admin@paysa.demo` / `demo1234` | Critical alert, charts, fatigue grid, quit risk; switch workplace in the top bar |
 
-The demo data is generated relative to today, so there is always recent activity to explore.
+The demo data is generated relative to today, so there is always recent activity to explore. For a guided tour, see **[DEMO.md](DEMO.md)**.
 
 ## Privacy by design
 
