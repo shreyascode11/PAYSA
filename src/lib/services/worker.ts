@@ -91,3 +91,28 @@ export async function verifiedDaysWorked(repo: Repository, workerId: string): Pr
   const shifts = await repo.listShifts({ workerId });
   return new Set(shifts.filter((s) => s.checkOut).map((s) => localDateKey(s.checkIn))).size;
 }
+
+export interface StreakWeek {
+  weekStart: string;
+  days: { date: string; state: "worked" | "off" | "future" }[];
+}
+
+/** Mon–Sun rows of worked / off / upcoming days, oldest week first, for the attendance dot calendar. */
+export async function workerStreak(repo: Repository, workerId: string, weeks = 5, now = new Date()): Promise<{ weeks: StreakWeek[]; worked: number }> {
+  const today = localDateKey(now);
+  const first = addDays(weekStartKey(today), -7 * (weeks - 1));
+  const shifts = await repo.listShifts({ workerId, since: localDayStart(first).toISOString() });
+  const workedDays = new Set(shifts.map((s) => localDateKey(s.checkIn)));
+  const rows: StreakWeek[] = Array.from({ length: weeks }, (_, w) => {
+    const weekStart = addDays(first, 7 * w);
+    return {
+      weekStart,
+      days: Array.from({ length: 7 }, (_, d) => {
+        const date = addDays(weekStart, d);
+        const state = date > today ? "future" : workedDays.has(date) ? "worked" : "off";
+        return { date, state } as const;
+      }),
+    };
+  });
+  return { weeks: rows, worked: rows.flatMap((r) => r.days).filter((d) => d.state === "worked").length };
+}

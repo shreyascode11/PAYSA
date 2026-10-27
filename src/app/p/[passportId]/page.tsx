@@ -2,6 +2,7 @@ import { ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LangSwitch } from "@/components/LangSwitch";
+import { Logo } from "@/components/Logo";
 import { PassportCard } from "@/components/PassportCard";
 import { getT } from "@/lib/locale";
 import { getRepo } from "@/lib/repo";
@@ -19,21 +20,24 @@ export default async function PublicPassport({ params }: { params: Promise<{ pas
   const { lang, t } = await getT();
 
   return (
-    <div className="mx-auto max-w-xl px-4 py-6 text-lg">
+    <div className="bg-aurora min-h-dvh text-lg text-cream-50">
+    <div className="mx-auto max-w-md px-4 py-6">
       <header className="mb-6 flex items-center justify-between gap-2">
-        <p className="text-xl font-extrabold text-brand">
-          {t("common.appName")} · {t("passport.publicTitle")}
+        <p className="flex items-center gap-2 text-xl font-extrabold tracking-[0.18em]">
+          <Logo className="size-9" />
+          {t("common.appName")}
         </p>
         <LangSwitch current={lang} label={t("common.language")} />
       </header>
       <main id="main">
         <h1 className="sr-only">{t("passport.publicTitle")}</h1>
         <PassportCard passport={passport} t={t} />
-        <p className="mt-6 flex items-center gap-2 text-base text-muted">
-          <ShieldCheck aria-hidden="true" className="size-5 text-ok" />
+        <p className="mt-6 flex items-center gap-2 text-base text-cream-50/75">
+          <ShieldCheck aria-hidden="true" className="size-5 text-mint-100" />
           {t("passport.publicPrivacy")}
         </p>
       </main>
+    </div>
     </div>
   );
 }

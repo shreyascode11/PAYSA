@@ -1,52 +1,79 @@
 import { Award, BadgeCheck, CalendarCheck } from "lucide-react";
 import type { Translator } from "@/lib/i18n";
 import type { PublicPassport } from "@/lib/services/passport";
+import { IdBadge } from "./ui/IdBadge";
+import { StatusPill } from "./ui/StatusPill";
 
-/** Shared by the worker's own view and the public read-only link. */
+const initials = (name: string) =>
+  name
+    .split(" ")
+    .map((p) => p[0])
+    .join("")
+    .slice(0, 2);
+
+/** The Skill Passport as a portable ID badge. Shared by the worker's own view and the public link. */
 export function PassportCard({ passport, t }: { passport: PublicPassport; t: Translator }) {
   return (
-    <div className="flex flex-col gap-4">
-      <div className="rounded-2xl bg-brand p-5 text-brand-ink">
-        <p className="text-2xl font-extrabold">{passport.name}</p>
-        <p>{passport.role}</p>
-        <p className="mt-3 flex items-center gap-2 text-xl font-bold">
-          <CalendarCheck aria-hidden="true" className="size-7" />
-          {t("passport.days", { days: passport.verifiedDays })}
-        </p>
+    <IdBadge
+      kind={t("passport.publicTitle")}
+      footer={
+        <>
+          <span className="flex items-center gap-1.5">
+            <BadgeCheck aria-hidden="true" className="size-4" />
+            {passport.orgName}
+          </span>
+          <span className="tabular uppercase">ID {passport.passportId.slice(-6)}</span>
+        </>
+      }
+    >
+      <div className="flex items-center gap-4">
+        <span aria-hidden="true" className="flex size-20 shrink-0 items-center justify-center rounded-3xl bg-cream-50/90 text-3xl font-black text-ink-900">
+          {initials(passport.name)}
+        </span>
+        <div className="min-w-0">
+          <p className="text-2xl font-black leading-tight">{passport.name}</p>
+          <p className="text-cream-50/75">{passport.role}</p>
+        </div>
       </div>
-      <section aria-labelledby="skills-h">
-        <h2 id="skills-h" className="mb-3 text-xl font-bold">
-          {t("passport.skills")}
-        </h2>
-        {passport.skills.length === 0 ? (
-          <p className="text-muted">{t("passport.noSkills")}</p>
-        ) : (
-          <ul className="flex flex-col gap-3">
-            {passport.skills.map((s) => (
-              <li key={s.skill} className="flex items-start gap-3 rounded-2xl bg-surface p-4 shadow-sm">
-                <Award aria-hidden="true" className="size-8 shrink-0 text-brand" />
-                <div className="flex-1">
-                  <p className="font-bold">{t(`passport.skill.${s.skill}`)}</p>
-                  <p className="text-base text-muted">
-                    {t("passport.level", { level: s.level })} · {t(`passport.source.${s.source}`)}
-                  </p>
-                  {s.endorsedByName && (
-                    <p className="mt-1 inline-flex items-center gap-1 rounded-full bg-ok-soft px-2.5 py-0.5 text-sm font-semibold text-ok">
-                      <BadgeCheck aria-hidden="true" className="size-4" />
-                      {t("passport.endorsed", { org: s.endorsedByName })}
-                    </p>
-                  )}
-                </div>
-                <span aria-hidden="true" className="flex gap-0.5 pt-1">
+
+      <p className="mt-5 flex items-center gap-3 rounded-3xl bg-cream-50/8 p-4">
+        <CalendarCheck aria-hidden="true" className="size-8 shrink-0 text-mint-100" />
+        <span>
+          <span className="tabular block text-4xl font-black leading-none">{passport.verifiedDays}</span>
+          <span className="text-sm text-cream-50/75">{t("passport.daysLabel")}</span>
+        </span>
+      </p>
+
+      <h2 className="mb-3 mt-6 text-sm font-bold uppercase tracking-[0.14em] text-cream-50/75">{t("passport.skills")}</h2>
+      {passport.skills.length === 0 ? (
+        <p className="text-cream-50/75">{t("passport.noSkills")}</p>
+      ) : (
+        <ul className="flex flex-col gap-2.5">
+          {passport.skills.map((s) => (
+            <li key={s.skill} className="rounded-3xl bg-cream-50/8 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <span className="flex items-center gap-2 font-bold">
+                  <Award aria-hidden="true" className="size-5 text-mint-100" />
+                  {t(`passport.skill.${s.skill}`)}
+                </span>
+                <span role="img" aria-label={t("passport.level", { level: s.level })} className="flex gap-1">
                   {[1, 2, 3].map((n) => (
-                    <span key={n} className={`size-3 rounded-full ${n <= s.level ? "bg-brand" : "bg-surface-2"}`} />
+                    <span key={n} aria-hidden="true" className={`size-3 rounded-full ${n <= s.level ? "bg-safety-500" : "border-2 border-cream-50/45"}`} />
                   ))}
                 </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-    </div>
+              </div>
+              <p className="mt-1 text-sm text-cream-50/75">
+                {t("passport.level", { level: s.level })} · {t(`passport.source.${s.source}`)}
+              </p>
+              {s.endorsedByName && (
+                <div className="mt-2">
+                  <StatusPill tone="ok" icon={BadgeCheck} label={t("passport.endorsed", { org: s.endorsedByName })} />
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </IdBadge>
   );
 }

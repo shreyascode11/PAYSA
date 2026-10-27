@@ -59,7 +59,7 @@ export function SpeakButton({ text, lang, listenLabel, stopLabel, compact = fals
       onClick={toggle}
       aria-label={label}
       aria-pressed={speaking}
-      className={`inline-flex min-h-12 items-center gap-2 rounded-xl border-2 border-brand bg-brand-soft font-bold text-brand ${
+      className={`inline-flex min-h-12 items-center gap-2 rounded-full bg-mint-100 font-bold text-ink-900 ${
         compact ? "min-w-12 justify-center px-2" : "px-4 text-lg"
       }`}
     >

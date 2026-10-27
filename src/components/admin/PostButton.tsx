@@ -15,7 +15,7 @@ export function PostButton({ endpoint, body, children, doneLabel }: { endpoint: 
   }
   return (
     <span className="inline-flex items-center gap-2">
-      <button type="button" onClick={() => void go()} disabled={state === "busy" || state === "done"} className="min-h-10 rounded-lg border-2 border-brand px-3 text-sm font-bold text-brand disabled:opacity-60">
+      <button type="button" onClick={() => void go()} disabled={state === "busy" || state === "done"} className="min-h-10 rounded-full border border-forest-700 px-4 text-sm font-bold text-forest-700 disabled:opacity-60">
         {state === "done" ? doneLabel : children}
       </button>
       {state === "error" && <span role="alert" className="text-sm text-danger">Failed</span>}

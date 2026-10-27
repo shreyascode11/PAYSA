@@ -3,8 +3,9 @@ import type { Repository } from "../repo/types";
 import { canShowAggregate } from "../rules/anonymity";
 import { deriveAttritionSignals, scoreAttrition, type AttritionResult } from "../rules/attrition";
 import { assessFatigueDay, type FatigueResult } from "../rules/fatigue";
-import { closeOpenShiftsAt, hoursByDay } from "../rules/overtime";
-import { addDays, dayRange, localDateKey, localDayStart, round2 } from "../time";
+import { closeOpenShiftsAt, computeOvertime, hoursByDay } from "../rules/overtime";
+import { sectorConfig } from "../sectors";
+import { addDays, dayRange, localDateKey, localDayStart, round2, weekStartKey } from "../time";
 import type { FatigueAction, Org, Report, Severity, Shift, Site, Worker } from "../types";
 
 const HOUR = 3_600_000;
@@ -97,7 +98,44 @@ export interface TeamPulse {
   average: number | null;
 }
 
+export interface PersonRow {
+  worker: Worker;
+  onSite: boolean;
+  /** Worst fatigue level in the last 7 days. */
+  fatigue: FatigueResult["level"];
+  risk: AttritionResult;
+}
+
+export interface WeekHoursRow {
+  weekStart: string;
+  regular: number;
+  overtime: number;
+}
+
+/** Org-wide regular vs overtime hours per Mon–Sun week, using the same OT rules as payslips. */
+export function weeklyHours(data: OrgData, now = new Date(), weeks = 6): WeekHoursRow[] {
+  const thisWeek = weekStartKey(localDateKey(now));
+  const starts = Array.from({ length: weeks }, (_, i) => addDays(thisWeek, -7 * (weeks - 1 - i)));
+  const std = sectorConfig(data.org.sector).standardDailyHours;
+  const live = closeOpenShiftsAt(data.shifts, now);
+  return starts.map((weekStart) => {
+    const end = addDays(weekStart, 6);
+    let regular = 0;
+    let overtime = 0;
+    for (const w of data.workers) {
+      const own = live.filter((s) => s.workerId === w.id && localDateKey(s.checkIn) >= weekStart && localDateKey(s.checkIn) <= end);
+      if (own.length === 0) continue;
+      const ot = computeOvertime(own, { standardDailyHours: std });
+      regular += ot.regularHours;
+      overtime += ot.otHours;
+    }
+    return { weekStart, regular: Math.round(regular), overtime: Math.round(overtime) };
+  });
+}
+
 export interface Overview {
+  weeks: WeekHoursRow[];
+  people: PersonRow[];
   onSiteNow: number;
   workforce: number;
   attendance: { date: string; present: number; rate: number }[];
@@ -119,9 +157,15 @@ export async function overview(repo: Repository, data: OrgData, now = new Date()
   ]);
 
   // Open shifts older than 16h are forgotten checkouts, not people on site.
-  const onSiteNow = new Set(
+  const onSite = new Set(
     data.shifts.filter((s) => !s.checkOut && now.getTime() - Date.parse(s.checkIn) < 16 * HOUR).map((s) => s.workerId),
-  ).size;
+  );
+  const RANK = { ok: 0, warn: 1, critical: 2 } as const;
+  const people: PersonRow[] = attrition.map(({ worker, result }) => {
+    const cells = fatigue.rows.find((r) => r.worker.id === worker.id)?.cells ?? [];
+    const worst = cells.reduce<FatigueResult["level"]>((acc, c) => (RANK[c.result.level] > RANK[acc] ? c.result.level : acc), "ok");
+    return { worker, onSite: onSite.has(worker.id), fatigue: worst, risk: result };
+  });
 
   const attendance = dayRange(addDays(today, -13), today).map((date) => {
     const present = new Set(data.shifts.filter((s) => localDateKey(s.checkIn) === date).map((s) => s.workerId)).size;
@@ -149,7 +193,9 @@ export async function overview(repo: Repository, data: OrgData, now = new Date()
   });
 
   return {
-    onSiteNow,
+    weeks: weeklyHours(data, now),
+    people,
+    onSiteNow: onSite.size,
     workforce: data.workers.length,
     attendance,
     openBySeverity,

@@ -1,4 +1,4 @@
-# FairShift: Decent Work Platform
+# PAYSA: Decent Work Platform
 
 > Prompt Wars 2026 × SRM ACM · UN SDG 8 (Decent Work & Economic Growth)
 
@@ -6,11 +6,11 @@
 
 Construction crews and campus support staff are run on paper registers, spreadsheets and WhatsApp.
 Unpaid overtime goes unnoticed, exhaustion is invisible until someone gets hurt, and workers stay silent about danger or abuse because speaking up is risky.
-FairShift turns one shift check-in into fair pay, safety alerts and an anonymous voice, in the worker's own language.
+PAYSA turns one shift check-in into fair pay, safety alerts and an anonymous voice, in the worker's own language.
 
 ## SDG 8 targets addressed
 
-| Target | How FairShift helps |
+| Target | How PAYSA helps |
 |---|---|
 | **8.5** Decent work and equal pay | Automatic overtime from real check-ins; plain-language payslip in Tamil, Hindi or English that is read aloud; one-tap "Something wrong?" pay grievance |
 | **8.7** Forced-labour signals | Fatigue rules (12h+ shifts, < 8h rest, 60h+ weeks), late or missed pay, and anonymous "forced overtime / threats" feedback are all surfaced to HR with reasons |
@@ -18,7 +18,7 @@ FairShift turns one shift check-in into fair pay, safety alerts and an anonymous
 
 ## Features
 
-The deck asked for at least 3 working features. FairShift ships 8.
+The deck asked for at least 3 working features. PAYSA ships 8.
 
 | # | Feature | Where |
 |---|---|---|
@@ -68,9 +68,9 @@ All workers use PIN **1234**.
 | Construction worker (Tamil) | phone `9000000001` | Overworked: fatigue banner, heavy OT on last week's payslip, endorsed skills |
 | Construction worker (Hindi) | phone `9000000002` | Hindi UI and payslip |
 | College housekeeping (Tamil) | phone `9000000101` | Rotating shifts, short rest between shifts |
-| Admin / HR (both orgs) | `admin@fairshift.demo` / `demo1234` | Critical banner, heatmap, quit-risk, reports |
+| Admin / HR (both orgs) | `admin@paysa.demo` / `demo1234` | Critical banner, heatmap, quit-risk, reports |
 
-Demo tracking codes (no login needed): `FS-7K2Q9M` (critical fall hazard, Tamil) and `FS-H3LMT4` (PPE hazard with chat).
+Demo tracking codes (no login needed): `PS-7K2Q9M` (critical fall hazard, Tamil) and `PS-H3KMT4` (PPE hazard with chat).
 
 Seed data is generated relative to "now", so the dashboard always shows recent activity: 6 weeks of shifts, critical-fatigue and high-risk workers in both sectors, and a 4-person team whose mood is hidden by k-anonymity.
 
@@ -109,7 +109,7 @@ flowchart LR
 ## How anonymity is guaranteed
 
 1. **Nothing identifying is stored.** For an anonymous report `workerId` is never written, and `createdAt`, the first timeline entry and the worker's chat replies are rounded to the hour, so they can't be matched against check-in logs. See `reportIdentity()` in `src/lib/rules/anonymity.ts`, which is the only place identity is decided.
-2. **The tracking code is the only way back.** `FS-XXXXXX` is drawn from a crypto-random, unambiguous alphabet. The public track endpoint returns status, timeline and messages only, and is tested to contain no identity fields.
+2. **The tracking code is the only way back.** `PS-XXXXXX` is drawn from a crypto-random, unambiguous alphabet. The public track endpoint returns status, timeline and messages only, and is tested to contain no identity fields.
 3. **Photos are cleaned twice.** The phone re-encodes the photo through a canvas, and the server strips every JPEG APP1–APP15 and comment segment (EXIF, GPS, XMP).
 4. **Small groups stay hidden (k-anonymity).** Team mood is shown, and used in quit-risk, only when 5 or more people responded. Otherwise the dashboard says "Not enough responses".
 5. **Anonymous reports never feed an individual's quit-risk score.** This is enforced in `deriveAttritionSignals` and covered by a test.
@@ -137,7 +137,7 @@ Optional `.env.local` (see `.env.example`):
 printf '%s' "<gemini key>" | gcloud secrets create gemini-key --data-file=-
 openssl rand -hex 32 | tr -d '\n' | gcloud secrets create session-secret --data-file=-
 
-gcloud run deploy fairshift \
+gcloud run deploy paysa \
   --source . --region asia-south1 --allow-unauthenticated \
   --set-secrets GEMINI_API_KEY=gemini-key:latest,SESSION_SECRET=session-secret:latest \
   --set-env-vars GEMINI_MODEL=<model>,NODE_ENV=production \

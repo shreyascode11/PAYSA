@@ -4,7 +4,7 @@ import { getT } from "@/lib/locale";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "FairShift", template: "%s · FairShift" },
+  title: { default: "PAYSA", template: "%s · PAYSA" },
   description: "Worker-first platform for fair pay, safe work and an anonymous voice.",
   icons: { icon: "/icon.svg" },
 };

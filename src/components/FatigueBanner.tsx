@@ -1,25 +1,25 @@
-import { BedDouble, TriangleAlert } from "lucide-react";
+import { BedDouble, OctagonAlert } from "lucide-react";
 import { formatHours, type Translator } from "@/lib/i18n";
 import type { FatigueResult } from "@/lib/rules/fatigue";
 
-/** Gentle rest reminder on the worker's home screen; reasons always carry the numbers. */
+const reasonText = (f: FatigueResult["factors"][number], t: Translator): string =>
+  t(`fatigue.${f.code}`, { value: formatHours(f.value), limit: f.limit });
+
+/** Rest reminder on the worker home. Critical = red fill + cream text; warning = yellow fill + ink text. */
 export function FatigueBanner({ fatigue, t }: { fatigue: FatigueResult; t: Translator }) {
   if (fatigue.level === "ok") return null;
   const critical = fatigue.level === "critical";
-  const Icon = critical ? TriangleAlert : BedDouble;
+  const Icon = critical ? OctagonAlert : BedDouble;
   return (
-    <section
-      aria-labelledby="fatigue-title"
-      className={`mb-5 flex gap-3 rounded-2xl border-2 p-4 ${critical ? "border-danger bg-danger-soft" : "border-warn bg-warn-soft"}`}
-    >
-      <Icon aria-hidden="true" className={`size-9 shrink-0 ${critical ? "text-danger" : "text-warn"}`} />
+    <section aria-labelledby="fatigue-title" className={`flex gap-3 rounded-4xl p-5 ${critical ? "bg-critical text-cream-50" : "bg-warn text-ink-900"}`}>
+      <Icon aria-hidden="true" className="size-9 shrink-0" />
       <div>
-        <h2 id="fatigue-title" className={`text-xl font-bold ${critical ? "text-danger" : "text-warn"}`}>
+        <h2 id="fatigue-title" className="text-xl font-extrabold">
           {t(critical ? "fatigue.criticalTitle" : "fatigue.warnTitle")}
         </h2>
-        <ul className="mt-1 text-ink">
+        <ul className="mt-1 font-semibold">
           {fatigue.factors.map((f) => (
-            <li key={f.code}>{t(`fatigue.${f.code}`, { value: formatHours(f.value), limit: f.limit })}</li>
+            <li key={f.code}>{reasonText(f, t)}</li>
           ))}
         </ul>
       </div>
@@ -30,5 +30,5 @@ export function FatigueBanner({ fatigue, t }: { fatigue: FatigueResult; t: Trans
 export function fatigueSpeech(fatigue: FatigueResult, t: Translator): string {
   if (fatigue.level === "ok") return "";
   const title = t(fatigue.level === "critical" ? "fatigue.criticalTitle" : "fatigue.warnTitle");
-  return [title, ...fatigue.factors.map((f) => t(`fatigue.${f.code}`, { value: formatHours(f.value), limit: f.limit }))].join(". ");
+  return [title, ...fatigue.factors.map((f) => reasonText(f, t))].join(". ");
 }

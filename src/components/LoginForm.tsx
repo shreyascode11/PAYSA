@@ -1,6 +1,6 @@
 "use client";
 
-import { LogIn } from "lucide-react";
+import { ArrowRight, OctagonAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 
@@ -23,6 +23,7 @@ interface Props {
   next?: string;
 }
 
+/** Credential form styled for the dark ID badge. */
 export function LoginForm({ endpoint, fields, submitLabel, messages, next }: Props) {
   const router = useRouter();
   const [error, setError] = useState("");
@@ -53,10 +54,10 @@ export function LoginForm({ endpoint, fields, submitLabel, messages, next }: Pro
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-5" noValidate={false}>
+    <form onSubmit={onSubmit} className="flex flex-col gap-4">
       {fields.map((f) => (
-        <label key={f.name} className="flex flex-col gap-2 text-lg font-semibold">
-          {f.label}
+        <label key={f.name} className="flex flex-col gap-1.5">
+          <span className="text-xs font-bold uppercase tracking-[0.14em] text-cream-50/75">{f.label}</span>
           <input
             name={f.name}
             type={f.type}
@@ -67,20 +68,27 @@ export function LoginForm({ endpoint, fields, submitLabel, messages, next }: Pro
             required
             aria-invalid={error ? true : undefined}
             aria-describedby={error ? "login-error" : undefined}
-            className="min-h-14 rounded-xl border-2 border-line bg-surface px-4 text-2xl tracking-wider text-ink"
+            className="min-h-14 rounded-2xl bg-cream-50/8 px-4 text-2xl font-bold tracking-[0.12em] text-cream-50 ring-1 ring-cream-50/20 transition focus:bg-cream-50/12 focus:outline-none focus:ring-2 focus:ring-safety-500"
           />
         </label>
       ))}
-      <p id="login-error" role="alert" aria-live="polite" className="min-h-6 font-semibold text-danger">
-        {error}
-      </p>
+      <div id="login-error" role="alert" aria-live="polite" className="min-h-0">
+        {error && (
+          <p className="flex items-center gap-2 rounded-2xl bg-critical px-4 py-2.5 font-bold text-cream-50">
+            <OctagonAlert aria-hidden="true" className="size-5 shrink-0" />
+            {error}
+          </p>
+        )}
+      </div>
       <button
         type="submit"
         disabled={busy}
-        className="flex min-h-16 items-center justify-center gap-3 rounded-2xl bg-brand px-6 text-xl font-bold text-brand-ink disabled:opacity-60"
+        className="group mt-1 flex min-h-16 items-center justify-between gap-3 rounded-full bg-safety-500 pl-6 pr-2 text-xl font-extrabold text-ink-900 transition disabled:opacity-60"
       >
-        <LogIn aria-hidden="true" className="size-7" />
         {submitLabel}
+        <span aria-hidden="true" className="flex size-12 items-center justify-center rounded-full bg-ink-900 text-cream-50 transition group-hover:translate-x-0.5">
+          <ArrowRight className="size-6" />
+        </span>
       </button>
     </form>
   );

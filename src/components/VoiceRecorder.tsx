@@ -121,8 +121,8 @@ export default function VoiceRecorder({ lang, labels, onTranscript, onError }: P
         onPointerCancel={stop}
         onKeyDown={onKey}
         onContextMenu={(e) => e.preventDefault()}
-        className={`flex size-28 touch-none select-none items-center justify-center rounded-full shadow-lg ${
-          recording ? "animate-pulse bg-danger text-danger-ink" : "bg-brand text-brand-ink"
+        className={`flex size-32 touch-none select-none items-center justify-center rounded-full shadow-lg ${
+          recording ? "animate-pulse bg-critical text-cream-50 ring-8 ring-critical/30" : "bg-safety-500 text-ink-900 ring-8 ring-safety-500/20"
         } disabled:opacity-60`}
       >
         {recording ? <Square aria-hidden="true" className="size-12" /> : <Mic aria-hidden="true" className="size-14" />}

@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "FairShift",
+    "appName": "PAYSA",
     "tagline": "Fair pay. Safe work. Your voice.",
     "skip": "Skip to main content",
     "listen": "Listen",
@@ -18,7 +18,8 @@
     "copy": "Copy",
     "copied": "Copied",
     "hoursShort": "{hours} h",
-    "tooMany": "Too many tries. Please wait a minute."
+    "tooMany": "Too many tries. Please wait a minute.",
+    "now": "Now"
   },
   "landing": {
     "title": "Decent work, made simple",
@@ -27,7 +28,13 @@
     "workerHint": "Check in, see pay, report a problem",
     "admin": "Supervisor / HR",
     "adminHint": "Dashboard for sites and staff",
-    "sectors": "Works for construction sites and college campus staff."
+    "sectors": "Works for construction sites and college campus staff.",
+    "workerKind": "Worker pass",
+    "adminKind": "Staff pass",
+    "workerBig": "WORKER",
+    "adminBig": "SUPERVISOR",
+    "enter": "Enter",
+    "site": "Construction · Campus"
   },
   "login": {
     "title": "Worker login",
@@ -36,7 +43,11 @@
     "submit": "Log in",
     "invalid": "Wrong phone number or PIN.",
     "demo": "Demo: phone {phone}, PIN {pin}",
-    "speak": "Enter your phone number and four digit PIN, then press Log in."
+    "speak": "Enter your phone number and four digit PIN, then press Log in.",
+    "kind": "Worker pass",
+    "big": "WORKER",
+    "demoTitle": "Demo logins",
+    "secure": "Secure sign-in"
   },
   "nav": {
     "label": "Main menu",
@@ -58,7 +69,20 @@
     "endWork": "End work",
     "speak": "Hello {name}. Today you worked {today} hours. This week {week} hours. Overtime {ot} hours.",
     "notices": "Notices",
-    "noNotices": "No new notices."
+    "noNotices": "No new notices.",
+    "weekHours": "Hours this week",
+    "otLine": "{hours} h overtime counted",
+    "streakTitle": "Days worked",
+    "streakCount": "{days} days in the last 5 weeks",
+    "dotWorked": "{date}: worked",
+    "dotOff": "{date}: day off",
+    "dotFuture": "{date}: coming",
+    "legendWorked": "Worked",
+    "legendOff": "Off",
+    "legendFuture": "Coming",
+    "voiceCard": "How was your week? Tell us anonymously",
+    "todayGoal": "{hours} of {goal} hours today",
+    "streakUnit": "days in the last 5 weeks"
   },
   "fatigue": {
     "warnTitle": "Please rest well",
@@ -83,7 +107,7 @@
     "speak": "Scan the QR code at your site, or use your location to start work.",
     "err": {
       "expired_qr": "This QR code is old. Ask your supervisor for today's code.",
-      "bad_qr": "This QR code is not a FairShift site code.",
+      "bad_qr": "This QR code is not a PAYSA site code.",
       "outside": "You are {distance} metres away from {site}. Please go closer.",
       "already_in": "You have already started work.",
       "not_in": "You have not started work yet.",
@@ -91,7 +115,13 @@
       "gps_unavailable": "We could not find your location. Please scan the QR code.",
       "camera_denied": "Camera is turned off. Allow the camera, or use your location.",
       "no_site": "No work site found for you. Please tell your supervisor."
-    }
+    },
+    "stepReady": "Ready",
+    "stepScan": "Scan",
+    "stepDone": "Done",
+    "permission": "Your camera is used only to read the site QR code. Nothing is recorded.",
+    "stepOf": "Step {n} of 3",
+    "tryAgain": "Try again"
   },
   "pay": {
     "title": "My pay",
@@ -192,7 +222,8 @@
       "in_review": "Being checked",
       "action_taken": "Action taken",
       "resolved": "Solved"
-    }
+    },
+    "stepOf": "Step {n} of 4"
   },
   "voice": {
     "title": "My voice",
@@ -241,6 +272,7 @@
       "electrical_maintenance": "Electrical maintenance",
       "lab_assistance": "Lab assistance",
       "security": "Security"
-    }
+    },
+    "daysLabel": "verified days worked"
   }
 }

@@ -39,7 +39,7 @@ async function generateJson<T>(parts: object[], schema: object, validator: z.Zod
     return parsed.success ? parsed.data : null;
   } catch (err) {
     // Never log prompts or responses: they contain worker reports.
-    console.warn("[fairshift] Gemini call failed:", err instanceof Error ? err.name : "unknown");
+    console.warn("[paysa] Gemini call failed:", err instanceof Error ? err.name : "unknown");
     return null;
   }
 }

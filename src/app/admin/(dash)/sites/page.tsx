@@ -40,13 +40,13 @@ export default async function Sites() {
       </div>
       <ul className="grid gap-6 md:grid-cols-2">
         {posters.map(({ site, url, src }) => (
-          <li key={site.id} className="break-inside-avoid rounded-2xl border-2 border-line bg-surface p-6 text-center">
+          <li key={site.id} className="break-inside-avoid rounded-3xl border border-ink-900/10 bg-cream-50 p-6 shadow-sm shadow-ink-900/5 text-center">
             <h2 className="text-2xl font-extrabold">{site.name}</h2>
             <p className="mb-3 text-muted">
               {org.name} · valid {today}
             </p>
             {/* eslint-disable-next-line @next/next/no-img-element -- inline generated SVG data URL */}
-            <img src={src} alt={`Check-in QR code for ${site.name}, valid today`} className="mx-auto size-64 rounded-lg bg-white p-2" />
+            <img src={src} alt={`Check-in QR code for ${site.name}, valid today`} className="mx-auto size-64 rounded-3xl bg-cream-50 p-3 ring-1 ring-ink-900/10" />
             <p className="mt-3 text-lg font-bold">Scan to start / end work · काम शुरू करें · வேலை தொடங்கு</p>
             <p className="no-print mt-2 text-xs text-muted">
               GPS radius {site.radiusM} m ·{" "}

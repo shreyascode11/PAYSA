@@ -47,14 +47,14 @@ export function ReplyForm({ endpoint, label, submit, errorText }: Props) {
         rows={2}
         maxLength={1000}
         required
-        className="rounded-xl border-2 border-line bg-surface p-3 text-ink"
+        className="rounded-3xl border border-line bg-surface p-4 text-ink"
       />
       {error && (
-        <p role="alert" className="font-semibold text-danger">
+        <p role="alert" className="font-bold text-danger">
           {errorText}
         </p>
       )}
-      <button type="submit" disabled={busy} className="flex min-h-12 items-center justify-center gap-2 self-start rounded-xl bg-brand px-5 font-bold text-brand-ink disabled:opacity-60">
+      <button type="submit" disabled={busy} className="flex min-h-12 items-center justify-center gap-2 self-start rounded-full bg-brand px-6 font-bold text-brand-ink disabled:opacity-60">
         <Send aria-hidden="true" className="size-5" />
         {submit}
       </button>

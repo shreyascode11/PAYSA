@@ -33,13 +33,13 @@ export default async function Passport() {
         stopLabel={t("common.stop")}
       />
       <PassportCard passport={passport} t={t} />
-      <section aria-labelledby="share" className="mt-8 rounded-2xl bg-surface p-4">
+      <section aria-labelledby="share" className="glass-dark mt-8 rounded-4xl p-5">
         <h2 id="share" className="mb-2 text-xl font-bold">
           {t("passport.share")}
         </h2>
-        <p className="mb-3 text-muted">{t("passport.shareHint")}</p>
+        <p className="mb-4 text-cream-50/75">{t("passport.shareHint")}</p>
         {/* eslint-disable-next-line @next/next/no-img-element -- generated SVG data URL */}
-        <img src={`data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`} alt={t("passport.share")} className="mx-auto mb-3 size-48 rounded-lg bg-white p-2" />
+        <img src={`data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`} alt={t("passport.share")} className="mx-auto mb-4 size-52 rounded-3xl bg-cream-50 p-3" />
         <CopyLink url={url} copyLabel={t("common.copy")} copiedLabel={t("common.copied")} shareLabel={t("passport.share")} />
       </section>
     </>

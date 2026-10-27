@@ -20,7 +20,7 @@ describe("canShowAggregate", () => {
 });
 
 describe("generateTrackingId", () => {
-  it("matches FS-XXXXXX with no ambiguous characters", () => {
+  it("matches PS-XXXXXX with no ambiguous characters", () => {
     for (let i = 0; i < 200; i++) {
       const id = generateTrackingId();
       expect(id).toMatch(TRACKING_ID_PATTERN);
@@ -34,8 +34,8 @@ describe("generateTrackingId", () => {
   });
 
   it("normalizes user-typed codes", () => {
-    expect(normalizeTrackingId(" fs-7k2q9m ")).toBe("FS-7K2Q9M");
-    expect(normalizeTrackingId("7k2q9m")).toBe("FS-7K2Q9M");
+    expect(normalizeTrackingId(" ps-7k2q9m ")).toBe("PS-7K2Q9M");
+    expect(normalizeTrackingId("7k2q9m")).toBe("PS-7K2Q9M");
   });
 });
 

@@ -1,48 +1,47 @@
-import { CircleAlert, CircleCheck, Info, OctagonAlert, TriangleAlert, type LucideIcon } from "lucide-react";
-import type { FatigueLevel } from "@/lib/rules/fatigue";
+import { StatusPill, type StatusTone } from "@/components/ui/StatusPill";
 import type { RiskBand } from "@/lib/rules/attrition";
+import type { FatigueLevel } from "@/lib/rules/fatigue";
 import type { ReportStatus, Severity } from "@/lib/types";
 
 interface Look {
   label: string;
-  cls: string;
-  Icon: LucideIcon;
-}
-
-function Badge({ look }: { look: Look }) {
-  const { label, cls, Icon } = look;
-  return (
-    <span className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-sm font-semibold ${cls}`}>
-      <Icon aria-hidden="true" className="size-4" />
-      {label}
-    </span>
-  );
+  tone: StatusTone;
 }
 
 export const SEVERITY: Record<Severity, Look> = {
-  1: { label: "Low", cls: "bg-surface-2 text-ink", Icon: Info },
-  2: { label: "Moderate", cls: "bg-info-soft text-info", Icon: CircleAlert },
-  3: { label: "Serious", cls: "bg-warn-soft text-warn", Icon: TriangleAlert },
-  4: { label: "Critical", cls: "bg-danger-soft text-danger", Icon: OctagonAlert },
+  1: { label: "Low", tone: "neutral" },
+  2: { label: "Moderate", tone: "info" },
+  3: { label: "Serious", tone: "warn" },
+  4: { label: "Critical", tone: "critical" },
 };
 
 export const FATIGUE: Record<FatigueLevel, Look> = {
-  ok: { label: "OK", cls: "bg-ok-soft text-ok", Icon: CircleCheck },
-  warn: { label: "Warning", cls: "bg-warn-soft text-warn", Icon: TriangleAlert },
-  critical: { label: "Critical", cls: "bg-danger-soft text-danger", Icon: OctagonAlert },
+  ok: { label: "OK", tone: "ok" },
+  warn: { label: "Warning", tone: "warn" },
+  critical: { label: "Critical", tone: "critical" },
 };
 
 export const RISK: Record<RiskBand, Look> = {
-  low: { label: "Low", cls: "bg-ok-soft text-ok", Icon: CircleCheck },
-  medium: { label: "Medium", cls: "bg-warn-soft text-warn", Icon: TriangleAlert },
-  high: { label: "High", cls: "bg-danger-soft text-danger", Icon: OctagonAlert },
+  low: { label: "Low", tone: "ok" },
+  medium: { label: "Medium", tone: "warn" },
+  high: { label: "High", tone: "critical" },
 };
 
-export const SeverityBadge = ({ severity }: { severity: Severity }) => <Badge look={SEVERITY[severity]} />;
-export const FatigueBadge = ({ level }: { level: FatigueLevel }) => <Badge look={FATIGUE[level]} />;
+export const SeverityBadge = ({ severity }: { severity: Severity }) => <StatusPill {...SEVERITY[severity]} />;
+export const FatigueBadge = ({ level }: { level: FatigueLevel }) => <StatusPill {...FATIGUE[level]} />;
 export const RiskBadge = ({ band, score }: { band: RiskBand; score?: number }) => (
-  <Badge look={{ ...RISK[band], label: score === undefined ? RISK[band].label : `${score} · ${RISK[band].label}` }} />
+  <StatusPill tone={RISK[band].tone} label={score === undefined ? RISK[band].label : `${score} · ${RISK[band].label}`} />
 );
+
+export const DRIVER_LABELS: Record<string, string> = {
+  absences_up: "Absences rising",
+  fatigue_days: "Fatigue alerts",
+  long_weeks: "Weeks over 54h",
+  late_pay: "Late or missed pay",
+  low_team_mood: "Low team mood",
+  new_joiner: "New joiner (under 90 days)",
+  team_silent: "Team has gone silent",
+};
 
 export const ACTION_LABELS: Record<string, string> = {
   one_on_one: "1-on-1 check-in",

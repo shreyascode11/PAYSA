@@ -39,7 +39,7 @@ export default async function WorkerDetail({ params }: { params: Promise<{ id: s
         {worker.role} · {org.teams.find((t) => t.id === worker.teamId)?.name} · {formatINR(worker.dailyWage)}/day · {days} verified days
       </p>
       <div className="grid gap-6 lg:grid-cols-2">
-        <section aria-labelledby="week" className="rounded-2xl bg-surface p-4 shadow-sm">
+        <section aria-labelledby="week" className="rounded-3xl border border-ink-900/10 bg-cream-50 p-5 shadow-sm shadow-ink-900/5">
           <h2 id="week" className="mb-3 text-lg font-bold">
             This week
           </h2>
@@ -69,7 +69,7 @@ export default async function WorkerDetail({ params }: { params: Promise<{ id: s
           )}
         </section>
 
-        <section aria-labelledby="risk" className="rounded-2xl bg-surface p-4 shadow-sm">
+        <section aria-labelledby="risk" className="rounded-3xl border border-ink-900/10 bg-cream-50 p-5 shadow-sm shadow-ink-900/5">
           <h2 id="risk" className="mb-3 flex items-center gap-2 text-lg font-bold">
             Quit risk {risk && <RiskBadge band={risk.band} score={risk.score} />}
           </h2>
@@ -86,7 +86,7 @@ export default async function WorkerDetail({ params }: { params: Promise<{ id: s
           )}
         </section>
 
-        <section aria-labelledby="skills" className="rounded-2xl bg-surface p-4 shadow-sm lg:col-span-2">
+        <section aria-labelledby="skills" className="rounded-3xl border border-ink-900/10 bg-cream-50 p-5 shadow-sm shadow-ink-900/5 lg:col-span-2">
           <h2 id="skills" className="mb-1 text-lg font-bold">
             Skill Passport
           </h2>
@@ -95,13 +95,13 @@ export default async function WorkerDetail({ params }: { params: Promise<{ id: s
             {sectorConfig(org.sector).skills.map((skill) => {
               const entry = has.get(skill);
               return (
-                <li key={skill} className="flex min-h-12 items-center justify-between gap-2 rounded-lg bg-surface-2 px-3 py-2">
+                <li key={skill} className="flex min-h-12 items-center justify-between gap-2 rounded-2xl bg-mint-100/60 px-4 py-2.5">
                   <span>
                     {humanize(skill)}
                     {entry && <span className="ml-2 text-sm text-muted">level {entry.level} · {entry.source}</span>}
                   </span>
                   {entry?.endorsedBy ? (
-                    <span className="inline-flex items-center gap-1 text-sm font-semibold text-ok">
+                    <span className="inline-flex items-center gap-1 text-sm font-semibold text-ok-text">
                       <BadgeCheck aria-hidden="true" className="size-4" /> Endorsed
                     </span>
                   ) : (

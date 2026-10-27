@@ -1,4 +1,4 @@
-# CLAUDE.md — FairShift: Decent Work Platform
+# CLAUDE.md — PAYSA: Decent Work Platform
 
 > Prompt Wars 2026 × SRM ACM · Theme: UN SDG 8 (Decent Work & Economic Growth)
 > Read this whole file before writing code. Follow the build order in §14. Do not add scope beyond this file.
@@ -7,7 +7,7 @@
 
 ## 1. What we're building
 
-FairShift is a **worker-first workforce platform** for employee-intensive organisations that today run on paper registers, spreadsheets and WhatsApp. It is **one engine with sector templates**: we demo **Construction Site** and **College Campus (facility/support staff)**.
+PAYSA is a **worker-first workforce platform** for employee-intensive organisations that today run on paper registers, spreadsheets and WhatsApp. It is **one engine with sector templates**: we demo **Construction Site** and **College Campus (facility/support staff)**.
 
 **The core idea is that one check-in feeds everything.** A QR/geo shift check-in drives the following:
 attendance → automatic overtime → plain-language payslip → fatigue alerts → explainable quit-risk score.
@@ -58,7 +58,7 @@ On top of that sit **anonymous, voice-first safety and grievance reporting**, pl
 ## 4. Repo layout
 
 ```
-fairshift/
+paysa/
 ├─ CLAUDE.md
 ├─ README.md               # problem, features, sectors, demo logins, deploy steps, SDG 8 mapping
 ├─ Dockerfile
@@ -112,7 +112,7 @@ SkillEntry { id, workerId, skill, level: 1..3, source: "training"|"experience"|"
              endorsedBy?: orgId, date }
 ```
 
-**Anonymity rule:** when `anonymous=true`, **never store `workerId`, IP, or a precise timestamp** (round `createdAt` to the hour). `trackingId` is a random 8-char code (for example `FS-7K2Q9M`). It is shown to the worker once and is the only way back to the report.
+**Anonymity rule:** when `anonymous=true`, **never store `workerId`, IP, or a precise timestamp** (round `createdAt` to the hour). `trackingId` is a random 8-char code (for example `PS-7K2Q9M`). It is shown to the worker once and is the only way back to the report.
 
 ---
 
@@ -321,7 +321,7 @@ Rate-limit `/api/reports`, `/api/voice/transcribe` and the login routes with a s
 `Dockerfile`: multi-stage `node:20-alpine` (deps → build → runner). Copy `.next/standalone`, `.next/static` and `public`, run as a non-root user, `ENV PORT=8080`, `CMD ["node","server.js"]`.
 
 ```bash
-gcloud run deploy fairshift \
+gcloud run deploy paysa \
   --source . --region asia-south1 --allow-unauthenticated \
   --set-secrets GEMINI_API_KEY=gemini-key:latest,SESSION_SECRET=session-secret:latest \
   --set-env-vars GEMINI_MODEL=<model>,NODE_ENV=production \
@@ -341,3 +341,83 @@ The problem in 3 lines → SDG 8 targets addressed (8.5 decent work, 8.7 forced 
 - Functions should be small and named for what they do. Comment the *why*, not the *what*.
 - No new dependency without a clear need. Check bundle impact.
 - Never commit generated files, audio or images other than tiny SVGs.
+
+## 18. Design system
+
+Design references live in `./ui-design/` (gitignored, never committed). Use them for **layout and feel only**. Never copy their branding, logos or text.
+
+### 18.1 Palette (the only colours allowed)
+
+These are Tailwind theme tokens (`bg-forest-900`, `text-cream-50`…). Tints are allowed only as reduced opacity of these tokens (`text-cream-50/75`). Nothing else.
+
+| Token | Hex | Use |
+|---|---|---|
+| `forest-900` | `#0F2A1D` | Worker background; admin sidebar; dark hero cards |
+| `forest-700` | `#1F5A3F` | Raised cards on dark; admin links, headings, bars |
+| `mint-100` | `#D9F2E3` | Accent text and icons on dark; light chips on cream |
+| `cream-50` | `#F7F3EA` | Text on dark; admin background and cards |
+| `ink-900` | `#11201A` | Text on light, **and the only text colour on orange / ok / warn fills**; nav pill |
+| `safety-500` | `#FF6B1A` | **Fill only**, always with `ink-900` content. Primary action, active nav, progress |
+| `ok` | `#1E9E5A` | Status fill (+ ink text) |
+| `warn` | `#F5B800` | Status fill (+ ink text) |
+| `critical` | `#C62828` | Status fill (+ cream text); text on cream only |
+
+### 18.2 Contrast rules (computed, WCAG AA ≥ 4.5:1 for text)
+
+| Text on background | Ratio | Allowed |
+|---|---|---|
+| cream-50 on forest-900 / forest-700 | 13.85 / 7.31 | ✓ body text |
+| cream-50/75 on forest-900 · on card (mint-100/8) · on forest-700 | 8.38 · 7.04 · 4.92 | ✓ muted text (never below /75 on forest-700) |
+| mint-100 on forest-900 / forest-700 | 12.97 / 6.85 | ✓ accent text |
+| ink-900 on safety-500 · ok · warn | 5.92 · 4.89 · 9.43 | ✓ the only text on these fills |
+| cream-50 on critical | 5.08 | ✓ |
+| ink-900 on cream-50 / mint-100 | 15.23 / 14.26 | ✓ |
+| ink-900/70 on cream-50 | 5.98 | ✓ muted text on light |
+| forest-700 on cream-50 | 7.31 | ✓ links on light |
+| critical on cream-50 | 5.08 | ✓ error text on light |
+| safety-500 as text anywhere | ≤ 2.6 | ✗ never |
+| ok on cream (3.11) or forest (4.45); warn as text on light; critical on dark (2.73) | — | ✗ never |
+
+Non-text marks need ≥ 3:1: hollow "future" dots use cream-50/45 (3.9:1), "off" dots use cream-50/40.
+
+### 18.3 Rules
+
+- **Status = icon + label, always** (`StatusPill`). Colour is never the only signal. Dots and heatmaps carry a shape difference plus an accessible name or table.
+- **Worker UI is dark** (`forest-900` background) and mobile-first: ≥ 48px tap targets, 18px base font, **one primary action per screen** (the orange button).
+- **Admin UI is light** (`cream-50` background, `forest-900` sidebar) and desktop-first.
+- Cards: `rounded-3xl` on worker, `rounded-2xl` on admin. Worker cards are `bg-mint-100/8` (or `bg-forest-700` for emphasis). Admin cards are cream with a hairline `ink-900/10` border.
+- Numbers lead: one huge figure per hero (`text-6xl`, tabular nums), with its label above in small caps.
+- Focus ring: 3px `safety-500` on dark, 3px `forest-700` on light.
+- Motion: only the nav highlight slide and ring/progress fills, at ≤ 250ms. All motion is disabled under `prefers-reduced-motion`.
+- Worker pages stay server components; only `PillNav` and existing interactive leaves are client JS.
+
+### 18.4 Shared components (`src/components/ui/`)
+
+| Component | Purpose | Notes |
+|---|---|---|
+| `BigButton` | One primary action | `primary` = orange fill + ink; `secondary` = forest-700 + cream; `light` = forest-900 + cream (admin) |
+| `StatCard` | Label + big number + unit + hint | `tone`: `card`, `hero` (forest-700), `light` (admin cream), `dark` (admin forest hero) |
+| `StatusPill` | Status chip | `ok`, `warn`, `critical`, `info`, `neutral`; icon + label always |
+| `PillNav` | Worker bottom nav | Dark `ink-900` pill, 4 tabs (Home, Pay, Report, Passport), orange highlight circle slides to the active tab, label under each icon |
+| `Timeline` | Horizontal step tracker | done (mint fill, check), current (orange fill, ink icon, "Now" label), todo (hollow ring); progress bar beneath |
+| `DotCalendar` | Dot grid by row | `worked` (orange), `off` (small grey), `future` (hollow), and `ok`/`warn`/`critical` (status fill + icon) for fatigue; optional select handler; always paired with an sr-only summary |
+| `Gauge` | Semicircular segmented gauge (0–100) | Segments filled to the value in band colour; centre shows value + band label + icon |
+| `Ring` | Timer-style progress ring | For pay and hours; value text sits inside. `arc="ink"` on orange cards |
+| `IdBadge` | Lanyard ID badge (strap, clip, punched slot, ember glow) | Auth (worker + supervisor login, role picker) and the Skill Passport |
+| `ColumnChart` | Server-rendered column chart | y-axis ticks, hairline grid, optional average line, stacked series with 2px gaps, focusable tooltips, legend for 2+ series, table view |
+
+### 18.5 Screen patterns
+
+- **Worker home:** big "hours this week" number at top, then rounded cards (today, overtime, streak dot calendar, notices), then the primary action.
+- **Worker check-in:** 3 steps (permission → scan inside orange corner brackets → result).
+- **Worker pay:** cream / ink / orange cards with rings, plus a Listen button.
+- **Report tracking:** horizontal `Timeline`.
+- **Auth:** dark `bg-aurora` page; the form lives inside an `IdBadge` (big role word like "WORKER" / "SUPERVISOR", orange role chip, orange pill submit).
+- **Admin:** forest sidebar, top bar with the sector switcher, KPI `StatCard`s, bar chart, team table with `StatusPill`s. The quit-risk page uses `Gauge` plus heatmap tiles. The fatigue page uses a `DotCalendar` grid (workers × days).
+
+### 18.6 Brand, glass and glow
+
+- **Logo:** the PAYSA mascot (a site worker in a hard hat and shades), drawn as an original SVG in palette colours (`Logo` = cream tile, `Mascot` = bare). Always next to the "PAYSA" wordmark, which carries the name.
+- **Glass** (`glass-dark`, `glass-light`): blurred, translucent surfaces only where content scrolls beneath or sits over a glow. That means sticky headers, the bottom nav, panels beside grids, and secondary cards on auth pages. Never put glass behind long body text.
+- **Glow** (`bg-ember`, `bg-aurora`): radial gradients of the palette. Peaks are capped at 35% orange / 30% yellow, which keeps cream text ≥ 7:1 and cream/75 ≥ 4.6:1 over them.
+- **Charts:** one axis only, hairline solid gridlines, ≤ 28px bars with 4px rounded tops, 2px gaps between stacked segments, a legend for 2+ series, and always a table view. Regular hours are `forest-700`, overtime `safety-500`, today `safety-500` and rest days hatched.

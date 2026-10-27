@@ -21,7 +21,7 @@ export default async function Workers() {
   return (
     <>
       <h1 className="mb-4 text-3xl font-extrabold">Workers</h1>
-      <div className="overflow-x-auto rounded-2xl bg-surface shadow-sm">
+      <div className="overflow-x-auto rounded-3xl border border-ink-900/10 bg-cream-50 shadow-sm shadow-ink-900/5">
         <table className="w-full text-left text-sm">
           <caption className="sr-only">All workers</caption>
           <thead className="text-muted">

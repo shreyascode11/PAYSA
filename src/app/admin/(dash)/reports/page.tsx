@@ -33,11 +33,11 @@ export default async function Reports({ searchParams }: { searchParams: Promise<
     )
     .sort((a, b) => b.severity - a.severity || b.createdAt.localeCompare(a.createdAt));
 
-  const sel = "min-h-11 rounded-lg border-2 border-line bg-surface px-2 text-ink";
+  const sel = "min-h-11 rounded-full border border-ink-900/20 bg-cream-50 px-4 text-ink";
   return (
     <>
       <h1 className="mb-4 text-3xl font-extrabold">Reports inbox</h1>
-      <form method="get" className="mb-5 flex flex-wrap items-end gap-3 rounded-2xl bg-surface p-3" aria-label="Filter reports">
+      <form method="get" className="glass-light mb-5 flex flex-wrap items-end gap-3 rounded-3xl p-4" aria-label="Filter reports">
         <label className="flex flex-col text-sm font-semibold">
           Type
           <select name="type" defaultValue={f.type ?? ""} className={sel}>
@@ -83,7 +83,7 @@ export default async function Reports({ searchParams }: { searchParams: Promise<
             ))}
           </select>
         </label>
-        <button type="submit" className="flex min-h-11 items-center gap-2 rounded-lg bg-brand px-4 font-bold text-brand-ink">
+        <button type="submit" className="flex min-h-11 items-center gap-2 rounded-full bg-forest-900 px-5 font-bold text-cream-50">
           <Filter aria-hidden="true" className="size-5" />
           Apply
         </button>
@@ -95,7 +95,7 @@ export default async function Reports({ searchParams }: { searchParams: Promise<
       <p className="mb-2 text-sm text-muted" aria-live="polite">
         {rows.length} report{rows.length === 1 ? "" : "s"}
       </p>
-      <div className="overflow-x-auto rounded-2xl bg-surface shadow-sm">
+      <div className="overflow-x-auto rounded-3xl border border-ink-900/10 bg-cream-50 shadow-sm shadow-ink-900/5">
         <table className="w-full text-left text-sm">
           <caption className="sr-only">Reports, most severe first</caption>
           <thead className="text-muted">

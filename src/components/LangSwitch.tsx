@@ -19,7 +19,7 @@ export function LangSwitch({ current, label }: { current: Lang; label: string })
   }
 
   return (
-    <div role="group" aria-label={label} className="flex rounded-xl border-2 border-line bg-surface p-0.5">
+    <div role="group" aria-label={label} className="flex rounded-full bg-ink-900 p-1 ring-1 ring-cream-50/15">
       {ORDER.map((l) => (
         <button
           key={l}
@@ -27,9 +27,7 @@ export function LangSwitch({ current, label }: { current: Lang; label: string })
           lang={LANG_TAGS[l]}
           aria-pressed={lang === l}
           onClick={() => choose(l)}
-          className={`min-h-11 min-w-12 rounded-lg px-2.5 text-base font-semibold ${
-            lang === l ? "bg-brand text-brand-ink" : "text-ink"
-          }`}
+          className={`min-h-11 min-w-12 rounded-full px-3 text-base font-bold ${lang === l ? "bg-safety-500 text-ink-900" : "text-cream-50"}`}
         >
           {LANG_LABELS[l]}
         </button>

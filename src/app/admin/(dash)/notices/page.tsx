@@ -22,7 +22,7 @@ export default async function Notices() {
           </h2>
           <ul className="flex flex-col gap-3">
             {notices.map((n) => (
-              <li key={n.id} className="rounded-2xl border-l-4 border-brand bg-surface p-4">
+              <li key={n.id} className="rounded-3xl border-l-4 border-forest-700 bg-cream-50 p-5">
                 <p lang={n.lang}>{n.text}</p>
                 <p className="mt-1 text-sm text-muted">
                   {LANG_NAMES[n.lang]} · {new Date(n.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" })}

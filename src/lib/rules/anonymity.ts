@@ -7,7 +7,7 @@ export function canShowAggregate(groupSize: number): boolean {
 
 // No 0/O, 1/I/L, so codes survive being read aloud or written on paper.
 export const TRACKING_ALPHABET = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
-export const TRACKING_ID_PATTERN = /^FS-[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{6}$/;
+export const TRACKING_ID_PATTERN = /^PS-[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{6}$/;
 
 export function generateTrackingId(): string {
   const n = TRACKING_ALPHABET.length;
@@ -20,12 +20,12 @@ export function generateTrackingId(): string {
       if (b < limit && code.length < 6) code += TRACKING_ALPHABET[b % n];
     }
   }
-  return `FS-${code}`;
+  return `PS-${code}`;
 }
 
 export function normalizeTrackingId(raw: string): string {
   const s = raw.trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
-  return s.startsWith("FS") ? `FS-${s.slice(2)}` : `FS-${s}`;
+  return s.startsWith("PS") ? `PS-${s.slice(2)}` : `PS-${s}`;
 }
 
 /** Coarsen a timestamp to the hour so submission time can't be matched to a shift log. */

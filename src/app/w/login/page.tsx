@@ -10,7 +10,7 @@ export default async function WorkerLogin() {
   if (await getWorkerSession()) redirect("/w/home");
   const { lang, t } = await getT();
   return (
-    <main id="main" className="flex-1 px-4 py-6">
+    <main id="main" className="flex-1 px-4 pb-10">
       <WorkerLoginPanel lang={lang} t={t} />
     </main>
   );

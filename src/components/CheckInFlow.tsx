@@ -1,11 +1,11 @@
 "use client";
 
-import { CircleCheck, CircleStop, MapPin, QrCode, TriangleAlert } from "lucide-react";
+import { CircleCheck, CircleStop, MapPin, OctagonAlert, QrCode, ScanLine } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { BigButton } from "./BigButton";
+import { BigButton } from "./ui/BigButton";
 
 const QrScanner = dynamic(() => import("./QrScanner"), { ssr: false });
 
@@ -20,6 +20,13 @@ export interface CheckInLabels {
   successIn: string;
   successOut: string;
   goHome: string;
+  stepReady: string;
+  stepScan: string;
+  stepDone: string;
+  stepOf: string;
+  permission: string;
+  tryAgain: string;
+  cancel: string;
   generic: string;
   offline: string;
   errors: Record<string, string>;
@@ -134,43 +141,78 @@ export function CheckInFlow({ mode, initialQr, labels, locale }: Props) {
   }
 
   const done = result?.kind === "ok";
+  const failed = result?.kind === "error";
+  const stepIndex = done || failed ? 2 : step === "scan" || step === "busy" || step === "locating" ? 1 : 0;
+  const steps = [labels.stepReady, labels.stepScan, labels.stepDone];
 
   return (
-    <div className="flex flex-col gap-4">
-      <div aria-live="polite" role="status">
+    <div className="flex flex-col gap-6">
+      <ol aria-label={fill(labels.stepOf, { n: stepIndex + 1 })} className="grid grid-cols-3 gap-2">
+        {steps.map((name, i) => (
+          <li key={name} aria-current={i === stepIndex ? "step" : undefined} className="flex flex-col gap-1.5">
+            <span aria-hidden="true" className={`h-1.5 rounded-full ${i <= stepIndex ? "bg-safety-500" : "bg-cream-50/20"}`} />
+            <span className={`text-sm ${i === stepIndex ? "font-extrabold text-cream-50" : "font-semibold text-cream-50/75"}`}>
+              {i + 1}. {name}
+            </span>
+          </li>
+        ))}
+      </ol>
+
+      <div aria-live="polite" role="status" className="contents">
         {result && (
-          <p
-            className={`flex items-start gap-3 rounded-2xl border-2 p-4 text-xl font-semibold ${
-              result.kind === "ok" ? "border-ok bg-ok-soft text-ok" : "border-danger bg-danger-soft text-danger"
-            }`}
-          >
-            {result.kind === "ok" ? (
-              <CircleCheck aria-hidden="true" className="size-8 shrink-0" />
-            ) : (
-              <TriangleAlert aria-hidden="true" className="size-8 shrink-0" />
-            )}
-            <span>{result.text}</span>
+          <section className="flex flex-col items-center gap-4 rounded-4xl bg-mint-100/8 px-6 py-8 text-center">
+            <span className={`flex size-24 items-center justify-center rounded-full ${result.kind === "ok" ? "bg-ok text-ink-900" : "bg-critical text-cream-50"}`}>
+              {result.kind === "ok" ? <CircleCheck aria-hidden="true" className="size-12" /> : <OctagonAlert aria-hidden="true" className="size-12" />}
+            </span>
+            <p className="text-xl font-bold">{result.text}</p>
+          </section>
+        )}
+        {step === "locating" && (
+          <p className="flex items-center justify-center gap-2 rounded-full bg-mint-100/8 py-3 font-semibold">
+            <MapPin aria-hidden="true" className="size-5 animate-pulse" />
+            {labels.locating}
           </p>
         )}
-        {step === "locating" && <p className="text-lg font-semibold">{labels.locating}</p>}
       </div>
 
       {done ? (
-        <Link href="/w/home" className="flex min-h-16 items-center justify-center rounded-2xl bg-brand text-xl font-bold text-brand-ink">
+        <Link href="/w/home" className="flex min-h-16 items-center justify-center rounded-full bg-safety-500 text-xl font-extrabold text-ink-900">
           {labels.goHome}
         </Link>
       ) : mode === "out" ? (
         <>
-          <p>{labels.confirmOut}</p>
-          <BigButton tone="danger" icon={<CircleStop />} label={labels.endWork} disabled={step === "busy"} onClick={() => void send("/api/shifts/check-out", {})} />
+          {!failed && <p className="text-center text-cream-50/80">{labels.confirmOut}</p>}
+          <BigButton icon={<CircleStop />} label={failed ? labels.tryAgain : labels.endWork} disabled={step === "busy"} onClick={() => void send("/api/shifts/check-out", {})} />
         </>
       ) : step === "scan" ? (
-        <QrScanner onScan={onScan} onError={onScanError} hint={labels.scanning} />
+        <>
+          <QrScanner onScan={onScan} onError={onScanError} hint={labels.scanning} />
+          <button type="button" onClick={() => setStep("choose")} className="min-h-12 rounded-full font-bold text-cream-50 underline">
+            {labels.cancel}
+          </button>
+        </>
       ) : (
         <>
-          <p className="font-semibold">{labels.choose}</p>
-          <BigButton icon={<QrCode />} label={labels.scanQr} disabled={step !== "choose"} onClick={() => { setResult(null); setStep("scan"); }} />
-          <BigButton tone="neutral" icon={<MapPin />} label={labels.useGps} disabled={step !== "choose"} onClick={useGps} />
+          {!failed && (
+            <section className="flex flex-col items-center gap-4 py-2 text-center">
+              <span aria-hidden="true" className="relative flex size-40 items-center justify-center rounded-[40%] bg-cream-50/90 text-ink-900">
+                <ScanLine className="size-20" strokeWidth={1.75} />
+                <span className="absolute -right-1 top-3 size-6 rounded-full bg-safety-500" />
+              </span>
+              <p className="text-xl font-bold">{labels.choose}</p>
+              <p className="max-w-xs text-base text-cream-50/75">{labels.permission}</p>
+            </section>
+          )}
+          <BigButton
+            icon={<QrCode />}
+            label={failed ? labels.tryAgain : labels.scanQr}
+            disabled={step !== "choose"}
+            onClick={() => {
+              setResult(null);
+              setStep("scan");
+            }}
+          />
+          <BigButton variant="outline" icon={<MapPin />} label={labels.useGps} disabled={step !== "choose"} onClick={useGps} />
         </>
       )}
     </div>

@@ -1,57 +1,82 @@
 @import "tailwindcss";
 
-/* Colour tokens. Every text/background pair below meets WCAG AA (4.5:1) in both themes. */
-:root {
-  --bg: #f6f5f1;
-  --surface: #ffffff;
-  --surface-2: #eeede7;
-  --ink: #15191f;
-  --muted: #4a5260;
-  --line: #d4d2c8;
-  --brand: #0d5c4c;
-  --brand-ink: #ffffff;
-  --brand-soft: #dcefe9;
-  --ok: #166534;
-  --ok-soft: #dcfce7;
-  --warn: #92400e;
-  --warn-soft: #fef3c7;
-  --danger: #b91c1c;
-  --danger-ink: #ffffff;
-  --danger-soft: #fee2e2;
-  --info: #1e40af;
-  --info-soft: #dbeafe;
-  --focus: #1d4ed8;
-  /* Single-series chart mark; validated for chroma and 3:1 contrast on the surface. */
-  --chart: #0a8a6f;
-  --grid: #e4e2da;
-  color-scheme: light;
+/*
+ * PAYSA design system (CLAUDE.md §18). The palette below is the only source of colour.
+ * Contrast for every text pair is computed and listed in §18.2.
+ */
+@theme {
+  --color-*: initial;
+  --color-forest-900: #0f2a1d;
+  --color-forest-700: #1f5a3f;
+  --color-mint-100: #d9f2e3;
+  --color-cream-50: #f7f3ea;
+  --color-ink-900: #11201a;
+  --color-safety-500: #ff6b1a;
+  --color-ok: #1e9e5a;
+  --color-warn: #f5b800;
+  --color-critical: #c62828;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Sans Tamil", "Noto Sans Devanagari", sans-serif;
+  --radius-4xl: 2rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0f1214;
-    --surface: #181c20;
-    --surface-2: #22272d;
-    --ink: #f1f3f5;
-    --muted: #b4bcc6;
-    --line: #353b43;
-    --brand: #5fd4b6;
-    --brand-ink: #062a22;
-    --brand-soft: #123a31;
-    --ok: #86efac;
-    --ok-soft: #12321f;
-    --warn: #fcd34d;
-    --warn-soft: #3a2a08;
-    --danger: #fca5a5;
-    --danger-ink: #3b0a0a;
-    --danger-soft: #3d1414;
-    --info: #93c5fd;
-    --info-soft: #172a4a;
-    --focus: #93c5fd;
-    --chart: #5fd4b6;
-    --grid: #2b3138;
-    color-scheme: dark;
-  }
+/*
+ * Semantic aliases used by screens not yet redesigned. Each area maps them onto palette
+ * tokens only, chosen so every pair the code uses still passes AA (see §18.2).
+ */
+.theme-worker,
+:root {
+  --bg: var(--color-forest-900);
+  --surface: color-mix(in srgb, var(--color-mint-100) 8%, var(--color-forest-900));
+  --surface-2: color-mix(in srgb, var(--color-mint-100) 14%, var(--color-forest-900));
+  --ink: var(--color-cream-50);
+  --muted: color-mix(in srgb, var(--color-cream-50) 78%, var(--color-forest-900));
+  --line: color-mix(in srgb, var(--color-cream-50) 22%, var(--color-forest-900));
+  --brand: var(--color-mint-100);
+  --brand-ink: var(--color-forest-900);
+  --brand-soft: var(--color-forest-700);
+  --ok: var(--color-mint-100);
+  --ok-soft: var(--color-forest-700);
+  --warn: var(--color-warn);
+  --warn-soft: var(--color-forest-700);
+  --danger: var(--color-cream-50);
+  --danger-ink: var(--color-critical);
+  --danger-soft: var(--color-critical);
+  --info: var(--color-mint-100);
+  --info-soft: var(--color-forest-700);
+  --focus: var(--color-safety-500);
+  --chart: var(--color-mint-100);
+  --grid: color-mix(in srgb, var(--color-cream-50) 15%, var(--color-forest-900));
+  color-scheme: dark;
+}
+
+.theme-admin {
+  --bg: color-mix(in srgb, var(--color-mint-100) 35%, var(--color-cream-50));
+  --surface: var(--color-cream-50);
+  --surface-2: var(--color-mint-100);
+  --ink: var(--color-ink-900);
+  --muted: color-mix(in srgb, var(--color-ink-900) 72%, var(--color-cream-50));
+  --line: color-mix(in srgb, var(--color-ink-900) 14%, var(--color-cream-50));
+  --brand: var(--color-forest-700);
+  --brand-ink: var(--color-cream-50);
+  --brand-soft: var(--color-mint-100);
+  --ok: var(--color-forest-700);
+  --ok-soft: var(--color-mint-100);
+  --warn: var(--color-ink-900);
+  --warn-soft: var(--color-warn);
+  --danger: var(--color-critical);
+  --danger-ink: var(--color-cream-50);
+  --danger-soft: var(--color-cream-50);
+  --info: var(--color-forest-900);
+  --info-soft: var(--color-mint-100);
+  --focus: var(--color-forest-700);
+  --chart: var(--color-forest-700);
+  --grid: color-mix(in srgb, var(--color-ink-900) 10%, var(--color-cream-50));
+  color-scheme: light;
+  background: var(--bg);
+  color: var(--ink);
 }
 
 @theme inline {
@@ -64,21 +89,20 @@
   --color-brand: var(--brand);
   --color-brand-ink: var(--brand-ink);
   --color-brand-soft: var(--brand-soft);
-  --color-ok: var(--ok);
+  --color-ok-text: var(--ok);
   --color-ok-soft: var(--ok-soft);
-  --color-warn: var(--warn);
+  --color-warn-text: var(--warn);
   --color-warn-soft: var(--warn-soft);
   --color-danger: var(--danger);
   --color-danger-ink: var(--danger-ink);
   --color-danger-soft: var(--danger-soft);
   --color-info: var(--info);
   --color-info-soft: var(--info-soft);
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Sans Tamil", "Noto Sans Devanagari", sans-serif;
 }
 
 html {
-  background: var(--bg);
-  color: var(--ink);
+  background: var(--color-forest-900);
+  color: var(--color-cream-50);
   -webkit-text-size-adjust: 100%;
 }
 
@@ -92,7 +116,7 @@ body {
 :focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 .skip-link {
@@ -101,10 +125,10 @@ body {
   top: -100px;
   z-index: 50;
   padding: 12px 16px;
-  background: var(--brand);
-  color: var(--brand-ink);
+  background: var(--color-safety-500);
+  color: var(--color-ink-900);
   font-weight: 700;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 .skip-link:focus {
   top: 8px;
@@ -122,6 +146,77 @@ body {
   border: 0;
 }
 
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * Glass and glow (CLAUDE.md §18.6). Glow peaks are capped at 35% orange / 30% yellow so cream
+ * text, even at /75, stays above 4.6:1 wherever it lands on them.
+ */
+@utility glass-dark {
+  background: color-mix(in srgb, var(--color-ink-900) 60%, transparent);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-cream-50) 12%, transparent);
+}
+
+@utility glass-light {
+  background: color-mix(in srgb, var(--color-cream-50) 72%, transparent);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-ink-900) 10%, transparent);
+}
+
+@utility bg-ember {
+  background-color: var(--color-ink-900);
+  background-image:
+    radial-gradient(60% 45% at 0% 0%, color-mix(in srgb, var(--color-safety-500) 35%, transparent), transparent 70%),
+    radial-gradient(55% 45% at 100% 100%, color-mix(in srgb, var(--color-warn) 30%, transparent), transparent 70%);
+}
+
+@utility bg-aurora {
+  background-color: var(--color-forest-900);
+  background-image:
+    radial-gradient(70% 40% at 100% 0%, color-mix(in srgb, var(--color-forest-700) 70%, transparent), transparent 70%),
+    radial-gradient(50% 30% at 0% 18%, color-mix(in srgb, var(--color-safety-500) 12%, transparent), transparent 70%);
+  background-attachment: fixed;
+}
+
+@keyframes badge-sway {
+  0% {
+    transform: rotate(-2.2deg);
+  }
+  45% {
+    transform: rotate(1.4deg);
+  }
+  75% {
+    transform: rotate(-0.6deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.badge-sway {
+  transform-origin: 50% -120px;
+  animation: badge-sway 1.6s cubic-bezier(0.3, 0.7, 0.4, 1) both;
+}
+
+@keyframes scan-line {
+  0%,
+  100% {
+    top: 12%;
+  }
+  50% {
+    top: 84%;
+  }
+}
+
+.scan-line {
+  animation: scan-line 2.4s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -136,5 +231,8 @@ body {
 @media print {
   .no-print {
     display: none !important;
+  }
+  .theme-admin {
+    background: var(--color-cream-50);
   }
 }

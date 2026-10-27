@@ -14,7 +14,7 @@ beforeAll(async () => {
   delete process.env.GEMINI_API_KEY;
   repo = new MemoryRepository(buildSeed(now, "pin", "pw"));
   // The route handler reads the process-wide repository.
-  (globalThis as { __fairshiftRepo?: Repository }).__fairshiftRepo = repo;
+  (globalThis as { __paysaRepo?: Repository }).__paysaRepo = repo;
   org = (await repo.getOrg("org-con")) as Org;
 });
 
@@ -71,7 +71,7 @@ describe("anonymous reports", () => {
   });
 
   it("returns 404 for unknown or malformed codes", async () => {
-    for (const code of ["FS-ZZZZZZ", "not-a-code"]) {
+    for (const code of ["PS-ZZZZZZ", "not-a-code"]) {
       const res = await trackGet(new Request("http://x"), { params: Promise.resolve({ trackingId: code }) });
       expect(res.status).toBe(404);
     }

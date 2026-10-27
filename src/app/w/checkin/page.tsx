@@ -19,7 +19,7 @@ export default async function CheckIn({ searchParams }: { searchParams: Promise<
   if (!session) {
     const back = site && token ? `/w/checkin?site=${encodeURIComponent(site)}&t=${encodeURIComponent(token)}` : "/w/checkin";
     return (
-      <main id="main" className="flex-1 px-4 py-6">
+      <main id="main" className="flex-1 px-4 pb-10">
         <WorkerLoginPanel lang={lang} t={t} next={back} />
       </main>
     );
@@ -29,7 +29,7 @@ export default async function CheckIn({ searchParams }: { searchParams: Promise<
   const title = t(mode === "in" ? "checkin.titleIn" : "checkin.titleOut");
 
   return (
-    <main id="main" className="flex-1 px-4 pb-10 pt-5">
+    <main id="main" className="flex-1 px-4 pb-10 pt-4">
       <ScreenHeader
         title={title}
         speak={mode === "in" ? t("checkin.speak") : t("checkin.confirmOut")}
@@ -52,6 +52,13 @@ export default async function CheckIn({ searchParams }: { searchParams: Promise<
           successIn: t("checkin.successIn"),
           successOut: t("checkin.successOut"),
           goHome: t("checkin.goHome"),
+          stepReady: t("checkin.stepReady"),
+          stepScan: t("checkin.stepScan"),
+          stepDone: t("checkin.stepDone"),
+          stepOf: t("checkin.stepOf"),
+          permission: t("checkin.permission"),
+          tryAgain: t("checkin.tryAgain"),
+          cancel: t("common.cancel"),
           generic: t("common.error"),
           offline: t("common.offline"),
           errors: Object.fromEntries(ERROR_CODES.map((c) => [c, t(`checkin.err.${c}`)])),
