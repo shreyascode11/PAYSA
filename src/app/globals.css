@@ -21,6 +21,9 @@
   --info: #1e40af;
   --info-soft: #dbeafe;
   --focus: #1d4ed8;
+  /* Single-series chart mark; validated for chroma and 3:1 contrast on the surface. */
+  --chart: #0a8a6f;
+  --grid: #e4e2da;
   color-scheme: light;
 }
 
@@ -45,6 +48,8 @@
     --info: #93c5fd;
     --info-soft: #172a4a;
     --focus: #93c5fd;
+    --chart: #5fd4b6;
+    --grid: #2b3138;
     color-scheme: dark;
   }
 }

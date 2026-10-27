@@ -85,3 +85,23 @@ export function addMessage(r: Report, from: ReportMessage["from"], text: string,
   const at = from === "worker" && r.anonymous ? reportIdentity({ anonymous: true, now }).createdAt : now.toISOString();
   return { ...r, messages: [...r.messages, { from, text, at }] };
 }
+
+export interface ReportPatch {
+  status: ReportStatus;
+  note: string;
+  severity?: Report["severity"];
+  category?: string;
+}
+
+/** Applies an admin decision; every status change or note is appended to the worker-visible timeline. */
+export function applyAdminUpdate(r: Report, patch: ReportPatch, allowedCategories: readonly string[], now = new Date()): Report {
+  const category = patch.category && allowedCategories.includes(patch.category) ? patch.category : r.category;
+  const changed = patch.status !== r.status || patch.note.length > 0;
+  return {
+    ...r,
+    status: patch.status,
+    severity: patch.severity ?? r.severity,
+    category,
+    updates: changed ? [...r.updates, { at: now.toISOString(), status: patch.status, note: patch.note }] : r.updates,
+  };
+}
