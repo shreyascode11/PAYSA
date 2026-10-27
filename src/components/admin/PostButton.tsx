@@ -18,7 +18,7 @@ export function PostButton({ endpoint, body, children, doneLabel }: { endpoint: 
       <button type="button" onClick={() => void go()} disabled={state === "busy" || state === "done"} className="min-h-10 rounded-full border border-slate-600 px-4 text-sm font-bold text-slate-600 disabled:opacity-60">
         {state === "done" ? doneLabel : children}
       </button>
-      {state === "error" && <span role="alert" className="text-sm text-danger">Failed</span>}
+      {state === "error" && <span role="alert" className="text-sm text-critical">Failed</span>}
     </span>
   );
 }

@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { DotCalendar, type DotState } from "@/components/ui/DotCalendar";
 import { StatusPill } from "@/components/ui/StatusPill";
 import type { FatigueLevel } from "@/lib/rules/fatigue";
+import { panel } from "@/components/admin/styles";
 
 export interface HeatCell {
   date: string;
@@ -66,7 +67,7 @@ export function FatigueHeatmap({ rows, dates }: { rows: HeatRow[]; dates: { key:
 
   return (
     <div className="flex flex-col gap-4 xl:flex-row xl:items-start">
-      <div className="min-w-0 flex-1 overflow-x-auto rounded-3xl border border-navy-950/10 bg-ivory-50 p-4 shadow-sm shadow-navy-950/5">
+      <div className={`min-w-0 flex-1 overflow-x-auto ${panel} p-4`}>
         <DotCalendar
           tone="light"
           caption="Fatigue level per worker per day. Select a dot for reasons and to log an action."
@@ -89,7 +90,7 @@ export function FatigueHeatmap({ rows, dates }: { rows: HeatRow[]; dates: { key:
         />
       </div>
 
-      <aside aria-live="polite" className="glass-light rounded-3xl p-5 xl:sticky xl:top-24 xl:w-80 xl:shrink-0">
+      <aside aria-label="Day details" aria-live="polite" className="glass-light rounded-3xl p-5 xl:sticky xl:top-24 xl:w-80 xl:shrink-0">
         {!selected ? (
           <p className="text-navy-950/70">Select a dot to see why the day was flagged and to log what you did about it.</p>
         ) : (

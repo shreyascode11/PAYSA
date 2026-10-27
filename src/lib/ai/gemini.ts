@@ -1,9 +1,9 @@
 import "server-only";
 import { GoogleGenAI } from "@google/genai";
 import { z } from "zod";
-import { classifyReport, type Classification } from "../rules/classify";
+import { classifyReport, maxSeverity, type Classification } from "../rules/classify";
 import { explainPayslipTemplate } from "../rules/payslip";
-import type { Lang, Payslip, ReportType, Severity } from "../types";
+import type { Lang, Payslip, ReportType } from "../types";
 
 const TIMEOUT_MS = 20_000;
 const LANG_NAMES: Record<Lang, string> = { en: "English", ta: "Tamil", hi: "Hindi" };
@@ -120,13 +120,17 @@ export async function analyzeReport(input: {
       },
       required: ["textEn", "category", "severity"],
     },
-    z.object({ textEn: z.string().max(4000), category: z.string(), severity: z.number().int().min(1).max(4) }),
+    z.object({
+      textEn: z.string().max(4000),
+      category: z.string(),
+      severity: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]),
+    }),
   );
   if (!result || !input.allowedCategories.includes(result.category)) {
     return { ...fallback, textEn: input.textEn ?? input.text, ai: false };
   }
   // Never let the model downgrade a report our keyword rules consider more dangerous.
-  const severity = Math.max(result.severity, fallback.severity) as Severity;
+  const severity = maxSeverity(result.severity, fallback.severity);
   return { category: result.category, severity, textEn: input.lang === "en" ? input.text : result.textEn, ai: true };
 }
 

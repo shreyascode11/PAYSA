@@ -10,6 +10,7 @@ import { getRepo } from "@/lib/repo";
 import { sectorConfig } from "@/lib/sectors";
 import { attritionTable, loadOrgData } from "@/lib/services/admin";
 import { verifiedDaysWorked, workerSummary } from "@/lib/services/worker";
+import { panelPadded } from "@/components/admin/styles";
 
 export const metadata: Metadata = { title: "Worker" };
 
@@ -31,29 +32,29 @@ export default async function WorkerDetail({ params }: { params: Promise<{ id: s
 
   return (
     <>
-      <Link href="/admin/workers" className="mb-4 inline-flex min-h-11 items-center gap-1 font-semibold text-brand">
+      <Link href="/admin/workers" className="mb-4 inline-flex min-h-11 items-center gap-1 font-semibold text-slate-600">
         <ArrowLeft aria-hidden="true" className="size-5" /> All workers
       </Link>
       <h1 className="text-2xl font-extrabold">{worker.name}</h1>
-      <p className="mb-6 text-muted">
+      <p className="mb-6 text-navy-950/70">
         {worker.role} · {org.teams.find((t) => t.id === worker.teamId)?.name} · {formatINR(worker.dailyWage)}/day · {days} verified days
       </p>
       <div className="grid gap-6 lg:grid-cols-2">
-        <section aria-labelledby="week" className="rounded-3xl border border-navy-950/10 bg-ivory-50 p-5 shadow-sm shadow-navy-950/5">
+        <section aria-labelledby="week" className={`${panelPadded}`}>
           <h2 id="week" className="mb-3 text-lg font-bold">
             This week
           </h2>
           <dl className="grid grid-cols-3 gap-3">
             <div>
-              <dt className="text-sm text-muted">Today</dt>
+              <dt className="text-sm text-navy-950/70">Today</dt>
               <dd className="text-2xl font-bold">{summary.todayHours}h</dd>
             </div>
             <div>
-              <dt className="text-sm text-muted">Week</dt>
+              <dt className="text-sm text-navy-950/70">Week</dt>
               <dd className="text-2xl font-bold">{summary.weekHours}h</dd>
             </div>
             <div>
-              <dt className="text-sm text-muted">Overtime</dt>
+              <dt className="text-sm text-navy-950/70">Overtime</dt>
               <dd className="text-2xl font-bold">{summary.weekOtHours}h</dd>
             </div>
           </dl>
@@ -69,7 +70,7 @@ export default async function WorkerDetail({ params }: { params: Promise<{ id: s
           )}
         </section>
 
-        <section aria-labelledby="risk" className="rounded-3xl border border-navy-950/10 bg-ivory-50 p-5 shadow-sm shadow-navy-950/5">
+        <section aria-labelledby="risk" className={`${panelPadded}`}>
           <h2 id="risk" className="mb-3 flex items-center gap-2 text-lg font-bold">
             Quit risk {risk && <RiskBadge band={risk.band} score={risk.score} />}
           </h2>
@@ -77,20 +78,20 @@ export default async function WorkerDetail({ params }: { params: Promise<{ id: s
             <ul className="flex flex-col gap-1">
               {risk.drivers.map((d) => (
                 <li key={d.code}>
-                  {d.detail} <span className="text-muted">(+{d.points} · {ACTION_LABELS[d.action]})</span>
+                  {d.detail} <span className="text-navy-950/70">(+{d.points} · {ACTION_LABELS[d.action]})</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-muted">No risk signals.</p>
+            <p className="text-navy-950/70">No risk signals.</p>
           )}
         </section>
 
-        <section aria-labelledby="skills" className="rounded-3xl border border-navy-950/10 bg-ivory-50 p-5 shadow-sm shadow-navy-950/5 lg:col-span-2">
+        <section aria-labelledby="skills" className={`${panelPadded} lg:col-span-2`}>
           <h2 id="skills" className="mb-1 text-lg font-bold">
             Skill Passport
           </h2>
-          <p className="mb-3 text-sm text-muted">Endorsing adds an &quot;Endorsed by {org.name}&quot; badge on the worker&apos;s portable passport.</p>
+          <p className="mb-3 text-sm text-navy-950/70">Endorsing adds an &quot;Endorsed by {org.name}&quot; badge on the worker&apos;s portable passport.</p>
           <ul className="grid gap-2 sm:grid-cols-2">
             {sectorConfig(org.sector).skills.map((skill) => {
               const entry = has.get(skill);
@@ -98,10 +99,10 @@ export default async function WorkerDetail({ params }: { params: Promise<{ id: s
                 <li key={skill} className="flex min-h-12 items-center justify-between gap-2 rounded-2xl bg-sand-300/40 px-4 py-2.5">
                   <span>
                     {humanize(skill)}
-                    {entry && <span className="ml-2 text-sm text-muted">level {entry.level} · {entry.source}</span>}
+                    {entry && <span className="ml-2 text-sm text-navy-950/70">level {entry.level} · {entry.source}</span>}
                   </span>
                   {entry?.endorsedBy ? (
-                    <span className="inline-flex items-center gap-1 text-sm font-semibold text-ok-text">
+                    <span className="inline-flex items-center gap-1 text-sm font-semibold text-slate-600">
                       <BadgeCheck aria-hidden="true" className="size-4" /> Endorsed
                     </span>
                   ) : (

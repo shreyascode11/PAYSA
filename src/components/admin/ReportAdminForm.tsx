@@ -52,7 +52,7 @@ export function ReportAdminForm({ reportId, status, severity, category, categori
     }
   }
 
-  const field = "min-h-11 rounded-full border border-navy-950/20 bg-ivory-50 px-4 text-ink";
+  const field = "min-h-11 rounded-full border border-navy-950/20 bg-ivory-50 px-4 text-navy-950";
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-3">
       <div className="grid gap-3 sm:grid-cols-3">
@@ -89,7 +89,7 @@ export function ReportAdminForm({ reportId, status, severity, category, categori
       </div>
       <label className="flex flex-col gap-1 font-semibold">
         Note for the worker (shown on their tracking page)
-        <textarea name="note" rows={2} maxLength={500} className="rounded-3xl border border-navy-950/20 bg-ivory-50 p-4 text-ink" />
+        <textarea name="note" rows={2} maxLength={500} className="rounded-3xl border border-navy-950/20 bg-ivory-50 p-4 text-navy-950" />
       </label>
       <div className="flex items-center gap-3">
         <button type="submit" disabled={busy} className="flex min-h-11 items-center gap-2 rounded-full bg-navy-950 px-5 font-bold text-ivory-50 disabled:opacity-60">

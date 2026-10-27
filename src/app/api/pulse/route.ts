@@ -5,7 +5,6 @@ import { PULSE_COOKIE } from "@/lib/constants";
 import { jsonError, parseJson } from "@/lib/http";
 import { LIMITS, clientKey, take } from "@/lib/rate-limit";
 import { localDateKey, weekStartKey } from "@/lib/time";
-import type { Pulse } from "@/lib/types";
 import { pulseSchema } from "@/lib/validation";
 
 /** Anonymous weekly mood. Only team + week are stored; the once-a-week guard lives in the worker's own cookie. */
@@ -26,7 +25,7 @@ export async function POST(req: Request) {
     orgId: worker.orgId,
     teamId: worker.teamId,
     weekOf,
-    score: parsed.data.score as Pulse["score"],
+    score: parsed.data.score,
   });
   jar.set(PULSE_COOKIE, weekOf, { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/", maxAge: 8 * 86_400 });
   return NextResponse.json({ ok: true }, { status: 201 });

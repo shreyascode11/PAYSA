@@ -15,5 +15,13 @@ export default defineConfig({
     environment: "node",
     include: ["tests/**/*.test.{ts,tsx}"],
     setupFiles: ["tests/setup.ts"],
+    coverage: {
+      provider: "v8",
+      // Business logic, services, storage and security helpers: the code the app's correctness rests on.
+      include: ["src/lib/**", "src/middleware.ts", "src/components/ui/**"],
+      exclude: ["src/lib/admin-context.ts"],
+      reporter: ["text-summary", "text"],
+      thresholds: { lines: 85, functions: 80, branches: 75, statements: 85 },
+    },
   },
 });

@@ -91,7 +91,7 @@ export interface PayRecord {
 
 export type ReportType = "hazard" | "grievance" | "manager_feedback";
 export type ReportStatus = "received" | "in_review" | "action_taken" | "resolved";
-export const REPORT_STATUSES: readonly ReportStatus[] = ["received", "in_review", "action_taken", "resolved"];
+export const REPORT_STATUSES = ["received", "in_review", "action_taken", "resolved"] as const satisfies readonly ReportStatus[];
 export type Severity = 1 | 2 | 3 | 4;
 
 export interface ReportUpdate {

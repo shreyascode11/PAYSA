@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import QRCode from "qrcode";
 import { CopyLink } from "@/components/CopyLink";
@@ -7,6 +6,7 @@ import { PassportCard } from "@/components/PassportCard";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { requireWorkerPage } from "@/lib/auth";
 import { getT } from "@/lib/locale";
+import { requestOrigin } from "@/lib/origin";
 import { getRepo } from "@/lib/repo";
 import { buildPassport } from "@/lib/services/passport";
 
@@ -17,10 +17,7 @@ export default async function Passport() {
   const passport = await buildPassport(getRepo(), session.sub);
   if (!passport) notFound();
   const { lang, t } = await getT();
-  const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-  const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  const url = `${proto}://${host}/p/${passport.passportId}`;
+  const url = `${await requestOrigin()}/p/${passport.passportId}`;
   const svg = await QRCode.toString(url, { type: "svg", margin: 1 });
 
   return (

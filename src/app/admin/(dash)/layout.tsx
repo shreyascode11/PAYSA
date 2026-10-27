@@ -11,7 +11,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const today = new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", timeZone: "Asia/Kolkata" });
   return (
     <div lang="en" className="theme-admin flex min-h-dvh flex-col lg:flex-row">
-      <aside className="no-print bg-aurora flex flex-col gap-6 p-4 text-ivory-50 lg:sticky lg:top-0 lg:h-dvh lg:w-64 lg:shrink-0 lg:p-5">
+      <aside aria-label="Sidebar" className="no-print bg-aurora flex flex-col gap-6 p-4 text-ivory-50 lg:sticky lg:top-0 lg:h-dvh lg:w-64 lg:shrink-0 lg:p-5">
         <p className="flex items-center gap-2 text-xl font-extrabold tracking-wide">
           <Logo className="size-8" />
           PAYSA

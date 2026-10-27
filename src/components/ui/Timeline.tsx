@@ -59,6 +59,7 @@ export function Timeline({ steps, current, nowLabel, progressLabel }: Props) {
       <div className="mt-4">
         <div
           role="progressbar"
+          aria-label={progressLabel}
           aria-valuemin={0}
           aria-valuemax={n}
           aria-valuenow={current + 1}

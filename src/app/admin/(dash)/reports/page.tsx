@@ -6,6 +6,8 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { adminPageContext } from "@/lib/admin-context";
 import { getRepo } from "@/lib/repo";
 import { REPORT_STATUSES } from "@/lib/types";
+import { panel } from "@/components/admin/styles";
+import { formatDateTime } from "@/lib/i18n";
 
 export const metadata: Metadata = { title: "Reports" };
 
@@ -33,7 +35,7 @@ export default async function Reports({ searchParams }: { searchParams: Promise<
     )
     .sort((a, b) => b.severity - a.severity || b.createdAt.localeCompare(a.createdAt));
 
-  const sel = "min-h-11 rounded-full border border-navy-950/20 bg-ivory-50 px-4 text-ink";
+  const sel = "min-h-11 rounded-full border border-navy-950/20 bg-ivory-50 px-4 text-navy-950";
   return (
     <>
       <h1 className="mb-4 text-2xl font-extrabold">Reports inbox</h1>
@@ -87,18 +89,18 @@ export default async function Reports({ searchParams }: { searchParams: Promise<
           <Filter aria-hidden="true" className="size-5" />
           Apply
         </button>
-        <Link href="/admin/reports" className="min-h-11 content-center px-2 font-semibold text-brand underline">
+        <Link href="/admin/reports" className="min-h-11 content-center px-2 font-semibold text-slate-600 underline">
           Clear
         </Link>
       </form>
 
-      <p className="mb-2 text-sm text-muted" aria-live="polite">
+      <p className="mb-2 text-sm text-navy-950/70" aria-live="polite">
         {rows.length} report{rows.length === 1 ? "" : "s"}
       </p>
-      <div className="overflow-x-auto rounded-3xl border border-navy-950/10 bg-ivory-50 shadow-sm shadow-navy-950/5">
+      <div className={`overflow-x-auto ${panel}`}>
         <table className="w-full text-left text-sm">
           <caption className="sr-only">Reports, most severe first</caption>
-          <thead className="text-muted">
+          <thead className="text-navy-950/70">
             <tr>
               <th scope="col" className="p-3">Severity</th>
               <th scope="col" className="p-3">Report</th>
@@ -110,17 +112,17 @@ export default async function Reports({ searchParams }: { searchParams: Promise<
           </thead>
           <tbody>
             {rows.map((r) => (
-              <tr key={r.id} className="border-t border-line align-top">
+              <tr key={r.id} className="border-t border-navy-950/15 align-top">
                 <td className="p-3">
                   <SeverityBadge severity={r.severity} />
                 </td>
                 <td className="max-w-md p-3">
-                  <Link href={`/admin/reports/${r.id}`} className="font-bold text-brand underline">
+                  <Link href={`/admin/reports/${r.id}`} className="font-bold text-slate-600 underline">
                     {REPORT_TYPE_LABELS[r.type]} · {humanize(r.category)}
                   </Link>
-                  <p className="line-clamp-2 text-ink">{r.textEn}</p>
+                  <p className="line-clamp-2 text-navy-950">{r.textEn}</p>
                   {r.photoUrl && (
-                    <span className="inline-flex items-center gap-1 text-xs text-muted">
+                    <span className="inline-flex items-center gap-1 text-xs text-navy-950/70">
                       <ImageIcon aria-hidden="true" className="size-3.5" /> Photo attached
                     </span>
                   )}
@@ -131,14 +133,14 @@ export default async function Reports({ searchParams }: { searchParams: Promise<
                 </td>
                 <td className="p-3">
                   {r.anonymous ? (
-                    <span className="inline-flex items-center gap-1 text-muted">
+                    <span className="inline-flex items-center gap-1 text-navy-950/70">
                       <EyeOff aria-hidden="true" className="size-4" /> Anonymous
                     </span>
                   ) : (
                     (r.workerId && workerName.get(r.workerId)) ?? "—"
                   )}
                 </td>
-                <td className="whitespace-nowrap p-3">{new Date(r.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" })}</td>
+                <td className="whitespace-nowrap p-3">{formatDateTime(r.createdAt)}</td>
               </tr>
             ))}
           </tbody>

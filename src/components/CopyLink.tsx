@@ -13,7 +13,7 @@ export function CopyLink({ url, copyLabel, copiedLabel, shareLabel }: { url: str
       <button
         type="button"
         onClick={() => void navigator.clipboard?.writeText(url).then(() => setCopied(true))}
-        className="flex min-h-12 items-center gap-2 rounded-xl border-2 border-line bg-surface px-4 font-bold"
+        className="flex min-h-12 items-center gap-2 rounded-xl border-2 border-ivory-50/20 bg-navy-900 px-4 font-bold"
       >
         <Copy aria-hidden="true" className="size-5" />
         {copied ? copiedLabel : copyLabel}
@@ -22,7 +22,7 @@ export function CopyLink({ url, copyLabel, copiedLabel, shareLabel }: { url: str
         <button
           type="button"
           onClick={() => void navigator.share({ url }).catch(() => undefined)}
-          className="flex min-h-12 items-center gap-2 rounded-xl bg-brand px-4 font-bold text-brand-ink"
+          className="flex min-h-12 items-center gap-2 rounded-xl bg-sand-300 px-4 font-bold text-navy-950"
         >
           <Share2 aria-hidden="true" className="size-5" />
           {shareLabel}

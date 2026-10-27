@@ -25,6 +25,9 @@ const CRITICAL_WORDS = ["almost fell", "nearly fell", "fell", "died", "death", "
 const SERIOUS_WORDS = ["injur", "burn", "hurt", "pain", "without", "threat", "force", "காயம்", "எரி", "வலி", "இல்லாமல்", "மிரட்ட", "चोट", "जल ", "जल रहे", "दर्द", "बिना", "धमकी", "ज़बरदस्ती"];
 const HIGH_RISK_CATEGORIES = new Set(["fall_height", "electrical", "collapse", "harassment", "machinery"]);
 
+/** The more serious of two severities. */
+export const maxSeverity = (a: Severity, b: Severity): Severity => (a >= b ? a : b);
+
 export interface Classification {
   category: string;
   severity: Severity;
@@ -54,7 +57,7 @@ export function classifyReport(
 
   let severity: Severity = type === "hazard" ? 2 : 1;
   if (type === "hazard" && HIGH_RISK_CATEGORIES.has(best)) severity = 3;
-  if (score(text, SERIOUS_WORDS) > 0) severity = Math.max(severity, type === "hazard" ? 3 : 2) as Severity;
+  if (score(text, SERIOUS_WORDS) > 0) severity = maxSeverity(severity, type === "hazard" ? 3 : 2);
   if (score(text, CRITICAL_WORDS) > 0) severity = type === "hazard" ? 4 : 3;
   return { category: best, severity };
 }

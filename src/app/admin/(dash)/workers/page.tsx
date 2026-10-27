@@ -5,6 +5,7 @@ import { adminPageContext } from "@/lib/admin-context";
 import { formatINR } from "@/lib/i18n";
 import { getRepo } from "@/lib/repo";
 import { attritionTable, loadOrgData } from "@/lib/services/admin";
+import { panel } from "@/components/admin/styles";
 
 export const metadata: Metadata = { title: "Workers" };
 
@@ -21,10 +22,10 @@ export default async function Workers() {
   return (
     <>
       <h1 className="mb-4 text-2xl font-extrabold">Workers</h1>
-      <div className="overflow-x-auto rounded-3xl border border-navy-950/10 bg-ivory-50 shadow-sm shadow-navy-950/5">
+      <div className={`overflow-x-auto ${panel}`}>
         <table className="w-full text-left text-sm">
           <caption className="sr-only">All workers</caption>
-          <thead className="text-muted">
+          <thead className="text-navy-950/70">
             <tr>
               <th scope="col" className="p-3">Name</th>
               <th scope="col" className="p-3">Role · team</th>
@@ -37,9 +38,9 @@ export default async function Workers() {
             {workers.map((w) => {
               const r = risk.get(w.id);
               return (
-                <tr key={w.id} className="border-t border-line">
+                <tr key={w.id} className="border-t border-navy-950/15">
                   <th scope="row" className="p-3 text-left">
-                    <Link href={`/admin/workers/${w.id}`} className="font-bold text-brand underline">
+                    <Link href={`/admin/workers/${w.id}`} className="font-bold text-slate-600 underline">
                       {w.name}
                     </Link>
                   </th>

@@ -1,7 +1,8 @@
-import { ArrowUpRight, Clock, Flame, HardHat, Inbox, OctagonAlert, TrendingDown } from "lucide-react";
+import { Clock, Flame, HardHat, Inbox, OctagonAlert, TrendingDown } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FatigueBadge, RiskBadge, SEVERITY, humanize } from "@/components/admin/badges";
+import { SEVERITY, humanize } from "@/components/admin/badges";
+import { TeamTable } from "@/components/admin/TeamTable";
 import { ColumnChart } from "@/components/ui/ColumnChart";
 import { StatCard } from "@/components/ui/StatCard";
 import { StatusPill } from "@/components/ui/StatusPill";
@@ -10,11 +11,11 @@ import { formatDay } from "@/lib/i18n";
 import { getRepo } from "@/lib/repo";
 import { loadOrgData, overview } from "@/lib/services/admin";
 import type { Severity } from "@/lib/types";
+import { panelPadded } from "@/components/admin/styles";
 
 export const metadata: Metadata = { title: "Overview" };
 
-const FATIGUE_RANK = { ok: 0, warn: 1, critical: 2 } as const;
-const card = "rounded-3xl border border-navy-950/10 bg-ivory-50 p-5 shadow-sm shadow-navy-950/5";
+const SEVERITY_ORDER: readonly Severity[] = [4, 3, 2, 1];
 
 export default async function Overview() {
   const { org } = await adminPageContext();
@@ -38,10 +39,6 @@ export default async function Overview() {
   }));
   const lastWeek = ov.weeks.at(-2);
   const otShare = lastWeek && lastWeek.regular + lastWeek.overtime > 0 ? Math.round((lastWeek.overtime / (lastWeek.regular + lastWeek.overtime)) * 100) : 0;
-  const people = [...ov.people]
-    .sort((a, b) => b.risk.score - a.risk.score || FATIGUE_RANK[b.fatigue] - FATIGUE_RANK[a.fatigue])
-    .slice(0, 8);
-  const teamName = new Map(org.teams.map((t) => [t.id, t.name]));
 
   return (
     <div className="flex flex-col gap-6">
@@ -86,7 +83,7 @@ export default async function Overview() {
 
       <div className="grid gap-6 xl:grid-cols-3">
         <div className="flex flex-col gap-6 xl:col-span-2">
-          <section aria-labelledby="att" className={card}>
+          <section aria-labelledby="att" className={panelPadded}>
             <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 id="att" className="text-lg font-extrabold text-navy-950">
@@ -116,7 +113,7 @@ export default async function Overview() {
             />
           </section>
 
-          <section aria-labelledby="hrs" className={card}>
+          <section aria-labelledby="hrs" className={panelPadded}>
             <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 id="hrs" className="text-lg font-extrabold text-navy-950">
@@ -141,12 +138,12 @@ export default async function Overview() {
         </div>
 
         <div className="flex flex-col gap-6">
-          <section aria-labelledby="sev" className={card}>
+          <section aria-labelledby="sev" className={panelPadded}>
             <h2 id="sev" className="mb-3 text-lg font-extrabold text-navy-950">
               Open reports by severity
             </h2>
             <ul className="flex flex-col gap-2.5">
-              {([4, 3, 2, 1] as Severity[]).map((s) => (
+              {SEVERITY_ORDER.map((s) => (
                 <li key={s}>
                   <Link href={`/admin/reports?severity=${s}&status=open`} className="flex items-center justify-between rounded-lg hover:bg-sand-300/40">
                     <StatusPill tone={SEVERITY[s].tone} label={SEVERITY[s].label} />
@@ -157,7 +154,7 @@ export default async function Overview() {
             </ul>
           </section>
 
-          <section aria-labelledby="pulse" className={card}>
+          <section aria-labelledby="pulse" className={panelPadded}>
             <h2 id="pulse" className="text-lg font-extrabold text-navy-950">
               Team mood
             </h2>
@@ -178,59 +175,7 @@ export default async function Overview() {
         </div>
       </div>
 
-      <section aria-labelledby="team" className={card}>
-        <div className="mb-3 flex items-center justify-between gap-2">
-          <h2 id="team" className="text-lg font-extrabold text-navy-950">
-            Team: needs attention first
-          </h2>
-          <Link href="/admin/workers" className="flex min-h-10 items-center gap-1 rounded-full border border-navy-950/20 px-4 text-sm font-bold text-slate-600">
-            All workers <ArrowUpRight aria-hidden="true" className="size-4" />
-          </Link>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <caption className="sr-only">Workers sorted by quit risk, with today&apos;s status and fatigue</caption>
-            <thead className="text-navy-950/70">
-              <tr>
-                <th scope="col" className="py-2 pr-3">Worker</th>
-                <th scope="col" className="py-2 pr-3">Today</th>
-                <th scope="col" className="py-2 pr-3">Fatigue (7 days)</th>
-                <th scope="col" className="py-2 pr-3">Quit risk</th>
-                <th scope="col" className="py-2">Top reason</th>
-              </tr>
-            </thead>
-            <tbody>
-              {people.map(({ worker, onSite, fatigue, risk }) => (
-                <tr key={worker.id} className="border-t border-navy-950/10">
-                  <th scope="row" className="py-3 pr-3 text-left">
-                    <span className="flex items-center gap-3">
-                      <span aria-hidden="true" className="flex size-9 shrink-0 items-center justify-center rounded-full bg-sand-300 text-sm font-extrabold text-navy-950">
-                        {worker.name.split(" ").map((p) => p[0]).join("").slice(0, 2)}
-                      </span>
-                      <span>
-                        <Link href={`/admin/workers/${worker.id}`} className="font-bold text-navy-950 hover:underline">
-                          {worker.name}
-                        </Link>
-                        <span className="block font-normal text-navy-950/70">
-                          {worker.role} · {teamName.get(worker.teamId)}
-                        </span>
-                      </span>
-                    </span>
-                  </th>
-                  <td className="py-3 pr-3">{onSite ? <StatusPill tone="ok" label="On site" /> : <StatusPill tone="neutral" label="Not in" />}</td>
-                  <td className="py-3 pr-3">
-                    <FatigueBadge level={fatigue} />
-                  </td>
-                  <td className="py-3 pr-3">
-                    <RiskBadge band={risk.band} score={risk.score} />
-                  </td>
-                  <td className="py-3 text-navy-950">{risk.drivers[0]?.detail ?? "—"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+      <TeamTable people={ov.people} teams={org.teams} />
     </div>
   );
 }

@@ -248,7 +248,13 @@ flowchart LR
 ```
 
 - **Business rules** (`src/lib/rules/`) are pure TypeScript with no I/O: overtime, payslip, fatigue, attrition, anonymity, geofencing and report classification.
-- **Lightweight pages.** Worker pages are server components; only interactive pieces ship JavaScript. The home screen loads about 109 KB of JavaScript, and the QR scanner and voice recorder load on demand.
+- **Lightweight pages.** Worker pages are server components; only interactive pieces ship JavaScript. The home screen loads about 109 KB of JavaScript, and the QR scanner and voice recorder load on demand. Charts are server-rendered, with no chart library sent to the browser.
+- **Efficient analytics.**
+  - Each worker's fatigue context is precomputed once and reused for every day.
+  - Dashboard aggregates index shifts, actions, teams and pulses in single passes.
+  - React `cache()` shares one data load per request across layout and page.
+  - Firestore reads use indexed, chunked `in` queries instead of full scans.
+  - The in-memory store freezes records on write and returns them without copying.
 - **Guarded AI.** Gemini output is schema-validated. It can never lower a severity flagged by the safety rules, and an explanation that changes the net pay is discarded.
 
 ## Privacy and anonymity
@@ -264,14 +270,15 @@ flowchart LR
 
 - **Credentials:** PINs and passwords are hashed with bcrypt, with timing-safe checks for unknown accounts.
 - **Sessions:** signed JWTs in an `HttpOnly`, `Secure`, `SameSite=Lax` cookie.
-- **Inputs and access:** every API input is validated with zod, and authorization is checked per organisation on every route.
+- **Inputs and access:** every API input is validated with zod into exact types (no unchecked casts). Authorization is checked per organisation on every route through one shared helper: 401 without a session, 404 for unknown records, 403 for other organisations.
 - **Requests:** mutating API calls must be same-origin, and logins, reports and voice uploads are rate-limited.
 - **QR codes:** check-in codes are HMAC-signed and rotate daily.
-- **Headers:** CSP, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` and `X-Frame-Options`.
+- **Headers:** a per-request **nonce-based Content-Security-Policy** with `strict-dynamic` (no inline scripts allowed), HSTS, `Cross-Origin-Opener-Policy`, `Cross-Origin-Resource-Policy`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` and `X-Frame-Options`.
 - **Secrets:** no secrets in the repository; `.env.example` lists names only.
 
 ## Accessibility and design
 
+- **Audited with axe-core:** zero violations on all 25 page views (WCAG 2.2 AA + best practices), in English and Tamil.
 - WCAG AA contrast for every text pair, computed for both the dark worker theme and the light admin theme.
 - Full keyboard support, visible focus rings, a skip link, semantic landmarks and ARIA labels.
 - Status is never shown by colour alone: every status carries an icon and a label.
@@ -283,19 +290,26 @@ flowchart LR
 ## Testing and quality
 
 ```bash
-npm test             # unit and component tests (Vitest + Testing Library)
-npm run lint         # ESLint (Next.js rules)
-npm run typecheck    # TypeScript strict mode
+npm test               # 148 unit, integration and component tests (Vitest + Testing Library)
+npm run test:coverage  # with enforced coverage thresholds
+npm run lint           # ESLint (Next.js rules)
+npm run typecheck      # TypeScript strict mode
+npm run check          # all of the above
 ```
 
-Tests cover every business rule, plus:
+Coverage of business logic, services, storage, security helpers and UI components is about **94% of lines**. The build fails if it drops below the thresholds in `vitest.config.ts`. GitHub Actions runs lint, type checks, tests with coverage and a production build on every push.
 
-- AI fallbacks and guardrails
-- anonymity at the API level
-- Skill Passport privacy
-- realistic demo scenarios in both sectors
-- translation completeness across all three languages
-- accessibility behaviour of the shared UI components
+| Suite | What it proves |
+|---|---|
+| Business rules | Overtime (daily/weekly, midnight-crossing, open shifts), payslip and ESI, fatigue thresholds, quit-risk drivers and bands, geofencing, classification, EXIF stripping |
+| API routes (end to end) | Login, geofenced and QR check-in, double check-in, one pulse per week, anonymous report storage, admin access limited to their own organisations |
+| Security | Session signing and tamper rejection, daily QR token rotation, rate limiting, input validation, the nonce CSP and same-origin checks |
+| Storage | Firestore repository (against an in-memory fake: one-time seeding, chunked queries, transactional checkout) and the frozen in-memory store |
+| Services | Worker summary, payslip periods, attendance streak, dashboard aggregates (checked against a naive reference) |
+| AI | Fallbacks without a key, and guardrails: invalid categories, lowered severities and changed pay amounts are all rejected |
+| Privacy | Anonymous reports and the public tracking endpoint never contain identity; the Skill Passport never shows phone or wage |
+| UI | Accessible names, status shown as text, the language switcher, nav state, timeline, dot calendar, gauge and chart |
+| Content | Every UI string exists in English, Tamil and Hindi |
 
 ## Project structure
 

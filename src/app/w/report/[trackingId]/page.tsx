@@ -55,7 +55,7 @@ export default async function TrackReport({ params }: { params: Promise<{ tracki
         <span className="flex size-12 items-center justify-center rounded-full bg-sand-300 text-navy-950"><Icon aria-hidden="true" className="size-6" /></span>
         <span>
           <span className="block font-mono text-lg font-extrabold tracking-widest">{report.trackingId}</span>
-          <span className="text-muted">{t(`report.cat.${report.category}`)}</span>
+          <span className="text-ivory-50/75">{t(`report.cat.${report.category}`)}</span>
         </span>
       </p>
 
@@ -90,7 +90,7 @@ export default async function TrackReport({ params }: { params: Promise<{ tracki
           {t("track.messages")}
         </h2>
         {report.messages.length === 0 ? (
-          <p className="text-muted">{t("track.noMessages")}</p>
+          <p className="text-ivory-50/75">{t("track.noMessages")}</p>
         ) : (
           <ul className="mb-4 flex flex-col gap-3">
             {report.messages.map((m, i) => (
@@ -103,8 +103,8 @@ export default async function TrackReport({ params }: { params: Promise<{ tracki
             ))}
           </ul>
         )}
-        <ReplyForm endpoint={`/api/reports/track/${report.trackingId}/message`} label={t("track.reply")} submit={t("track.replySend")} errorText={t("common.error")} />
-        <p className="mt-4 flex items-start gap-2 text-base text-muted">
+        <ReplyForm tone="dark" endpoint={`/api/reports/track/${report.trackingId}/message`} label={t("track.reply")} submit={t("track.replySend")} errorText={t("common.error")} />
+        <p className="mt-4 flex items-start gap-2 text-base text-ivory-50/75">
           <ShieldCheck aria-hidden="true" className="size-5 shrink-0 text-sand-300" />
           {t("track.anonymousNote")}
         </p>

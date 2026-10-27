@@ -8,7 +8,7 @@ import { ScreenHeader } from "@/components/ScreenHeader";
 import { requireWorkerPage } from "@/lib/auth";
 import { PULSE_COOKIE } from "@/lib/constants";
 import { getT } from "@/lib/locale";
-import { reportLabels, reportTypeOption } from "@/lib/report-labels";
+import { reportLabels, reportTypeOption } from "@/components/report-labels";
 import { getRepo } from "@/lib/repo";
 import { localDateKey, weekStartKey } from "@/lib/time";
 

@@ -8,6 +8,7 @@ import { adminPageContext } from "@/lib/admin-context";
 import { bandFor, type RiskBand } from "@/lib/rules/attrition";
 import { getRepo } from "@/lib/repo";
 import { attritionTable, loadOrgData } from "@/lib/services/admin";
+import { panelPadded } from "@/components/admin/styles";
 
 export const metadata: Metadata = { title: "Quit risk" };
 
@@ -16,7 +17,6 @@ const TILE: Record<RiskBand, { cls: string; Icon: typeof CircleCheck; word: stri
   medium: { cls: "bg-warn text-navy-950", Icon: TriangleAlert, word: "Medium", tone: "warn" },
   high: { cls: "bg-critical text-ivory-50", Icon: OctagonAlert, word: "High", tone: "critical" },
 };
-const card = "rounded-3xl border border-navy-950/10 bg-ivory-50 p-5 shadow-sm shadow-navy-950/5";
 
 export default async function Attrition() {
   const { org } = await adminPageContext();
@@ -46,7 +46,7 @@ export default async function Attrition() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <section aria-labelledby="g-h" className={`${card} flex flex-col items-center justify-center text-navy-950`}>
+        <section aria-labelledby="g-h" className={`${panelPadded} flex flex-col items-center justify-center text-navy-950`}>
           <h2 id="g-h" className="sr-only">
             Average quit risk
           </h2>
@@ -56,7 +56,7 @@ export default async function Attrition() {
           <StatCard tone="dark" label="High" value={n("high")} hint="score 60+" />
           <StatCard tone="light" label="Medium" value={n("medium")} hint="score 30–59" />
           <StatCard tone="light" label="Low" value={n("low")} hint="score under 30" />
-          <div className={`${card} col-span-3`}>
+          <div className={`${panelPadded} col-span-3`}>
             <h2 className="mb-3 text-sm font-bold uppercase tracking-wider text-navy-950/70">Most common reasons</h2>
             <ul className="grid gap-2 sm:grid-cols-2">
               {topDrivers.map((d) => (
@@ -72,7 +72,7 @@ export default async function Attrition() {
         </section>
       </div>
 
-      <section aria-labelledby="tiles-h" className={card}>
+      <section aria-labelledby="tiles-h" className={panelPadded}>
         <h2 id="tiles-h" className="mb-1 text-lg font-extrabold text-navy-950">
           Risk map
         </h2>
@@ -84,15 +84,20 @@ export default async function Attrition() {
               <li key={worker.id}>
                 <Link
                   href={`/admin/workers/${worker.id}`}
-                  aria-label={`${worker.name}: ${result.score}, ${tile.word} risk`}
                   className={`flex min-h-24 flex-col justify-between rounded-2xl p-3 transition hover:-translate-y-0.5 hover:shadow-md ${tile.cls}`}
                 >
                   <span className="flex items-center justify-between gap-1">
-                    <span className="tabular text-2xl font-black">{result.score}</span>
+                    <span className="tabular text-2xl font-black">
+                      <span className="sr-only">Score </span>
+                      {result.score}
+                    </span>
                     <tile.Icon aria-hidden="true" className="size-5" />
                   </span>
                   <span className="truncate text-sm font-bold">{worker.name}</span>
-                  <span className="text-xs font-semibold">{tile.word}</span>
+                  <span className="text-xs font-semibold">
+                    {tile.word}
+                    <span className="sr-only"> risk</span>
+                  </span>
                 </Link>
               </li>
             );
@@ -100,7 +105,7 @@ export default async function Attrition() {
         </ul>
       </section>
 
-      <section aria-labelledby="tbl-h" className={card}>
+      <section aria-labelledby="tbl-h" className={panelPadded}>
         <h2 id="tbl-h" className="mb-3 text-lg font-extrabold text-navy-950">
           Why, and what to do
         </h2>

@@ -86,7 +86,7 @@ export function ColumnChart({ title, series, columns, format, max, ticks = 4, sh
                 const summary = single ? format(sum) : series.map((s) => `${s.label} ${format(c.values[s.key] ?? 0)}`).join(", ");
                 return (
                   <li key={c.key} className="group relative flex h-full flex-1 flex-col items-center justify-end">
-                    <span tabIndex={0} aria-label={`${c.label}: ${summary}`} className="flex w-full max-w-7 flex-col-reverse gap-[2px] rounded-t-md outline-offset-2" style={{ height: pct(sum) }}>
+                    <span tabIndex={0} role="img" aria-label={`${c.label}: ${summary}`} className="flex w-full max-w-7 flex-col-reverse gap-[2px] rounded-t-md outline-offset-2" style={{ height: pct(sum) }}>
                       {series.map((s, si) => {
                         const v = c.values[s.key] ?? 0;
                         if (v <= 0) return null;

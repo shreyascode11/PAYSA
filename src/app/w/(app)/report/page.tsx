@@ -7,7 +7,7 @@ import { TrackForm } from "@/components/TrackForm";
 import { requireWorkerPage } from "@/lib/auth";
 import { formatDay } from "@/lib/i18n";
 import { getT } from "@/lib/locale";
-import { reportLabels, reportTypeOption } from "@/lib/report-labels";
+import { reportLabels, reportTypeOption } from "@/components/report-labels";
 import { getRepo } from "@/lib/repo";
 
 export const metadata: Metadata = { title: "Report a problem" };
@@ -36,7 +36,7 @@ export default async function Report({ searchParams }: { searchParams: Promise<{
     <>
       <ScreenHeader title={t("report.title")} speak={t("report.speak")} lang={lang} listenLabel={t("common.listen")} stopLabel={t("common.stop")} />
       <ReportFlow aiVoice={aiEnabled()} lang={lang} types={types} initialType={initialType} initialCategory={initialCategory} prefillText={prefill} labels={reportLabels(t)} />
-      <section className="mt-10 rounded-2xl bg-surface p-4">
+      <section className="mt-10 rounded-2xl bg-navy-900 p-4">
         <TrackForm label={t("track.enter")} button={t("track.check")} />
       </section>
     </>

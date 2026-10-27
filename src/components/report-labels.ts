@@ -1,7 +1,7 @@
-import type { ReportLabels, ReportTypeOption } from "@/components/ReportFlow";
-import type { Translator } from "./i18n";
-import { categoriesFor } from "./sectors";
-import type { ReportType, Sector } from "./types";
+import type { ReportLabels, ReportTypeOption } from "./ReportFlow";
+import type { Translator } from "@/lib/i18n";
+import { categoriesFor } from "@/lib/sectors";
+import type { ReportType, Sector } from "@/lib/types";
 
 export function reportLabels(t: Translator): ReportLabels {
   return {

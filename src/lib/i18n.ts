@@ -92,3 +92,8 @@ export function formatTime(iso: string, lang: Lang): string {
   const period = DAY_PERIODS[lang].find(([until]) => h < until)?.[1] ?? "";
   return `${period} ${h % 12 || 12}:${String(m).padStart(2, "0")}`;
 }
+
+/** Date and time for the (English) admin dashboard, always in India Standard Time. */
+export function formatDateTime(iso: string): string {
+  return new Date(iso).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" });
+}

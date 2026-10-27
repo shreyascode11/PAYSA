@@ -32,6 +32,12 @@ const C = {
 } as const;
 
 const payRecordId = (p: PayRecord): string => `${p.workerId}_${p.periodStart}`;
+
+interface Write {
+  col: string;
+  id: string;
+  data: object;
+}
 const BATCH_LIMIT = 450;
 const IN_LIMIT = 30;
 
@@ -73,21 +79,24 @@ export class FirestoreRepository implements Repository {
       return; // already seeded by this or another instance
     }
     const s = this.seed();
-    const writes: [string, string, object][] = [
-      ...s.orgs.map((x) => [C.orgs, x.id, x] as [string, string, object]),
-      ...s.sites.map((x) => [C.sites, x.id, x] as [string, string, object]),
-      ...s.workers.map((x) => [C.workers, x.id, x] as [string, string, object]),
-      ...s.admins.map((x) => [C.admins, x.id, x] as [string, string, object]),
-      ...s.shifts.map((x) => [C.shifts, x.id, x] as [string, string, object]),
-      ...s.reports.map((x) => [C.reports, x.id, x] as [string, string, object]),
-      ...s.pulses.map((x) => [C.pulses, x.id, x] as [string, string, object]),
-      ...s.skills.map((x) => [C.skills, x.id, x] as [string, string, object]),
-      ...s.payRecords.map((x) => [C.payRecords, payRecordId(x), x] as [string, string, object]),
-      ...s.announcements.map((x) => [C.announcements, x.id, x] as [string, string, object]),
+    const rows = <T extends object>(col: string, items: readonly T[], id: (x: T) => string): Write[] =>
+      items.map((x) => ({ col, id: id(x), data: x }));
+    const byId = (x: { id: string }) => x.id;
+    const writes: Write[] = [
+      ...rows(C.orgs, s.orgs, byId),
+      ...rows(C.sites, s.sites, byId),
+      ...rows(C.workers, s.workers, byId),
+      ...rows(C.admins, s.admins, byId),
+      ...rows(C.shifts, s.shifts, byId),
+      ...rows(C.reports, s.reports, byId),
+      ...rows(C.pulses, s.pulses, byId),
+      ...rows(C.skills, s.skills, byId),
+      ...rows(C.payRecords, s.payRecords, payRecordId),
+      ...rows(C.announcements, s.announcements, byId),
     ];
     for (let i = 0; i < writes.length; i += BATCH_LIMIT) {
       const batch = db.batch();
-      for (const [col, id, data] of writes.slice(i, i + BATCH_LIMIT)) batch.set(db.collection(col).doc(id), data);
+      for (const w of writes.slice(i, i + BATCH_LIMIT)) batch.set(db.collection(w.col).doc(w.id), w.data);
       await batch.commit();
     }
   }

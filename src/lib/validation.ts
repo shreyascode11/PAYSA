@@ -41,12 +41,16 @@ export const reportSchema = z.object({
 
 export const messageSchema = z.object({ text: z.string().trim().min(1).max(1000) });
 
-export const pulseSchema = z.object({ score: z.number().int().min(1).max(5) });
+/** Literal unions so validated values carry exact types (no casts downstream). */
+const pulseScore = z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]);
+const severity = z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]);
+
+export const pulseSchema = z.object({ score: pulseScore });
 
 export const reportUpdateSchema = z.object({
-  status: z.enum(REPORT_STATUSES as [string, ...string[]]),
+  status: z.enum(REPORT_STATUSES),
   note: z.string().trim().max(500).default(""),
-  severity: z.number().int().min(1).max(4).optional(),
+  severity: severity.optional(),
   category: z.string().min(1).max(40).regex(/^[a-z_]+$/).optional(),
 });
 

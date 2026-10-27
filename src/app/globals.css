@@ -24,78 +24,18 @@
   --radius-4xl: 2rem;
 }
 
-/*
- * Semantic aliases used by older markup. Each area maps them onto palette tokens only,
- * chosen so every pair the code uses passes AA (see CLAUDE.md §18.2).
- */
-.theme-worker,
-:root {
-  --bg: var(--color-navy-950);
-  --surface: var(--color-navy-900);
-  --surface-2: color-mix(in srgb, var(--color-ivory-50) 10%, var(--color-navy-900));
-  --ink: var(--color-ivory-50);
-  --muted: color-mix(in srgb, var(--color-ivory-50) 75%, var(--color-navy-900));
-  --line: color-mix(in srgb, var(--color-ivory-50) 20%, var(--color-navy-950));
-  --brand: var(--color-sand-300);
-  --brand-ink: var(--color-navy-950);
-  --brand-soft: var(--color-navy-900);
-  --ok: var(--color-sand-300);
-  --ok-soft: var(--color-navy-900);
-  --warn: var(--color-warn);
-  --warn-soft: var(--color-navy-900);
-  --danger: var(--color-ivory-50);
-  --danger-ink: var(--color-critical);
-  --danger-soft: var(--color-critical);
-  --info: var(--color-sand-300);
-  --info-soft: var(--color-navy-900);
+/* Per-area theming: only the focus-ring colour and colour-scheme differ. */
+:root,
+.theme-worker {
   --focus: var(--color-sand-300);
   color-scheme: dark;
 }
 
 .theme-admin {
-  --bg: color-mix(in srgb, var(--color-sand-300) 25%, var(--color-ivory-50));
-  --surface: var(--color-ivory-50);
-  --surface-2: color-mix(in srgb, var(--color-sand-300) 45%, var(--color-ivory-50));
-  --ink: var(--color-navy-950);
-  --muted: color-mix(in srgb, var(--color-navy-950) 72%, var(--color-ivory-50));
-  --line: color-mix(in srgb, var(--color-navy-950) 14%, var(--color-ivory-50));
-  --brand: var(--color-slate-600);
-  --brand-ink: var(--color-ivory-50);
-  --brand-soft: color-mix(in srgb, var(--color-sand-300) 45%, var(--color-ivory-50));
-  --ok: var(--color-slate-600);
-  --ok-soft: color-mix(in srgb, var(--color-sand-300) 45%, var(--color-ivory-50));
-  --warn: var(--color-navy-950);
-  --warn-soft: var(--color-warn);
-  --danger: var(--color-critical);
-  --danger-ink: var(--color-ivory-50);
-  --danger-soft: var(--color-ivory-50);
-  --info: var(--color-navy-950);
-  --info-soft: color-mix(in srgb, var(--color-sand-300) 45%, var(--color-ivory-50));
   --focus: var(--color-slate-600);
   color-scheme: light;
-  background: var(--bg);
-  color: var(--ink);
-}
-
-@theme inline {
-  --color-bg: var(--bg);
-  --color-surface: var(--surface);
-  --color-surface-2: var(--surface-2);
-  --color-ink: var(--ink);
-  --color-muted: var(--muted);
-  --color-line: var(--line);
-  --color-brand: var(--brand);
-  --color-brand-ink: var(--brand-ink);
-  --color-brand-soft: var(--brand-soft);
-  --color-ok-text: var(--ok);
-  --color-ok-soft: var(--ok-soft);
-  --color-warn-text: var(--warn);
-  --color-warn-soft: var(--warn-soft);
-  --color-danger: var(--danger);
-  --color-danger-ink: var(--danger-ink);
-  --color-danger-soft: var(--danger-soft);
-  --color-info: var(--info);
-  --color-info-soft: var(--info-soft);
+  background: color-mix(in srgb, var(--color-sand-300) 25%, var(--color-ivory-50));
+  color: var(--color-navy-950);
 }
 
 html {
@@ -105,8 +45,8 @@ html {
 }
 
 body {
-  background: var(--bg);
-  color: var(--ink);
+  background: var(--color-navy-950);
+  color: var(--color-ivory-50);
   font-family: var(--font-sans);
   line-height: 1.5;
 }

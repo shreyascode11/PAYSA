@@ -19,7 +19,7 @@ export function Gauge({ value, label, bandLabel, band, tone = "light", segments 
   const cx = 100;
   const cy = 100;
   return (
-    <figure role="img" aria-label={`${label}: ${v} of 100, ${bandLabel}`} className="flex flex-col items-center">
+    <div role="img" aria-label={`${label}: ${v} of 100, ${bandLabel}`} className="flex flex-col items-center">
       <svg viewBox="0 0 200 112" className="w-full max-w-64" aria-hidden="true">
         {Array.from({ length: segments }, (_, i) => {
           // Spread segments across 180°, left to right.
@@ -44,10 +44,10 @@ export function Gauge({ value, label, bandLabel, band, tone = "light", segments 
           {v}
         </text>
       </svg>
-      <figcaption className="-mt-1 flex flex-col items-center gap-1.5">
+      <div className="-mt-1 flex flex-col items-center gap-1.5">
         <span className="text-sm font-bold uppercase tracking-wide opacity-80">{label}</span>
         <StatusPill tone={band} label={bandLabel} />
-      </figcaption>
-    </figure>
+      </div>
+    </div>
   );
 }

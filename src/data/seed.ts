@@ -275,7 +275,7 @@ const ANNOUNCEMENTS: { orgId: string; hoursAgo: number; text: Record<Lang, strin
   },
 ];
 
-const PULSE_PLAN: Record<string, { weeksAgo: number[]; perWeek: number; scores: number[] }> = {
+const PULSE_PLAN: Record<string, { weeksAgo: number[]; perWeek: number; scores: Pulse["score"][] }> = {
   "con-a": { weeksAgo: [0, 1, 2], perWeek: 6, scores: [1, 2, 2, 1, 3, 2] },
   "con-b": { weeksAgo: [4, 5], perWeek: 5, scores: [3, 4, 3, 4, 3] },
   "col-hk": { weeksAgo: [0, 1, 2], perWeek: 6, scores: [4, 3, 4, 5, 3, 4] },
@@ -352,7 +352,7 @@ export function buildSeed(now: Date, pinHash: string, adminPasswordHash: string)
     for (const w of plan.weeksAgo) {
       const weekOf = addDays(weekStartKey(today), -7 * w);
       for (let i = 0; i < plan.perWeek; i++) {
-        const score = (plan.scores[i % plan.scores.length] ?? 3) as Pulse["score"];
+        const score = plan.scores[i % plan.scores.length] ?? 3;
         pulses.push({ id: `pu-${teamId}-${w}-${i}`, orgId, teamId, weekOf, score });
       }
     }

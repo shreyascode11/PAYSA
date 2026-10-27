@@ -3,6 +3,7 @@
 import { Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import { panelPadded } from "@/components/admin/styles";
 
 const LANGS = [
   ["en", "English"],
@@ -37,7 +38,7 @@ export function NoticeForm({ orgId, autoTranslate }: { orgId: string; autoTransl
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4 rounded-3xl border border-navy-950/10 bg-ivory-50 p-5 shadow-sm shadow-navy-950/5">
+    <form onSubmit={onSubmit} className={`flex flex-col gap-4 ${panelPadded}`}>
       <label className="flex flex-col gap-1 text-sm font-semibold text-navy-950">
         Written in
         <select value={lang} onChange={(e) => setLang(e.target.value as typeof lang)} className="min-h-11 max-w-xs rounded-full border border-navy-950/20 bg-ivory-50 px-4 text-navy-950">
