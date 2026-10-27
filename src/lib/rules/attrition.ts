@@ -1,6 +1,6 @@
 import { DEFAULT_TZ_OFFSET_MIN, addDays, dayRange, daysBetweenKeys, localDateKey } from "../time";
 import { canShowAggregate } from "./anonymity";
-import { assessFatigueDay } from "./fatigue";
+import { createFatigueAssessor } from "./fatigue";
 import { hoursByDay, type ShiftLike } from "./overtime";
 
 export type DriverCode =
@@ -144,7 +144,8 @@ export function deriveAttritionSignals(input: AttritionInput): AttritionSignals 
     baselineDays.length > 0 ? (baselineAbs / baselineDays.length) * recentDays.length : absencesRecent;
 
   const last14 = dayRange(addDays(today, -13), today);
-  const fatigueDays = last14.filter((k) => assessFatigueDay(input.shifts, k, tz).level !== "ok").length;
+  const assess = createFatigueAssessor(input.shifts, tz);
+  const fatigueDays = last14.filter((k) => assess(k).level !== "ok").length;
 
   const byDay = hoursByDay(input.shifts, tz);
   const sumDays = (keys: string[]): number => keys.reduce((a, k) => a + (byDay.get(k) ?? 0), 0);

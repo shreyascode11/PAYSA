@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { explainPayslip } from "../ai/gemini";
 import type { Repository } from "../repo/types";
 import { assessFatigueDay, type FatigueResult } from "../rules/fatigue";
@@ -13,11 +14,11 @@ export interface WorkerContext {
   org: Org;
 }
 
-export async function loadWorker(repo: Repository, workerId: string): Promise<WorkerContext | null> {
+export const loadWorker = cache(async (repo: Repository, workerId: string): Promise<WorkerContext | null> => {
   const worker = await repo.getWorker(workerId);
   const org = worker && (await repo.getOrg(worker.orgId));
   return worker && org ? { worker, org } : null;
-}
+});
 
 export interface WorkerSummary {
   todayHours: number;

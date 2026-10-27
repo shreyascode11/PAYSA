@@ -33,6 +33,7 @@ const C = {
 
 const payRecordId = (p: PayRecord): string => `${p.workerId}_${p.periodStart}`;
 const BATCH_LIMIT = 450;
+const IN_LIMIT = 30;
 
 /**
  * Durable store for Cloud Run. Queries stay on single fields so no composite indexes are needed;
@@ -111,6 +112,16 @@ export class FirestoreRepository implements Repository {
     await (await this.db()).collection(col).doc(id).set(data);
   }
 
+  /** `field in values`, chunked to Firestore's 30-value limit and fetched in parallel. */
+  private async whereIn<T>(col: string, field: string, values: readonly string[]): Promise<T[]> {
+    if (values.length === 0) return [];
+    const db = await this.db();
+    const chunks: string[][] = [];
+    for (let i = 0; i < values.length; i += IN_LIMIT) chunks.push(values.slice(i, i + IN_LIMIT));
+    const snaps = await Promise.all(chunks.map((c) => db.collection(col).where(field, "in", c).get()));
+    return snaps.flatMap((snap) => snap.docs.map((d) => d.data() as T));
+  }
+
   private async first<T>(col: string, field: string, value: string): Promise<T | undefined> {
     return (await this.where<T>(col, field, value))[0];
   }
@@ -171,15 +182,9 @@ export class FirestoreRepository implements Repository {
   listSkills = (workerId: string) => this.where<SkillEntry>(C.skills, "workerId", workerId);
   saveSkill = (s: SkillEntry) => this.put(C.skills, s.id, s);
 
-  async listPayRecords(workerIds: readonly string[]) {
-    const ids = new Set(workerIds);
-    return (await this.all<PayRecord>(C.payRecords)).filter((p) => ids.has(p.workerId));
-  }
+  listPayRecords = (workerIds: readonly string[]) => this.whereIn<PayRecord>(C.payRecords, "workerId", workerIds);
 
-  async listFatigueActions(workerIds: readonly string[]) {
-    const ids = new Set(workerIds);
-    return (await this.all<FatigueAction>(C.fatigueActions)).filter((a) => ids.has(a.workerId));
-  }
+  listFatigueActions = (workerIds: readonly string[]) => this.whereIn<FatigueAction>(C.fatigueActions, "workerId", workerIds);
   addFatigueAction = (a: FatigueAction) => this.put(C.fatigueActions, a.id, a);
 
   async listAnnouncements(orgId: string) {

@@ -2,6 +2,7 @@ import "server-only";
 import bcrypt from "bcryptjs";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { sessionSecret } from "./secret";
 
@@ -60,9 +61,8 @@ export async function clearSessionCookie(): Promise<void> {
   (await cookies()).delete(SESSION_COOKIE);
 }
 
-export async function getSession(): Promise<Session | null> {
-  return verifySession((await cookies()).get(SESSION_COOKIE)?.value);
-}
+/** Verified once per request even when the layout and page both ask. */
+export const getSession = cache(async (): Promise<Session | null> => verifySession((await cookies()).get(SESSION_COOKIE)?.value));
 
 export async function getWorkerSession(): Promise<Extract<Session, { role: "worker" }> | null> {
   const s = await getSession();
