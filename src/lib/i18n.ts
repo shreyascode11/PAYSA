@@ -58,3 +58,7 @@ export function flatKeys(dict: Dict, prefix = ""): string[] {
 }
 
 export const dictionaries = DICTS;
+
+export function formatTime(iso: string, lang: Lang): string {
+  return new Date(iso).toLocaleTimeString(LANG_TAGS[lang], { hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" });
+}

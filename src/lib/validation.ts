@@ -25,13 +25,15 @@ export const checkInSchema = z.discriminatedUnion("method", [
 export const checkOutSchema = z.object({ lat: lat.optional(), lng: lng.optional() });
 
 export const MAX_REPORT_TEXT = 2000;
-export const MAX_PHOTO_BYTES = 2 * 1024 * 1024;
+export const MAX_PHOTO_BYTES = 1024 * 1024;
 export const PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 
 export const reportSchema = z.object({
   type: z.enum(["hazard", "grievance", "manager_feedback"]),
   category: z.string().min(1).max(40).regex(/^[a-z_]+$/),
   text: z.string().trim().min(1).max(MAX_REPORT_TEXT),
+  /** English transcript from /api/voice/transcribe, so the server needn't translate twice. */
+  textEn: z.string().trim().max(MAX_REPORT_TEXT * 2).optional(),
   lang,
   anonymous: z.boolean(),
   siteId: id.optional(),

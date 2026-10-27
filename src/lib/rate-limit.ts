@@ -6,7 +6,9 @@ interface Bucket {
   updated: number;
 }
 
-const buckets = new Map<string, Bucket>();
+// Shared across route bundles in one process (see secret.ts).
+const g = globalThis as typeof globalThis & { __fairshiftBuckets?: Map<string, Bucket> };
+const buckets = (g.__fairshiftBuckets ??= new Map<string, Bucket>());
 const MAX_BUCKETS = 10_000;
 
 export interface Limit {
