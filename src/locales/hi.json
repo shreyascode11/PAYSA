@@ -224,7 +224,8 @@
       "action_taken": "कार्रवाई हुई",
       "resolved": "हल हो गई"
     },
-    "stepOf": "चरण {n} / 4"
+    "stepOf": "चरण {n} / 4",
+    "translatedFrom": "{lang} से अनुवादित · मूल दिखाएँ"
   },
   "voice": {
     "title": "मेरी आवाज़",

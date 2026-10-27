@@ -61,7 +61,11 @@ export interface PublicReport {
   type: ReportType;
   category: string;
   status: ReportStatus;
+  /** What the worker wrote or said, in their language. */
   text: string;
+  lang: Lang;
+  /** English version, so an English reader isn't shown a language they can't read. */
+  textEn: string;
   createdAt: string;
   updates: { at: string; status: ReportStatus; note: string }[];
   messages: ReportMessage[];
@@ -74,6 +78,8 @@ export function toPublicReport(r: Report): PublicReport {
     category: r.category,
     status: r.status,
     text: r.textOriginal,
+    lang: r.langOriginal,
+    textEn: r.textEn,
     createdAt: r.createdAt,
     updates: r.updates.map(({ at, status, note }) => ({ at, status, note })),
     messages: r.messages.map(({ from, text, at }) => ({ from, text, at })),

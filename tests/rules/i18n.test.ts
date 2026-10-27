@@ -30,3 +30,22 @@ describe("formatTime", () => {
     expect(formatTime(morning, "en")).toMatch(/7:09/);
   });
 });
+
+describe("localizedReportText", () => {
+  const tamil = { text: "மின் கம்பி திறந்து கிடக்கிறது", lang: "ta" as const, textEn: "An electric wire is lying open" };
+
+  it("shows English to English readers of a Tamil report, marked as a translation", async () => {
+    const { localizedReportText } = await import("@/lib/i18n");
+    expect(localizedReportText(tamil, "en")).toEqual({ text: tamil.textEn, lang: "en", translated: true });
+  });
+
+  it("shows the original to readers of the same language", async () => {
+    const { localizedReportText } = await import("@/lib/i18n");
+    expect(localizedReportText(tamil, "ta")).toEqual({ text: tamil.text, lang: "ta", translated: false });
+  });
+
+  it("falls back to the original when no real translation exists", async () => {
+    const { localizedReportText } = await import("@/lib/i18n");
+    expect(localizedReportText({ ...tamil, textEn: tamil.text }, "en").translated).toBe(false);
+  });
+});

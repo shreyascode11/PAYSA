@@ -59,6 +59,16 @@ export function flatKeys(dict: Dict, prefix = ""): string[] {
 
 export const dictionaries = DICTS;
 
+/**
+ * Report text for a reader: the original when it's already in their language, the English version for
+ * English readers, otherwise the original (we only store an English translation).
+ */
+export function localizedReportText(r: { text: string; lang: Lang; textEn: string }, lang: Lang): { text: string; lang: Lang; translated: boolean } {
+  if (r.lang === lang || !r.textEn || r.textEn === r.text) return { text: r.text, lang: r.lang, translated: false };
+  if (lang === "en") return { text: r.textEn, lang: "en", translated: true };
+  return { text: r.text, lang: r.lang, translated: false };
+}
+
 /** A notice in the worker's language when a translation exists, else the original. */
 export function localizedNotice(n: { text: string; lang: Lang; translations?: Partial<Record<Lang, string>> }, lang: Lang): { text: string; lang: Lang } {
   const own = n.lang === lang ? n.text : n.translations?.[lang];

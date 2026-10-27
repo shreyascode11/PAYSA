@@ -6,7 +6,7 @@ import { Timeline } from "@/components/ui/Timeline";
 import { CircleCheck, Eye, Inbox, Wrench } from "lucide-react";
 import { TrackForm } from "@/components/TrackForm";
 import { categoryIcon } from "@/components/categoryIcons";
-import { formatTime, formatDay } from "@/lib/i18n";
+import { LANG_LABELS, formatDay, formatTime, localizedReportText } from "@/lib/i18n";
 import { getT } from "@/lib/locale";
 import { getRepo } from "@/lib/repo";
 import { TRACKING_ID_PATTERN, normalizeTrackingId } from "@/lib/rules/anonymity";
@@ -40,6 +40,7 @@ export default async function TrackReport({ params }: { params: Promise<{ tracki
   }
 
   const Icon = categoryIcon(report.category);
+  const shown = localizedReportText(report, lang);
   const latestNote = [...report.updates].reverse().find((u) => u.note)?.note;
   return (
     <main id="main" className="flex-1 px-4 py-6">
@@ -72,7 +73,17 @@ export default async function TrackReport({ params }: { params: Promise<{ tracki
         </p>
       )}
 
-      <blockquote className="mt-4 rounded-3xl border-l-4 border-sand-300 bg-navy-900 p-4 text-ivory-50/90">{report.text}</blockquote>
+      <blockquote className="mt-4 rounded-3xl border-l-4 border-sand-300 bg-navy-900 p-4 text-ivory-50/90">
+        <p lang={shown.lang}>{shown.text}</p>
+        {shown.translated && (
+          <details className="mt-2 text-sm text-ivory-50/75">
+            <summary className="cursor-pointer font-semibold">{t("track.translatedFrom", { lang: LANG_LABELS[report.lang] })}</summary>
+            <p lang={report.lang} className="mt-1 text-base text-ivory-50/90">
+              {report.text}
+            </p>
+          </details>
+        )}
+      </blockquote>
 
       <section aria-labelledby="msgs" className="mt-8">
         <h2 id="msgs" className="mb-3 text-lg font-bold">

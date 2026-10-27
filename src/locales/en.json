@@ -224,7 +224,8 @@
       "action_taken": "Action taken",
       "resolved": "Solved"
     },
-    "stepOf": "Step {n} of 4"
+    "stepOf": "Step {n} of 4",
+    "translatedFrom": "Translated from {lang} · show original"
   },
   "voice": {
     "title": "My voice",
