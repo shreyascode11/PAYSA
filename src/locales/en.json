@@ -114,14 +114,17 @@
       "gps_denied": "Location is turned off. Allow location, or scan the QR code.",
       "gps_unavailable": "We could not find your location. Please scan the QR code.",
       "camera_denied": "Camera is turned off. Allow the camera, or use your location.",
-      "no_site": "No work site found for you. Please tell your supervisor."
+      "no_site": "No work site found for you. Please tell your supervisor.",
+      "wrong_site": "This QR code belongs to another employer's site.",
+      "photo_failed": "We couldn't read a QR code in that photo. Try again closer, without glare."
     },
     "stepReady": "Ready",
     "stepScan": "Scan",
     "stepDone": "Done",
     "permission": "Your camera is used only to read the site QR code. Nothing is recorded.",
     "stepOf": "Step {n} of 3",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "photo": "Trouble scanning? Take a photo of the code"
   },
   "pay": {
     "title": "My pay",

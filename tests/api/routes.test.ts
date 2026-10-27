@@ -79,6 +79,15 @@ describe("shift check-in / check-out", () => {
     expect(await forged.json()).toMatchObject({ error: "expired_qr" });
     expect((await POST(json({ method: "qr", siteId: "site-con-1", qrToken: todaysSiteToken("site-con-1") }))).status).toBe(200);
   });
+
+  it("tells a worker when a QR belongs to another employer's site", async () => {
+    await login({ role: "worker", sub: "w-k02", orgId: "org-col" });
+    const { POST } = await import("@/app/api/shifts/check-in/route");
+    const res = await POST(json({ method: "qr", siteId: "site-con-1", qrToken: todaysSiteToken("site-con-1") }));
+    expect(await res.json()).toMatchObject({ error: "wrong_site" });
+    const unknown = await POST(json({ method: "qr", siteId: "no-such-site", qrToken: "AAAAAAAAAAAA" }));
+    expect(await unknown.json()).toMatchObject({ error: "bad_qr" });
+  });
 });
 
 describe("pulse", () => {

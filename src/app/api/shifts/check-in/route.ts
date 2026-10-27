@@ -21,7 +21,8 @@ export async function POST(req: Request) {
   let siteId: string;
   if (input.method === "qr") {
     const site = sites.find((s) => s.id === input.siteId);
-    if (!site) return jsonError("bad_qr", 400);
+    // A real PAYSA site that belongs to another employer gets a clearer message than "not a PAYSA code".
+    if (!site) return jsonError((await repo.getSite(input.siteId)) ? "wrong_site" : "bad_qr", 400);
     if (!verifySiteToken(site.id, input.qrToken)) return jsonError("expired_qr", 400);
     siteId = site.id;
   } else {

@@ -5,6 +5,8 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { formatTime } from "@/lib/lang";
+import type { Lang } from "@/lib/types";
 import { BigButton } from "./ui/BigButton";
 
 const QrScanner = dynamic(() => import("./QrScanner"), { ssr: false });
@@ -14,6 +16,7 @@ export interface CheckInLabels {
   scanQr: string;
   useGps: string;
   scanning: string;
+  photo: string;
   locating: string;
   endWork: string;
   confirmOut: string;
@@ -36,7 +39,7 @@ interface Props {
   mode: "in" | "out";
   initialQr?: { siteId: string; token: string };
   labels: CheckInLabels;
-  locale: string;
+  lang: Lang;
 }
 
 type Result = { kind: "ok" | "error"; text: string } | null;
@@ -56,7 +59,7 @@ export function parseQr(text: string): { siteId: string; token: string } | null 
   }
 }
 
-export function CheckInFlow({ mode, initialQr, labels, locale }: Props) {
+export function CheckInFlow({ mode, initialQr, labels, lang }: Props) {
   const router = useRouter();
   const [step, setStep] = useState<"choose" | "scan" | "locating" | "busy">("choose");
   const [result, setResult] = useState<Result>(null);
@@ -81,7 +84,7 @@ export function CheckInFlow({ mode, initialQr, labels, locale }: Props) {
         const text =
           mode === "in"
             ? fill(labels.successIn, {
-                time: new Date(data.checkIn ?? Date.now()).toLocaleTimeString(locale, { hour: "numeric", minute: "2-digit" }),
+                time: formatTime(data.checkIn ?? new Date().toISOString(), lang),
               })
             : fill(labels.successOut, { hours: Math.round((data.hours ?? 0) * 10) / 10 });
         setResult({ kind: "ok", text });
@@ -91,7 +94,7 @@ export function CheckInFlow({ mode, initialQr, labels, locale }: Props) {
         setStep("choose");
       }
     },
-    [errorText, labels, locale, mode, router],
+    [errorText, labels, lang, mode, router],
   );
 
   const onScan = useCallback(
@@ -186,7 +189,7 @@ export function CheckInFlow({ mode, initialQr, labels, locale }: Props) {
         </>
       ) : step === "scan" ? (
         <>
-          <QrScanner onScan={onScan} onError={onScanError} hint={labels.scanning} />
+          <QrScanner onScan={onScan} onError={onScanError} hint={labels.scanning} photoLabel={labels.photo} />
           <button type="button" onClick={() => setStep("choose")} className="min-h-12 rounded-full font-bold text-ivory-50 underline">
             {labels.cancel}
           </button>

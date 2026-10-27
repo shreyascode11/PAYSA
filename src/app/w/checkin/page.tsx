@@ -3,13 +3,12 @@ import { CheckInFlow } from "@/components/CheckInFlow";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { WorkerLoginPanel } from "@/components/WorkerLoginPanel";
 import { getWorkerSession } from "@/lib/auth";
-import { LANG_TAGS } from "@/lib/i18n";
 import { getT } from "@/lib/locale";
 import { getRepo } from "@/lib/repo";
 
 export const metadata: Metadata = { title: "Check in" };
 
-const ERROR_CODES = ["expired_qr", "bad_qr", "outside", "already_in", "not_in", "gps_denied", "gps_unavailable", "camera_denied", "no_site"];
+const ERROR_CODES = ["expired_qr", "bad_qr", "wrong_site", "photo_failed", "outside", "already_in", "not_in", "gps_denied", "gps_unavailable", "camera_denied", "no_site"];
 
 export default async function CheckIn({ searchParams }: { searchParams: Promise<{ site?: string; t?: string }> }) {
   const { site, t: token } = await searchParams;
@@ -39,13 +38,14 @@ export default async function CheckIn({ searchParams }: { searchParams: Promise<
       />
       <CheckInFlow
         mode={mode}
-        locale={LANG_TAGS[lang]}
+        lang={lang}
         initialQr={site && token ? { siteId: site, token } : undefined}
         labels={{
           choose: t("checkin.choose"),
           scanQr: t("checkin.scanQr"),
           useGps: t("checkin.useGps"),
           scanning: t("checkin.scanning"),
+          photo: t("checkin.photo"),
           locating: t("checkin.locating"),
           endWork: t("home.endWork"),
           confirmOut: t("checkin.confirmOut"),
