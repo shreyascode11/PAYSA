@@ -13,3 +13,6 @@ npm-debug.log*
 # Design reference images: inspiration only, never committed
 ui-design/
 design-refs/
+
+# Internal build spec (kept locally, not published)
+CLAUDE.md

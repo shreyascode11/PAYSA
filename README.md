@@ -246,7 +246,7 @@ flowchart LR
 
 ## Accessibility and design
 
-- WCAG AA contrast for every text pair, computed and documented in [`CLAUDE.md` §18](CLAUDE.md).
+- WCAG AA contrast for every text pair, computed for both the dark worker theme and the light admin theme.
 - Full keyboard support, visible focus rings, a skip link, semantic landmarks and ARIA labels.
 - Status is never shown by colour alone: every status carries an icon and a label.
 - Every screen in the worker app has a **Listen** button. `<html lang>` follows the chosen language, and times use spoken forms such as காலை 7:09 or सुबह 7:09.
