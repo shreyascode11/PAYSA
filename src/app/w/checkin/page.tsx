@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { CheckInFlow } from "@/components/CheckInFlow";
 import { ScreenHeader } from "@/components/ScreenHeader";
-import { requireWorkerPage } from "@/lib/auth";
+import { WorkerLoginPanel } from "@/components/WorkerLoginPanel";
+import { getWorkerSession } from "@/lib/auth";
 import { LANG_TAGS } from "@/lib/i18n";
 import { getT } from "@/lib/locale";
 import { getRepo } from "@/lib/repo";
@@ -11,15 +12,24 @@ export const metadata: Metadata = { title: "Check in" };
 const ERROR_CODES = ["expired_qr", "bad_qr", "outside", "already_in", "not_in", "gps_denied", "gps_unavailable", "camera_denied", "no_site"];
 
 export default async function CheckIn({ searchParams }: { searchParams: Promise<{ site?: string; t?: string }> }) {
-  const session = await requireWorkerPage();
   const { site, t: token } = await searchParams;
+  const session = await getWorkerSession();
   const { lang, t } = await getT();
+  // Outside the (app) group: a poster QR scanned while logged out logs in right here and keeps its token.
+  if (!session) {
+    const back = site && token ? `/w/checkin?site=${encodeURIComponent(site)}&t=${encodeURIComponent(token)}` : "/w/checkin";
+    return (
+      <main id="main" className="flex-1 px-4 py-6">
+        <WorkerLoginPanel lang={lang} t={t} next={back} />
+      </main>
+    );
+  }
   const open = await getRepo().getOpenShift(session.sub);
   const mode = open ? "out" : "in";
   const title = t(mode === "in" ? "checkin.titleIn" : "checkin.titleOut");
 
   return (
-    <>
+    <main id="main" className="flex-1 px-4 pb-10 pt-5">
       <ScreenHeader
         title={title}
         speak={mode === "in" ? t("checkin.speak") : t("checkin.confirmOut")}
@@ -47,6 +57,6 @@ export default async function CheckIn({ searchParams }: { searchParams: Promise<
           errors: Object.fromEntries(ERROR_CODES.map((c) => [c, t(`checkin.err.${c}`)])),
         }}
       />
-    </>
+    </main>
   );
 }

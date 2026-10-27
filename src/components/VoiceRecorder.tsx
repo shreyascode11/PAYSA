@@ -30,6 +30,8 @@ export default function VoiceRecorder({ lang, labels, onTranscript, onError }: P
   const rec = useRef<MediaRecorder | null>(null);
   const chunks = useRef<Blob[]>([]);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Whether the user still wants to record once the (possibly slow) mic permission resolves.
+  const wanted = useRef(false);
 
   useEffect(
     () => () => {
@@ -57,12 +59,18 @@ export default function VoiceRecorder({ lang, labels, onTranscript, onError }: P
 
   async function start() {
     if (state !== "idle") return;
+    wanted.current = true;
     if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") return onError("micDenied");
     let stream: MediaStream;
     try {
       stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch {
       return onError("micDenied");
+    }
+    // Released during the first-use permission prompt: don't start a recording nobody is holding.
+    if (!wanted.current) {
+      stream.getTracks().forEach((t) => t.stop());
+      return;
     }
     const mimeType = MIME_CANDIDATES.find((m) => MediaRecorder.isTypeSupported(m));
     const r = new MediaRecorder(stream, mimeType ? { mimeType, audioBitsPerSecond: 24_000 } : undefined);
@@ -86,6 +94,7 @@ export default function VoiceRecorder({ lang, labels, onTranscript, onError }: P
   }
 
   function stop() {
+    wanted.current = false;
     if (rec.current?.state === "recording") rec.current.stop();
   }
 

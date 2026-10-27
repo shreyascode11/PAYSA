@@ -19,9 +19,11 @@ interface Props {
   fields: LoginField[];
   submitLabel: string;
   messages: { invalid: string; tooMany: string; generic: string; offline: string };
+  /** Same-app path to return to after login (already validated by the page). */
+  next?: string;
 }
 
-export function LoginForm({ endpoint, fields, submitLabel, messages }: Props) {
+export function LoginForm({ endpoint, fields, submitLabel, messages, next }: Props) {
   const router = useRouter();
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -39,7 +41,7 @@ export function LoginForm({ endpoint, fields, submitLabel, messages }: Props) {
       });
       const data = (await res.json()) as { redirect?: string; error?: string };
       if (res.ok && data.redirect) {
-        router.replace(data.redirect);
+        router.replace(next ?? data.redirect);
         router.refresh();
         return;
       }
